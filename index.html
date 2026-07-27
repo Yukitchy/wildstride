@@ -1,0 +1,1862 @@
+<title>Wildstride — Setouchi → Shikoku Traverse</title>
+<style>
+:root{
+  --bg:#EAEEEA; --surface:#FFFFFF; --surface2:#F4F7F3; --sunk:#E4EAE4;
+  --ink:#0F1A1D; --ink2:#495B5F; --ink3:#7D8F91; --line:#D2DBD6;
+  --sea:#CFE1E7; --sea2:#BED6DE; --land:#E8EEE1; --contour:rgba(72,102,80,.30);
+  --route:#1E86C4; --route-soft:rgba(30,134,196,.20);
+  --accent:#D9640F; --accent-ink:#FFFFFF;
+  --danger:#C8402F; --water:#0E8F94; --photo:#A87A08; --food:#7A5AA8; --rest:#3E6E57;
+  --shadow:0 1px 2px rgba(16,30,34,.10),0 8px 24px rgba(16,30,34,.08);
+  --f-ui:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --f-num:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#080E11; --surface:#111B1F; --surface2:#162226; --sunk:#0C1417;
+    --ink:#E7EFEE; --ink2:#9CB0B2; --ink3:#697D80; --line:#22343A;
+    --sea:#0A1D25; --sea2:#0D2831; --land:#132019; --contour:rgba(122,178,142,.24);
+    --route:#43B6EF; --route-soft:rgba(67,182,239,.18);
+    --accent:#FF9040; --accent-ink:#16120C;
+    --danger:#F0625C; --water:#3ECBCF; --photo:#DCAE2E; --food:#B49BE8; --rest:#5FB88C;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.42);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#EAEEEA; --surface:#FFFFFF; --surface2:#F4F7F3; --sunk:#E4EAE4;
+  --ink:#0F1A1D; --ink2:#495B5F; --ink3:#7D8F91; --line:#D2DBD6;
+  --sea:#CFE1E7; --sea2:#BED6DE; --land:#E8EEE1; --contour:rgba(72,102,80,.30);
+  --route:#1E86C4; --route-soft:rgba(30,134,196,.20);
+  --accent:#D9640F; --accent-ink:#FFFFFF;
+  --danger:#C8402F; --water:#0E8F94; --photo:#A87A08; --food:#7A5AA8; --rest:#3E6E57;
+  --shadow:0 1px 2px rgba(16,30,34,.10),0 8px 24px rgba(16,30,34,.08);
+}
+:root[data-theme="dark"]{
+  --bg:#080E11; --surface:#111B1F; --surface2:#162226; --sunk:#0C1417;
+  --ink:#E7EFEE; --ink2:#9CB0B2; --ink3:#697D80; --line:#22343A;
+  --sea:#0A1D25; --sea2:#0D2831; --land:#132019; --contour:rgba(122,178,142,.24);
+  --route:#43B6EF; --route-soft:rgba(67,182,239,.18);
+  --accent:#FF9040; --accent-ink:#16120C;
+  --danger:#F0625C; --water:#3ECBCF; --photo:#DCAE2E; --food:#B49BE8; --rest:#5FB88C;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+#app{
+  font-family:var(--f-ui); color:var(--ink); background:var(--bg);
+  height:100vh; height:100dvh; max-width:440px; margin:0 auto;
+  display:flex; flex-direction:column; overflow:hidden; position:relative;
+  border-left:1px solid var(--line); border-right:1px solid var(--line);
+  -webkit-font-smoothing:antialiased;
+}
+@media (min-width:441px){ #app{box-shadow:0 0 80px rgba(0,0,0,.18)} }
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.lab{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+
+/* ---- top bar ---- */
+.top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);
+  border-bottom:1px solid var(--line);flex:0 0 auto;z-index:20}
+.brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.mark{width:26px;height:26px;flex:0 0 auto}
+.t1{font-size:12.5px;font-weight:750;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t2{font-size:10.5px;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbtns{display:flex;gap:6px;flex:0 0 auto}
+.chip{height:28px;padding:0 10px;border-radius:14px;background:var(--surface2);border:1px solid var(--line);
+  font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink2);display:flex;align-items:center;gap:5px}
+.chip:active{transform:scale(.96)}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+
+/* ---- panels ---- */
+main{flex:1 1 auto;position:relative;overflow:hidden}
+.panel{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.panel.on{display:flex}
+.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1;padding:14px 14px 24px}
+
+/* ---- map ---- */
+.mapwrap{position:relative;flex:1 1 auto;min-height:180px;background:var(--sea);overflow:hidden}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hud{position:absolute;left:8px;top:8px;right:8px;display:flex;gap:6px;pointer-events:none}
+.hudcell{background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:9px;padding:5px 8px 6px;flex:1;min-width:0}
+.hudcell .v{font-size:17px;font-weight:700;line-height:1.05;white-space:nowrap}
+.hudcell .v small{font-size:9.5px;font-weight:600;color:var(--ink3);margin-left:2px}
+.hudcell .lab{margin-bottom:2px}
+.callout{position:absolute;left:8px;right:8px;bottom:8px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:9px;padding:7px 10px;box-shadow:var(--shadow);
+  opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;z-index:5}
+.callout.show{opacity:1;transform:none}
+.callout .cn{font-size:12.5px;font-weight:700}
+.callout .cd{font-size:10.5px;color:var(--ink2);margin-top:1px;line-height:1.4}
+.mapbadge{position:absolute;right:8px;bottom:8px;background:color-mix(in srgb,var(--surface) 84%,transparent);
+  backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:7px;padding:3px 7px;font-size:9px;
+  letter-spacing:.08em;color:var(--ink3);font-weight:600;pointer-events:none}
+
+/* ---- controls ---- */
+.ctrl{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--surface);
+  border-top:1px solid var(--line)}
+.play{width:42px;height:42px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;flex:0 0 auto;box-shadow:0 3px 10px color-mix(in srgb,var(--accent) 35%,transparent)}
+.play:active{transform:scale(.93)}
+.play svg{width:17px;height:17px;fill:currentColor}
+.ctrlmeta{flex:1;min-width:0}
+.ctrlmeta .d1{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctrlmeta .d2{font-size:10px;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- profile ---- */
+.profwrap{flex:0 0 auto;background:var(--surface);padding:0 0 4px;position:relative}
+#prof{display:block;width:100%;height:96px;touch-action:none;cursor:ew-resize}
+.profax{position:absolute;left:10px;right:10px;bottom:2px;display:flex;justify-content:space-between;
+  font-size:8.5px;color:var(--ink3);pointer-events:none;font-family:var(--f-num)}
+
+/* ---- day strip ---- */
+.daystrip{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:9px 12px 11px;
+  background:var(--surface);border-top:1px solid var(--line);scrollbar-width:none}
+.daystrip::-webkit-scrollbar{display:none}
+.dchip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface2);border-radius:10px;
+  padding:6px 9px;text-align:left;min-width:76px}
+.dchip .dn{font-size:9px;letter-spacing:.1em;font-weight:700;color:var(--ink3)}
+.dchip .dk{font-size:13px;font-weight:700;margin-top:1px;font-family:var(--f-num)}
+.dchip .dk small{font-size:9px;color:var(--ink3);font-weight:600}
+.dchip.on{background:var(--ink);border-color:var(--ink)}
+.dchip.on .dn{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.dchip.on .dk{color:var(--bg)}
+.dchip.on .dk small{color:color-mix(in srgb,var(--bg) 60%,transparent)}
+
+/* ---- generic cards ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:20px 2px 9px}
+.sechead:first-child{margin-top:2px}
+.sechead h2{font-size:13px;font-weight:750;letter-spacing:.01em;margin:0}
+.sechead .sh{font-size:10px;color:var(--ink3)}
+
+/* summary */
+.hero{padding:16px 15px 15px;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero .ht{font-size:10px;letter-spacing:.16em;color:var(--accent);font-weight:700}
+.hero .hn{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-top:5px;line-height:1.15}
+.hero .hd{font-size:11px;color:var(--ink2);margin-top:5px;line-height:1.5}
+.bigrow{display:flex;gap:12px;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+.big{flex:1}
+.big .bv{font-size:26px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.big .bv small{font-size:11px;font-weight:600;color:var(--ink3);margin-left:2px;letter-spacing:0}
+.big .lab{margin-top:5px}
+.minirow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.mini{background:var(--surface2);border-radius:10px;padding:8px 6px;text-align:center}
+.mini .mv{font-size:15px;font-weight:750;line-height:1}
+.mini .ml{font-size:8.5px;color:var(--ink3);margin-top:4px;font-weight:600;letter-spacing:.04em}
+
+/* day card */
+.daycard{width:100%;text-align:left;padding:12px 13px;display:block;margin-bottom:9px}
+.daycard.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
+.dh{display:flex;align-items:center;gap:8px}
+.dbadge{width:30px;height:30px;border-radius:9px;background:var(--sunk);display:grid;place-items:center;
+  font-size:11px;font-weight:800;flex:0 0 auto;font-family:var(--f-num)}
+.daycard.on .dbadge{background:var(--accent);color:var(--accent-ink)}
+.dtitle{flex:1;min-width:0}
+.dtitle .a{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtitle .b{font-size:10px;color:var(--ink3);margin-top:1px}
+.dstats{display:flex;gap:12px;margin-top:9px}
+.dstat .sv{font-size:14px;font-weight:750;font-family:var(--f-num);letter-spacing:-.02em}
+.dstat .sv small{font-size:9px;color:var(--ink3);font-weight:600}
+.dstat .sl{font-size:8.5px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-top:2px}
+.spark{width:100%;height:34px;display:block;margin-top:8px}
+.dhl{font-size:10.5px;color:var(--ink2);margin-top:8px;line-height:1.45;display:flex;gap:6px;align-items:flex-start}
+.dhl .q{color:var(--accent);font-weight:800;flex:0 0 auto}
+.pinrow{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.pinchip{display:flex;align-items:center;gap:4px;font-size:9.5px;font-weight:600;color:var(--ink2);
+  background:var(--surface2);border-radius:6px;padding:3px 6px}
+.dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+
+/* briefing */
+.segbar{display:flex;background:var(--sunk);border-radius:10px;padding:3px;gap:3px}
+.segbar button{flex:1;font-size:11px;font-weight:700;padding:7px 4px;border-radius:8px;color:var(--ink3)}
+.segbar button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.brief{padding:15px 15px 14px;margin-top:11px}
+.briefhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.briefhead .bt{font-size:16px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+.briefhead .bs{font-size:10.5px;color:var(--ink3);margin-top:3px}
+.wx{text-align:right;flex:0 0 auto}
+.wx .wt{font-size:17px;font-weight:750;font-family:var(--f-num)}
+.wx .ws{font-size:9.5px;color:var(--ink3);margin-top:1px}
+.tl{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
+.tlrow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.tlrow:last-child{border-bottom:none}
+.tltime{font-family:var(--f-num);font-size:11.5px;font-weight:700;width:42px;flex:0 0 auto;padding-top:1px}
+.tlbar{width:2px;background:var(--line);flex:0 0 auto;border-radius:1px;position:relative}
+.tlbar::before{content:"";position:absolute;left:-3px;top:3px;width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.tlrow[data-k="danger"] .tlbar::before{background:var(--danger)}
+.tlrow[data-k="water"] .tlbar::before{background:var(--water)}
+.tlrow[data-k="photo"] .tlbar::before{background:var(--photo)}
+.tlrow[data-k="food"] .tlbar::before{background:var(--food)}
+.tlrow[data-k="rest"] .tlbar::before{background:var(--rest)}
+.tlbody{flex:1;min-width:0}
+.tlbody .n{font-size:12px;font-weight:700}
+.tlbody .d{font-size:10.5px;color:var(--ink2);margin-top:2px;line-height:1.45}
+.tlbody .km{font-size:9.5px;color:var(--ink3);font-family:var(--f-num);margin-top:3px}
+.guestrow{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.guestrow:last-child{border-bottom:none}
+.av{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-size:10.5px;font-weight:800;color:var(--accent-ink);background:var(--accent)}
+.gname{font-size:11.5px;font-weight:700}
+.gmeta{font-size:9.5px;color:var(--ink3);margin-top:1px}
+.gnote{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.flagpill{font-size:8.5px;font-weight:800;letter-spacing:.08em;color:var(--ink3);border:1px solid var(--line);
+  border-radius:4px;padding:1px 4px;margin-left:5px;vertical-align:1px}
+.alert{background:color-mix(in srgb,var(--danger) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--danger) 32%,var(--line));
+  border-radius:10px;padding:9px 11px;margin-top:12px}
+.alert .at{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--danger)}
+.alert .ad{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin-top:12px;font-size:11px}
+.kv dt{color:var(--ink3);font-weight:600;white-space:nowrap}
+.kv dd{margin:0;color:var(--ink2)}
+
+/* certificate */
+.cert{margin-top:12px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface);
+  box-shadow:var(--shadow);position:relative}
+.certtop{padding:16px 16px 12px;background:linear-gradient(160deg,var(--sunk),var(--surface));
+  border-bottom:1px dashed var(--line);position:relative}
+.certlab{font-size:8.5px;letter-spacing:.28em;color:var(--accent);font-weight:800}
+.certname{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-top:7px;line-height:1.15}
+.certsub{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.5}
+.certmap{display:block;width:100%;height:150px;background:var(--sea)}
+.certstats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.certstat{padding:11px 8px;text-align:center;border-right:1px solid var(--line)}
+.certstat:last-child{border-right:none}
+.certstat .cv{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.certstat .cv small{font-size:9px;color:var(--ink3);font-weight:600}
+.certstat .cl{font-size:8px;color:var(--ink3);letter-spacing:.1em;margin-top:4px;font-weight:700}
+.stamps{display:flex;gap:5px;padding:12px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.stamp{flex:1;min-width:38px;border:1px solid var(--line);border-radius:7px;padding:5px 2px;text-align:center;background:var(--surface2)}
+.stamp .sd{font-size:8px;color:var(--ink3);font-weight:700;letter-spacing:.06em}
+.stamp .sk{font-size:10px;font-weight:750;font-family:var(--f-num);margin-top:2px}
+.certfoot{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 15px 15px;border-top:1px solid var(--line)}
+.sig{font-size:10px;color:var(--ink3)}
+.sig b{display:block;font-size:13px;color:var(--ink);margin-top:3px;letter-spacing:.02em}
+.seal{width:56px;height:56px;flex:0 0 auto}
+.gpick{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.gpick::-webkit-scrollbar{display:none}
+.gbtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
+  border-radius:20px;padding:4px 11px 4px 4px;font-size:11px;font-weight:650}
+.gbtn .av{width:24px;height:24px;font-size:9px;background:var(--sunk);color:var(--ink2)}
+.gbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.gbtn.on .av{background:var(--accent);color:var(--accent-ink)}
+.note{font-size:10px;color:var(--ink3);line-height:1.55;margin-top:11px;padding:0 2px}
+
+/* tabs */
+.tabs{flex:0 0 auto;display:flex;background:var(--surface);border-top:1px solid var(--line);
+  padding:5px 4px calc(5px + env(safe-area-inset-bottom,0px))}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;color:var(--ink3)}
+.tab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tab span{font-size:9px;font-weight:700;letter-spacing:.03em}
+.tab.on{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="none" stroke="var(--line)" stroke-width="1.4"/>
+        <path d="M3 21 Q9 12 14 17 T22 9 T29 15" fill="none" stroke="var(--route)" stroke-width="2.1" stroke-linecap="round"/>
+        <circle cx="22" cy="9" r="3.1" fill="var(--accent)"/>
+      </svg>
+      <div style="min-width:0">
+        <div class="t1">SETOUCHI &rarr; SHIKOKU TRAVERSE</div>
+        <div class="t2" id="tourSub"></div>
+      </div>
+    </div>
+    <div class="topbtns">
+      <button class="chip" id="langBtn" aria-label="Language">EN</button>
+      <button class="chip" id="themeBtn" aria-label="Theme">
+        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4a6.6 6.6 0 100 13.2z" fill="currentColor"/><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel on" id="p-map">
+      <div class="mapwrap">
+        <svg id="map" viewBox="0 0 1000 1470" preserveAspectRatio="xMidYMid slice" aria-label="Route map"></svg>
+        <div class="hud">
+          <div class="hudcell"><div class="lab" data-i18n="hDist">DIST</div><div class="v num" id="hDist">0.0<small>km</small></div></div>
+          <div class="hudcell"><div class="lab" data-i18n="hEle">ELEV</div><div class="v num" id="hEle">0<small>m</small></div></div>
+          <div class="hudcell"><div class="lab" data-i18n="hGrad">GRADE</div><div class="v num" id="hGrad">0.0<small>%</small></div></div>
+          <div class="hudcell"><div class="lab" data-i18n="hSpd">SPEED</div><div class="v num" id="hSpd">0.0<small>km/h</small></div></div>
+          <div class="hudcell"><div class="lab" data-i18n="hTime">TIME</div><div class="v num" id="hTime">08:00</div></div>
+        </div>
+        <div class="callout" id="callout"><div class="cn" id="coName"></div><div class="cd" id="coDesc"></div></div>
+        <div class="mapbadge" id="mapBadge"></div>
+      </div>
+      <div class="strip" id="strip"></div>
+      <div class="ctrl">
+        <button class="play" id="playBtn" aria-label="Play"><svg id="playIcon" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></svg></button>
+        <div class="ctrlmeta">
+          <div class="d1" id="ctrlTitle"></div>
+          <div class="d2" id="ctrlSub"></div>
+        </div>
+        <button class="chip" id="speedBtn">1&times;</button>
+        <button class="chip on" id="tourBtn" data-i18n="tourMode">TOUR</button>
+      </div>
+      <div class="profwrap">
+        <svg id="prof" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-label="Elevation profile"></svg>
+        <div class="profax"><span id="axA">0 km</span><span id="axB"></span></div>
+      </div>
+      <div class="daystrip" id="dayStrip"></div>
+    </section>
+
+    <section class="panel" id="p-days"><div class="scroll" id="daysBody"></div></section>
+    <section class="panel" id="p-album"><div class="scroll" id="albumBody"></div></section>
+    <section class="panel" id="p-brief"><div class="scroll" id="briefBody"></div></section>
+    <section class="panel" id="p-card"><div class="scroll" id="cardBody"></div></section>
+  </main>
+
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Media">
+    <div class="scrim" id="scrim"></div>
+    <div class="sbody">
+      <div class="grab"></div>
+      <div class="stage" id="stage">
+        <div id="stageArt"></div>
+        <button class="bigplay hide" id="bigplay" aria-label="Play"><i></i></button>
+        <div class="vbar" id="vbar"><i id="vbarI"></i></div>
+        <div class="vtime" id="vtime"></div>
+      </div>
+      <div class="sinfo">
+        <div class="smeta" id="sMeta"></div>
+        <div class="stitle" id="sTitle"></div>
+        <div class="scap" id="sCap"></div>
+        <div class="stags" id="sTags"></div>
+      </div>
+      <div class="snav">
+        <button class="nbtn" id="prevB" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
+        <button class="nbtn" id="nextB" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button>
+        <div class="ncount" id="sCount"></div>
+        <button class="closeb" id="closeB" data-i18n="close">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-tab="map" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4z"/><path d="M9 4v13M15 6.5v13"/></svg>
+      <span data-i18n="tabMap">MAP</span></button>
+    <button class="tab" data-tab="days" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      <span data-i18n="tabDays">DAYS</span></button>
+    <button class="tab" data-tab="album" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 15 5-4.5 4 3.5 3.5-3 5.5 4.5"/><circle cx="8.5" cy="9.5" r="1.4"/></svg>
+      <span data-i18n="tabAlbum">ALBUM</span></button>
+    <button class="tab" data-tab="brief" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h4"/></svg>
+      <span data-i18n="tabBrief">BRIEF</span></button>
+    <button class="tab" data-tab="card" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9.5" r="5.5"/><path d="M8 14.5 6.5 21l5.5-2.8L17.5 21 16 14.5"/></svg>
+      <span data-i18n="tabCard">CARD</span></button>
+  </nav>
+</div>
+<style>
+/* ---- media: filmstrip, map thumbs, album, sheet ---- */
+.strip{flex:0 0 auto;display:none;gap:7px;overflow-x:auto;overflow-y:hidden;padding:8px 12px;
+  background:var(--surface);border-top:1px solid var(--line);scrollbar-width:none;align-items:center}
+.strip::-webkit-scrollbar{display:none}
+.strip.on{display:flex}
+.strip .sl{font-size:8.5px;letter-spacing:.12em;color:var(--ink3);font-weight:700;flex:0 0 auto;
+  white-space:nowrap;opacity:.85;padding-right:2px}
+.thumb{flex:0 0 auto;width:58px;height:44px;border-radius:7px;overflow:hidden;position:relative;
+  border:1px solid var(--line);background:var(--sunk);display:block;padding:0}
+.thumb svg{display:block;width:100%;height:100%}
+.thumb.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.4) translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.vbadge{position:absolute;right:3px;bottom:3px;background:rgba(8,14,17,.72);color:#fff;font-size:7.5px;
+  font-weight:700;border-radius:3px;padding:1px 3px;font-family:var(--f-num);letter-spacing:.02em}
+.vplay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.vplay i{width:20px;height:20px;border-radius:50%;background:rgba(8,14,17,.5);display:grid;place-items:center;
+  backdrop-filter:blur(2px);border:1px solid rgba(255,255,255,.5)}
+.vplay i::after{content:"";border-left:6px solid #fff;border-top:4px solid transparent;
+  border-bottom:4px solid transparent;margin-left:2px}
+
+/* album */
+.albday{margin:18px 2px 8px;display:flex;align-items:baseline;gap:8px}
+.albday .an{font-size:12.5px;font-weight:750}
+.albday .am{font-size:10px;color:var(--ink3)}
+.albday:first-child{margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.gcell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--sunk);
+  aspect-ratio:4/3;padding:0;display:block;box-shadow:var(--shadow)}
+.gcell svg{display:block;width:100%;height:100%}
+.gcap{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 7px;
+  background:linear-gradient(to top,rgba(6,12,14,.82),rgba(6,12,14,0));text-align:left}
+.gcap .gt{font-size:10px;font-weight:700;color:#fff;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcap .gm{font-size:8.5px;color:rgba(255,255,255,.72);margin-top:2px;font-family:var(--f-num)}
+.gcell .vbadge{font-size:8.5px;padding:2px 4px;right:5px;bottom:auto;top:5px}
+
+/* sheet */
+.sheet{position:absolute;inset:0;z-index:60;display:none}
+.sheet.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(4,9,11,.55);backdrop-filter:blur(3px);
+  animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sbody{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.35);animation:rise .32s cubic-bezier(.2,.9,.3,1);
+  max-height:94%;display:flex;flex-direction:column;overflow:hidden}
+@keyframes rise{from{transform:translateY(102%)}to{transform:none}}
+.grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:8px auto 0;flex:0 0 auto}
+.stage{position:relative;margin:10px 12px 0;border-radius:14px;overflow:hidden;background:var(--sunk);
+  aspect-ratio:4/3;flex:0 0 auto;touch-action:pan-y}
+.stage svg{display:block;width:100%;height:100%;transform-origin:52% 46%}
+.stage.kb svg{animation:kb 9s ease-out forwards}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.16) translate(-2%,-1.5%)}}
+.bigplay{position:absolute;inset:0;display:grid;place-items:center;border:none;background:none;width:100%;padding:0}
+.bigplay i{width:56px;height:56px;border-radius:50%;background:rgba(8,14,17,.46);border:1.5px solid rgba(255,255,255,.75);
+  display:grid;place-items:center;backdrop-filter:blur(4px);transition:transform .2s}
+.bigplay:active i{transform:scale(.92)}
+.bigplay i::after{content:"";border-left:17px solid #fff;border-top:11px solid transparent;
+  border-bottom:11px solid transparent;margin-left:5px}
+.bigplay.hide{display:none}
+.vbar{position:absolute;left:10px;right:10px;bottom:9px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,.28);overflow:hidden;display:none}
+.vbar.on{display:block}
+.vbar i{display:block;height:100%;width:0;background:#fff;border-radius:2px}
+.vtime{position:absolute;right:10px;bottom:16px;font-size:9px;color:#fff;font-family:var(--f-num);
+  text-shadow:0 1px 3px rgba(0,0,0,.6);display:none}
+.vtime.on{display:block}
+.sinfo{padding:12px 15px 4px;overflow-y:auto;flex:1}
+.smeta{display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--ink3);font-family:var(--f-num);
+  letter-spacing:.04em}
+.smeta b{color:var(--accent);font-weight:800}
+.stitle{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-top:5px;line-height:1.25;text-wrap:balance}
+.scap{font-size:11.5px;color:var(--ink2);line-height:1.62;margin-top:7px}
+.stags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.snav{display:flex;align-items:center;gap:9px;padding:11px 14px calc(13px + env(safe-area-inset-bottom,0px));
+  border-top:1px solid var(--line);flex:0 0 auto}
+.nbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);
+  display:grid;place-items:center;flex:0 0 auto}
+.nbtn:disabled{opacity:.35}
+.nbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ncount{flex:1;text-align:center;font-size:10px;color:var(--ink3);font-family:var(--f-num);letter-spacing:.08em}
+.closeb{height:34px;padding:0 14px;border-radius:17px;background:var(--ink);color:var(--bg);
+  font-size:11px;font-weight:700;letter-spacing:.06em;flex:0 0 auto}
+</style>
+
+<script>
+(function(){
+"use strict";
+/* ============================================================
+   Wildstride — Setouchi to Shikoku Traverse (7 days)
+   Everything below is computed from real-ish lat/lng data:
+   distances (haversine), elevation (synthetic terrain field),
+   times (gradient-based speed model). No hard-coded totals.
+   ============================================================ */
+
+var RAD = Math.PI/180;
+var W = {lat0:34.56, lat1:32.86, lng0:132.33, lng1:133.72, k:Math.cos(33.7*RAD)};
+var SCALE = 1000/((W.lng1-W.lng0)*W.k);
+var WORLD_H = (W.lat0-W.lat1)*SCALE;
+
+function px(lng){ return (lng-W.lng0)*W.k*SCALE; }
+function py(lat){ return (W.lat0-lat)*SCALE; }
+function P(p){ return [px(p[1]), py(p[0])]; }
+
+function hav(a,b){
+  var dLat=(b[0]-a[0])*RAD, dLng=(b[1]-a[1])*RAD;
+  var s=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(a[0]*RAD)*Math.cos(b[0]*RAD)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return 6371*2*Math.asin(Math.min(1,Math.sqrt(s)));
+}
+
+/* ---- terrain: sum of gaussians at real summit positions ---- */
+var PEAKS=[
+  [33.768,133.115,1982,.085],[33.790,133.200,1760,.070],[33.850,133.420,1620,.085],
+  [33.700,132.900,1180,.062],[33.920,132.855, 900,.048],[34.020,133.120, 520,.052],
+  [33.550,132.950,1360,.058],[33.460,132.930,1320,.046],[33.445,132.980,1300,.040],
+  [33.550,133.100,1420,.062],[33.420,133.100,1250,.055],[33.650,133.450,1380,.075],
+  [33.300,132.750,1180,.070],[33.350,133.050, 980,.058],[33.450,133.300, 720,.052],
+  [33.150,132.900, 620,.060],[33.050,132.800, 700,.055],[32.980,132.660, 980,.050],
+  [33.230,133.200, 560,.048],[33.100,133.150, 480,.045],[33.600,132.700, 620,.048],
+  [33.520,132.760, 640,.038],[33.350,132.480, 700,.045],[33.750,132.760, 480,.040],
+  [33.900,133.250, 900,.055],[33.250,132.620, 820,.050],[34.310,133.180, 300,.020],
+  [34.255,133.005, 380,.022],[34.150,133.020, 300,.020],[34.380,133.200, 150,.016],
+  [34.290,133.085, 250,.018],[34.210,133.060, 200,.015],[34.430,133.100, 190,.030]
+];
+/* river valleys: gaussians build ridges but never cut the gorges the road
+   follows. Each entry pulls terrain toward a valley-floor height, so the
+   Shimanto still descends from Kubokawa to the sea instead of flattening. */
+var VALLEYS=[
+  [33.208,133.100,190,.028],[33.198,133.030,120,.028],[33.182,132.975, 82,.028],
+  [33.192,132.918, 62,.028],[33.210,132.862, 48,.030],[33.170,132.870, 42,.028],
+  [33.120,132.880, 32,.028],[33.062,132.892, 22,.028],[33.000,132.920, 12,.030],
+  [33.300,133.100,300,.028],[33.245,133.122,240,.026],[33.520,132.640, 62,.028],
+  [33.506,132.556, 22,.028],[33.560,132.905,300,.024],
+  /* coastal plains and port towns sit at sea level, not on the shoulder of a peak */
+  [34.406,133.195, 14,.020],[34.065,132.998, 10,.022],[33.845,132.772, 26,.028],
+  [33.935,132.770, 14,.020],[33.220,133.295, 10,.020],[33.390,133.280, 12,.022],
+  [33.490,133.430, 18,.024],[33.545,133.528, 10,.034],[33.497,133.573,  6,.018],[33.567,133.544,  8,.026]];
+function elevAt(lat,lng){
+  var mx=0,sum=0;
+  for(var i=0;i<PEAKS.length;i++){
+    var p=PEAKS[i], dy=(lat-p[0]), dx=(lng-p[1])*W.k, s=p[3];
+    var d2=(dx*dx+dy*dy)/(2*s*s);
+    if(d2<9){ var v=p[2]*Math.exp(-d2); sum+=v; if(v>mx) mx=v; }
+  }
+  /* soft-max blend: neighbouring summits must not sum past the real high point */
+  var e=mx+0.15*(sum-mx)-16, bw=0, bf=0;
+  for(i=0;i<VALLEYS.length;i++){
+    var q=VALLEYS[i], vy=lat-q[0], vx=(lng-q[1])*W.k, vs=q[3];
+    var v2=(vx*vx+vy*vy)/(2*vs*vs);
+    if(v2<9){ var w=Math.exp(-v2); if(w>bw){ bw=w; bf=q[2]; } }
+  }
+  if(bw>0) e+=(bf-e)*Math.min(.88,bw);
+  return Math.max(4,e);
+}
+
+/* ---- coastlines (hand-authored, smoothed) ---- */
+function smooth(pts){
+  var n=pts.length, d="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);
+  for(var i=0;i<n;i++){
+    var p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+    d+="C"+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+","+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+
+       " "+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+","+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+
+       " "+p2[0].toFixed(1)+","+p2[1].toFixed(1);
+  }
+  return d+"Z";
+}
+function ring(ll){ return smooth(ll.map(P)); }
+function blob(lat,lng,r,seed,squash){
+  var pts=[], n=11, s=seed;
+  for(var i=0;i<n;i++){
+    s=(s*9301+49297)%233280;
+    var jit=0.68+0.62*(s/233280);
+    var a=i/n*Math.PI*2;
+    pts.push([lat+Math.sin(a)*r*jit*(squash||1), lng+Math.cos(a)*r*jit/W.k]);
+  }
+  return ring(pts);
+}
+
+var HONSHU=[[34.62,132.30],[34.44,132.52],[34.40,132.74],[34.375,132.96],[34.405,133.10],
+  [34.393,133.21],[34.425,133.36],[34.40,133.52],[34.46,133.80],[34.62,133.80]];
+var SHIKOKU=[[34.11,133.00],[34.06,133.22],[34.02,133.40],[34.06,133.80],[33.60,133.80],
+  [33.505,133.60],[33.40,133.30],[33.24,133.28],[33.10,133.16],[32.98,133.06],[32.80,132.99],
+  [32.80,132.80],[32.95,132.72],[33.05,132.66],[33.20,132.56],[33.33,132.50],[33.46,132.40],
+  [33.54,132.47],[33.63,132.41],[33.71,132.60],[33.80,132.66],[33.88,132.71],[33.96,132.75],
+  [34.03,132.86]];
+var ISLANDS=[
+  [34.383,133.203,.030,11],[34.328,133.180,.036,29],[34.288,133.090,.033,47],
+  [34.252,133.002,.038,63],[34.208,133.058,.024,81],[34.148,133.020,.041,97],
+  [34.250,132.885,.030,113],[34.255,133.190,.020,131],[34.318,132.990,.014,149],
+  [34.360,133.320,.018,167],[34.200,132.900,.016,183],[34.120,132.880,.013,199],
+  [34.300,133.290,.012,211],[34.190,133.170,.011,227]
+];
+var RIVERS=[
+  [[33.42,133.10],[33.30,133.10],[33.23,133.13],[33.20,133.05],[33.18,132.97],[33.21,132.87],
+   [33.15,132.88],[33.06,132.90],[33.00,132.92],[32.98,132.94]],
+  [[33.60,132.90],[33.55,132.78],[33.53,132.66],[33.50,132.56],[33.50,132.50]],
+  [[33.62,133.30],[33.55,133.28],[33.48,133.35],[33.45,133.45],[33.53,133.52]],
+  [[33.78,132.95],[33.85,132.85],[33.86,132.76],[33.84,132.70]]
+];
+
+/* ---- marching squares contours ---- */
+function contourPaths(levels){
+  var la0=32.88, la1=34.50, lo0=132.36, lo1=133.68, nx=170, ny=190;
+  var g=[], y,x;
+  for(y=0;y<=ny;y++){ var row=[]; for(x=0;x<=nx;x++){
+      row.push(elevAt(la1-(la1-la0)*y/ny, lo0+(lo1-lo0)*x/nx)); } g.push(row); }
+  var gx=function(x){ return px(lo0+(lo1-lo0)*x/nx); };
+  var gy=function(y){ return py(la1-(la1-la0)*y/ny); };
+  var out=[];
+  for(var L=0;L<levels.length;L++){
+    var lv=levels[L], d="";
+    for(y=0;y<ny;y++) for(x=0;x<nx;x++){
+      var a=g[y][x], b=g[y][x+1], c=g[y+1][x+1], e=g[y+1][x];
+      var idx=(a>lv?8:0)|(b>lv?4:0)|(c>lv?2:0)|(e>lv?1:0);
+      if(idx===0||idx===15) continue;
+      var X0=gx(x),X1=gx(x+1),Y0=gy(y),Y1=gy(y+1);
+      var T=function(){ return [X0+(X1-X0)*((lv-a)/(b-a)), Y0]; };
+      var R=function(){ return [X1, Y0+(Y1-Y0)*((lv-b)/(c-b))]; };
+      var B=function(){ return [X0+(X1-X0)*((lv-e)/(c-e)), Y1]; };
+      var Lf=function(){ return [X0, Y0+(Y1-Y0)*((lv-a)/(e-a))]; };
+      var seg=[];
+      switch(idx){
+        case 1: case 14: seg=[Lf(),B()]; break;
+        case 2: case 13: seg=[B(),R()]; break;
+        case 3: case 12: seg=[Lf(),R()]; break;
+        case 4: case 11: seg=[T(),R()]; break;
+        case 6: case 9:  seg=[T(),B()]; break;
+        case 7: case 8:  seg=[Lf(),T()]; break;
+        case 5: seg=[Lf(),T()]; d+="M"+B()[0].toFixed(1)+","+B()[1].toFixed(1)+"L"+R()[0].toFixed(1)+","+R()[1].toFixed(1); break;
+        case 10: seg=[T(),R()]; d+="M"+Lf()[0].toFixed(1)+","+Lf()[1].toFixed(1)+"L"+B()[0].toFixed(1)+","+B()[1].toFixed(1); break;
+      }
+      if(seg.length) d+="M"+seg[0][0].toFixed(1)+","+seg[0][1].toFixed(1)+"L"+seg[1][0].toFixed(1)+","+seg[1][1].toFixed(1);
+    }
+    out.push({lv:lv,d:d});
+  }
+  return out;
+}
+
+/* ---- tour data ---- */
+var TOUR={
+  op:{ja:"Wildstride Japan",en:"Wildstride Japan"},
+  guide:"MASAYA",
+  dates:{ja:"2026年10月12日 — 10月18日",en:"12 — 18 October 2026"},
+  short:{ja:"7日間 / 尾道発・高知着",en:"7 days / Onomichi to Kochi"},
+  name:{ja:"瀬戸内から四国へ",en:"Setouchi to Shikoku Traverse"}
+};
+
+var DAYS=[
+ {n:1,amp:1.1,start:8.5,
+  from:{ja:"尾道",en:"Onomichi"},to:{ja:"今治",en:"Imabari"},
+  sub:{ja:"しまなみ海道・7つの橋",en:"Shimanami Kaido, seven bridges"},
+  hl:{ja:"渡船で向島へ渡り、島から島へ。夕方の来島海峡大橋は逆光で海が銀色になる。",
+      en:"Ferry to Mukaishima, then island to island. Late light turns the Kurushima strait silver."},
+  wx:{t:"23°",ja:"晴れ / 北東の風 3m",en:"Clear / NE 3m/s"},
+  pts:[[34.4056,133.1953],[34.3960,133.1970],[34.3860,133.2020],[34.3720,133.1990],[34.3620,133.1900],
+       [34.3550,133.1830],[34.3430,133.1830],[34.3300,133.1810],[34.3180,133.1700],[34.3080,133.1590],
+       [34.3050,133.1200],[34.3010,133.0870],[34.2880,133.0560],[34.2660,133.0250],[34.2560,133.0090],
+       [34.2530,132.9930],[34.2420,132.9990],[34.2300,133.0080],[34.2210,133.0340],[34.2170,133.0450],
+       [34.2100,133.0380],[34.2040,133.0300],[34.1900,133.0290],[34.1800,133.0250],[34.1600,133.0180],
+       [34.1420,133.0140],[34.1300,133.0100],[34.1180,133.0000],[34.1080,132.9930],[34.0980,132.9900],
+       [34.0900,132.9880],[34.0760,132.9930],[34.0651,132.9979]],
+  poi:[{f:.02,k:"rest",ja:"尾道渡船 / 向島へ",en:"Onomichi ferry to Mukaishima",dja:"自転車ごと乗船・片道110円。5分間隔。",den:"Bikes ride free-flow, 110 yen, every 5 min."},
+       {f:.20,k:"photo",ja:"因島大橋",en:"Innoshima Bridge",dja:"車道の下層が自転車道。金網越しの海。",den:"Cyclists use the deck below the traffic lane."},
+       {f:.38,k:"food",ja:"瀬戸田 / レモンとタコ",en:"Setoda: lemon and octopus",dja:"11:40着予定。ここで昼。塩レモン補給。",den:"Lunch stop. Salt-lemon refill here."},
+       {f:.50,k:"photo",ja:"多々羅大橋 / 鳴き龍",en:"Tatara Bridge multi-echo",dja:"主塔の真下で手を叩くとドラゴンが鳴く。全員やる。",den:"Clap under the tower. Everyone does it."},
+       {f:.62,k:"water",ja:"大三島 道の駅",en:"Omishima roadside station",dja:"この先20kmは自販機のみ。ボトル2本満タンに。",den:"Last real refill for 20 km. Fill both bottles."},
+       {f:.79,k:"danger",ja:"大島 宮窪の下り",en:"Miyakubo descent, Oshima",dja:"路面が粗く採石場のダンプが多い。車間を開けて一列。",den:"Coarse surface, quarry trucks. Single file, wide gaps."},
+       {f:.93,k:"photo",ja:"来島海峡大橋",en:"Kurushima Kaikyo Bridge",dja:"世界初の三連吊橋。4.1km。日没20分前が最高。",den:"World's first triple suspension bridge, 4.1 km."}]},
+
+ {n:2,amp:1.18,start:8.75,
+  from:{ja:"今治",en:"Imabari"},to:{ja:"松山 / 道後",en:"Matsuyama / Dogo"},
+  sub:{ja:"瓦の里と伊予灘の海岸線",en:"Tile kilns and the Iyo coast"},
+  hl:{ja:"平坦基調で回復日。夕方は道後温泉本館へ。走行後の外湯はツアーの空気を変える。",
+      en:"Flat recovery day, finishing in the Dogo Onsen bathhouse."},
+  wx:{t:"24°",ja:"晴れ時々曇 / 南西 4m",en:"Sunny / SW 4m/s"},
+  pts:[[34.0651,132.9979],[34.0620,132.9700],[34.0500,132.9000],[34.0250,132.8800],[33.9950,132.8600],
+       [33.9750,132.8200],[33.9600,132.7900],[33.9480,132.7780],[33.9350,132.7700],[33.9180,132.7520],
+       [33.9000,132.7350],[33.8880,132.7220],[33.8800,132.7150],[33.8700,132.7280],[33.8620,132.7440],
+       [33.8560,132.7650],[33.8520,132.7860]],
+  poi:[{f:.16,k:"danger",ja:"国道196号 交通量",en:"Route 196 traffic",dja:"大型トラック。8km区間は歩道側の待避帯を使う。",den:"Heavy trucks for 8 km. Use the shoulder lane."},
+       {f:.34,k:"photo",ja:"菊間 / 瓦のまち",en:"Kikuma tile town",dja:"750年続く菊間瓦。屋根の色が町ごと違う。",den:"750 years of roof-tile making. Whole town is one colour."},
+       {f:.55,k:"water",ja:"北条 鹿島前",en:"Hojo, Kashima ferry point",dja:"海の前で30分休憩。ここでボトル。",den:"30 min seaside break. Bottles here."},
+       {f:.74,k:"food",ja:"堀江 / じゃこ天",en:"Horie: jakoten fish cake",dja:"揚げたてを立ち食い。ゲストの反応が一番良い店。",den:"Eaten standing, straight from the fryer."},
+       {f:.97,k:"rest",ja:"道後温泉本館",en:"Dogo Onsen Honkan",dja:"タトゥーの案内を事前に。Marco に説明済み。",den:"Tattoo policy briefed in advance (done for Marco)."}]},
+
+ {n:3,amp:0.98,start:8.25,
+  from:{ja:"松山",en:"Matsuyama"},to:{ja:"大洲",en:"Ozu"},
+  sub:{ja:"犬寄峠を越えて内子の町並みへ",en:"Over Inuyose Pass to Uchiko"},
+  hl:{ja:"最初の本格的な峠。内子座と白壁の町並みで午後の光を待つ。",
+      en:"First real pass, then the white-walled merchant street of Uchiko."},
+  wx:{t:"21°",ja:"曇のち晴 / 東 2m",en:"Cloudy then clear / E 2m/s"},
+  pts:[[33.8520,132.7860],[33.8390,132.7650],[33.8100,132.7700],[33.7800,132.7850],[33.7500,132.7900],
+       [33.7200,132.7850],[33.6900,132.7700],[33.6600,132.7600],[33.6300,132.7300],[33.6050,132.7100],
+       [33.5900,132.7000],[33.5700,132.6800],[33.5500,132.6650],[33.5350,132.6560],[33.5300,132.6300],
+       [33.5250,132.6000],[33.5150,132.5700],[33.5060,132.5450]],
+  poi:[{f:.15,k:"water",ja:"砥部 / 焼き物の里",en:"Tobe pottery village",dja:"砥部焼の窯元前。水はここが最後にきれい。",den:"Kiln district. Cleanest water stop of the day."},
+       {f:.36,k:"danger",ja:"犬寄峠 下り 落石",en:"Inuyose Pass descent",dja:"路肩に落石。旧道側は苔。雨後は特に。",den:"Rockfall on the shoulder, mossy old road. Worse after rain."},
+       {f:.58,k:"photo",ja:"中山 の棚田",en:"Nakayama rice terraces",dja:"10月は稲刈り後。はざ掛けの稲木が斜面に並ぶ。",den:"Post-harvest rice racks line the terraces in October."},
+       {f:.80,k:"food",ja:"内子 / 町並み保存地区",en:"Uchiko historic street",dja:"内子座（1916年の芝居小屋）。木蝋商の家。",den:"Uchikoza kabuki theatre, 1916. Wax-merchant houses."},
+       {f:.98,k:"rest",ja:"大洲 臥龍山荘",en:"Ozu, Garyu Sanso villa",dja:"肱川の上の数寄屋。翌朝の大登坂に備えて早寝。",den:"Riverside teahouse. Early night before the queen stage."}]},
+
+ {n:4,amp:0.84,start:7.5,
+  from:{ja:"大洲",en:"Ozu"},to:{ja:"四国カルスト / 天狗高原",en:"Shikoku Karst / Tengu Kogen"},
+  sub:{ja:"クイーンステージ・標高1,400mへ",en:"Queen stage. Up to 1,400 m"},
+  hl:{ja:"ツアー最大の登り。石灰岩の台地に牛と風車。稜線を走る20kmは一生の記憶になる。",
+      en:"The big one. Limestone plateau, cattle, wind turbines, 20 km along the ridge."},
+  wx:{t:"18° / 稜線 11°",ja:"晴 / 稜線は西風 8m",en:"Clear / 8m/s on the ridge"},
+  pts:[[33.5060,132.5450],[33.5120,132.5750],[33.5220,132.6100],[33.5300,132.6400],[33.5350,132.6560],[33.5420,132.6900],[33.5460,132.7250],[33.5380,132.7600],[33.5250,132.7900],[33.5330,132.8250],[33.5450,132.8550],[33.5400,132.8850],[33.5220,132.9050],[33.5020,132.9120],[33.4880,132.9020],[33.4760,132.8860],[33.4700,132.8900],[33.4640,132.9050],[33.4590,132.9180],[33.4560,132.9280],[33.4520,132.9450],[33.4480,132.9620],[33.4450,132.9800]],
+  poi:[{f:.12,k:"water",ja:"内子 最後のコンビニ",en:"Uchiko: last convenience store",dja:"この先50km 補給ゼロ。全員に確認する場所。",den:"No resupply for 50 km. Check every rider here."},
+       {f:.30,k:"food",ja:"小田 / 手打ちそば",en:"Oda soba house",dja:"11時開店。登坂前の最後の温かい食事。",den:"Opens at 11. Last hot food before the climb."},
+       {f:.47,k:"danger",ja:"地芳峠 本格登坂 開始",en:"Jiyoshi Pass climb begins",dja:"平均7%・14km。ここでグループを解散し各自のペースへ。",den:"14 km at 7%. Break the group, everyone rides own pace."},
+       {f:.71,k:"water",ja:"地芳峠 湧水",en:"Jiyoshi Pass spring",dja:"冷たい。稜線に出る前の最終給水。",den:"Ice cold. Final water before the ridge."},
+       {f:.84,k:"photo",ja:"姫鶴平",en:"Mezuru-daira",dja:"牧柵と風車と雲。ゲスト全員を止めて撮る。",den:"Fences, turbines, cloud. Stop everyone and shoot."},
+       {f:1,k:"rest",ja:"天狗高原 山荘",en:"Tengu Kogen lodge",dja:"標高1,400mで就寝。夜は5℃。防寒を先に配る。",den:"Sleeping at 1,400 m. 5°C at night. Hand out layers early."}]},
+
+ {n:5,amp:1.02,start:8,
+  from:{ja:"天狗高原",en:"Tengu Kogen"},to:{ja:"四万十町 / 窪川",en:"Shimanto-cho / Kubokawa"},
+  sub:{ja:"雲海と、雲の上の町・梼原",en:"Sea of cloud, then Yusuhara"},
+  hl:{ja:"早朝の雲海の上を走り出す。梼原の木造建築群を抜けて、四万十川の源流域へ長い下り。",
+      en:"Roll out above the cloud, through Yusuhara's timber architecture, down to the Shimanto headwaters."},
+  wx:{t:"16° → 24°",ja:"朝霧 / のち晴",en:"Morning fog, clearing"},
+  pts:[[33.4450,132.9800],[33.4380,132.9650],[33.4300,132.9500],[33.4200,132.9400],[33.4050,132.9320],[33.3920,132.9280],[33.3800,132.9400],[33.3720,132.9600],[33.3680,132.9850],[33.3600,133.0100],[33.3450,133.0300],[33.3300,133.0500],[33.3150,133.0700],[33.2900,133.0900],[33.2650,133.1050],[33.2400,133.1200],[33.2200,133.1330],[33.2080,133.1390]],
+  poi:[{f:.10,k:"photo",ja:"天狗の森 / 雲海",en:"Tengu forest, sea of cloud",dja:"6:20頃が濃い。走り出しを30分早める価値がある。",den:"Peaks around 06:20. Worth a 30 min earlier start."},
+       {f:.27,k:"water",ja:"梼原 / 雲の上の図書館",en:"Yusuhara: Kumo-no-ue Library",dja:"隈研吾の木造。トイレと水が確実にある。",den:"Kengo Kuma timber building. Reliable water and toilets."},
+       {f:.48,k:"food",ja:"津野 / 焼き餅",en:"Tsuno grilled mochi",dja:"婆ちゃんの店。営業は不定期、電話で確認する。",den:"Grandma's stall. Irregular hours, call ahead."},
+       {f:.68,k:"danger",ja:"長い下り / 濡れた落ち葉",en:"Long descent, wet leaves",dja:"10月は落ち葉。日陰のコーナーが滑る。速度を抑える。",den:"October leaf fall. Shaded corners are slick."},
+       {f:.88,k:"photo",ja:"四万十川 源流域",en:"Shimanto headwaters",dja:"最後の清流の始まり。ここから196km 河口まで。",den:"The last clear river starts here. 196 km to the sea."},
+       {f:1,k:"rest",ja:"窪川",en:"Kubokawa",dja:"米どころ。宿は駅前。輪行袋の予備を確認。",den:"Rice country. Inn by the station."}]},
+
+ {n:6,amp:1.34,start:8.5,
+  from:{ja:"四万十町",en:"Shimanto-cho"},to:{ja:"四万十市 / 中村",en:"Shimanto City / Nakamura"},
+  sub:{ja:"沈下橋をたどる一日",en:"A day of low-water bridges"},
+  hl:{ja:"欄干のない沈下橋を6本渡る。増水時は沈む前提の橋。日本の川の思想がここにある。",
+      en:"Six chinkabashi crossings, bridges built to be submerged rather than fight the flood."},
+  wx:{t:"25°",ja:"快晴 / 川風 2m",en:"Clear / river breeze"},
+  pts:[[33.2080,133.1390],[33.2050,133.1000],[33.2000,133.0300],[33.1900,133.0000],[33.1800,132.9800],
+       [33.1950,132.9200],[33.2100,132.8600],[33.1900,132.8620],[33.1700,132.8700],[33.1450,132.8760],
+       [33.1200,132.8800],[33.0900,132.8900],[33.0600,132.9000],[33.0300,132.9100],[33.0050,132.9180],
+       [32.9900,132.9200],[32.9880,132.9330]],
+  poi:[{f:.14,k:"water",ja:"十和 道の駅",en:"Towa roadside station",dja:"川エビとアイスクリン。トイレあり。",den:"River shrimp and ice cream. Toilets."},
+       {f:.32,k:"photo",ja:"三島沈下橋",en:"Mishima low-water bridge",dja:"中州の集落へ渡る橋。朝の斜光が一番。",den:"Crosses to a mid-river island hamlet."},
+       {f:.50,k:"food",ja:"江川崎 / 鮎の塩焼き",en:"Ekawasaki: salt-grilled ayu",dja:"炭で1時間かけて焼く。11:50に電話予約済み。",den:"An hour over charcoal. Booked for 11:50."},
+       {f:.64,k:"danger",ja:"沈下橋は欄干なし",en:"No railings on the bridges",dja:"幅3.5m、両側は水面まで4m。必ず一列・徐行・立ち止まらない。",den:"3.5 m wide, 4 m drop, no rail. Single file, slow, no stopping."},
+       {f:.82,k:"photo",ja:"岩間沈下橋",en:"Iwama low-water bridge",dja:"ポスターで有名な一本。ここで集合写真を撮る。",den:"The postcard one. Group photo here."},
+       {f:.97,k:"photo",ja:"佐田沈下橋",en:"Sada low-water bridge",dja:"河口に一番近い最長の沈下橋。291.6m。",den:"Longest and closest to the sea. 291.6 m."}]},
+
+ {n:7,amp:0.9,start:8,
+  from:{ja:"久礼",en:"Kure"},to:{ja:"高知 / 桂浜",en:"Kochi / Katsurahama"},
+  sub:{ja:"輪行で久礼へ、太平洋を見ながら高知へ",en:"Rail transfer to Kure, then the Pacific into Kochi"},
+  hl:{ja:"朝、中村から土讃線で久礼へ輪行。カツオの藁焼きで腹を作り、太平洋を横目に高知へ。桂浜の龍馬像でツアー終了。",
+      en:"Morning transfer by rail from Nakamura to Kure. Straw-seared bonito, then the Pacific run into Kochi and the Ryoma statue."},
+  wx:{t:"26°",ja:"晴 / 追い風 西 5m",en:"Clear / tailwind W 5m/s"},
+  pts:[[33.2200,133.2950],[33.2500,133.3050],[33.2800,133.3150],[33.3200,133.3050],[33.3600,133.2900],[33.3900,133.2800],[33.4150,133.3200],[33.4400,133.3600],[33.4700,133.4100],[33.4900,133.4600],[33.4980,133.5200],[33.4970,133.5730],[33.5150,133.5620],[33.5350,133.5520],[33.5670,133.5440]],
+  poi:[{f:.02,k:"rest",ja:"久礼スタート / 中村より輪行",en:"Start at Kure, after the rail transfer",dja:"土讃線で中村→窪川→久礼。輪行袋の畳み方は前夜に実演済み。",den:"Nakamura to Kure by rail. Bike-bag drill done the night before."},
+       {f:.11,k:"food",ja:"久礼 大正町市場 / 藁焼き",en:"Kure market: straw-seared bonito",dja:"目の前で藁が1m立ち上がる。10:30予約。全ツアーの山場。",den:"A metre of flame at the counter. Booked 10:30. The highlight."},
+       {f:.31,k:"danger",ja:"焼坂峠 トンネル",en:"Yakizaka tunnel",dja:"照明が弱く路肩が狭い。リアライト必須・全員点灯確認。",den:"Dim, narrow shoulder. Rear lights on, check every rider."},
+       {f:.50,k:"water",ja:"須崎 / 道の駅",en:"Susaki roadside station",dja:"鍋焼きラーメンの町。ここで大休止。",den:"Nabeyaki ramen town. Long break here."},
+       {f:.72,k:"water",ja:"土佐市 / 最終補給",en:"Tosa City, final refill",dja:"残り25km。ここで完走の段取りを共有する。",den:"25 km left. Brief the finish here."},
+       {f:.90,k:"photo",ja:"桂浜 / 坂本龍馬像",en:"Katsurahama: Ryoma statue",dja:"太平洋を向いた像。ゴール写真はここで撮る。",den:"The statue faces the Pacific. Finish photo."},
+       {f:1,k:"rest",ja:"高知 / ゴール",en:"Kochi, finish",dja:"帯屋町で打ち上げ。修了証カードを配る。",den:"Celebration in Obiyamachi. Hand out the finisher cards."}]}
+];
+
+var GUESTS=[
+ {id:"MB",name:"Marco Bianchi",cc:"ITA",age:54,f:1.06,
+  bike:{ja:"ロード / 自前ペダル",en:"Road, own pedals"},
+  note:{ja:"元アマチュアレーサー。登りで単独先行しがち。峠の分岐で必ず待たせる。",
+        en:"Ex-amateur racer. Tends to ride away on climbs. Always hold him at junctions."},crux:4},
+ {id:"SW",name:"Sarah Whitfield",cc:"AUS",age:41,f:.97,
+  bike:{ja:"グラベル / 38mm",en:"Gravel, 38 mm"},
+  note:{ja:"下りが苦手。Day3の犬寄と Day5の落ち葉区間は前に入って先導する。",
+        en:"Nervous descender. Lead her down Inuyose (D3) and the leaf section (D5)."},crux:5},
+ {id:"CY",name:"Chen Yi-hsuan",cc:"TWN",age:33,f:1.01,
+  bike:{ja:"ロード / レンタル 54",en:"Road, rental 54"},
+  note:{ja:"写真をよく撮る。集団が伸びる原因No.1。撮影は指定ポイントに集約する。",
+        en:"Stops to shoot constantly. Concentrate photos at the marked points."},crux:6},
+ {id:"TK",name:"田中 健一",cc:"JPN",age:62,f:.93,
+  bike:{ja:"E-BIKE / 500Wh",en:"E-bike, 500 Wh"},
+  note:{ja:"Day4は残量が読めない。地芳峠の宿で夜間充電、ECOモード指示を朝に。",
+        en:"Battery is tight on D4. Charge overnight, brief ECO mode at breakfast."},crux:4},
+ {id:"LF",name:"Lena Fischer",cc:"DEU",age:37,f:1.00,
+  bike:{ja:"ロード / 自前",en:"Road, own bike"},
+  note:{ja:"ベジタリアン。Day6の鮎とDay7のカツオは代替を手配済み。",
+        en:"Vegetarian. Alternatives arranged for the ayu (D6) and bonito (D7)."},crux:7}
+];
+
+var PINCOL={danger:"var(--danger)",water:"var(--water)",photo:"var(--photo)",food:"var(--food)",rest:"var(--rest)"};
+var PINLAB={danger:{ja:"危険",en:"Hazard"},water:{ja:"補給",en:"Water"},photo:{ja:"撮影",en:"Photo"},
+            food:{ja:"食事",en:"Food"},rest:{ja:"宿",en:"Stay"}};
+
+var TOWNS=[
+ [34.4056,133.1953,"尾道","Onomichi",1],[34.0651,132.9979,"今治","Imabari",1],
+ [33.8390,132.7650,"松山","Matsuyama",1],[33.5060,132.5450,"大洲","Ozu",0],
+ [33.5350,132.6560,"内子","Uchiko",0],[33.4560,132.9280,"四国カルスト","Shikoku Karst",1],
+ [33.3920,132.9280,"梼原","Yusuhara",0],[33.2080,133.1390,"窪川","Kubokawa",0],
+ [32.9880,132.9330,"中村","Nakamura",0],[33.5670,133.5440,"高知","Kochi",1],
+ [33.3900,133.2800,"須崎","Susaki",0],[33.2000,132.5600,"宇和島","Uwajima",0],
+ [33.7680,133.1150,"石鎚山","Mt. Ishizuchi",2],[34.2530,132.9930,"大三島","Omishima",0]
+];
+
+var I18N={
+ ja:{tabMap:"地図",tabDays:"行程",tabAlbum:"アルバム",tabBrief:"ブリーフ",tabCard:"記録",close:"閉じる",album:"ツアーアルバム",shots:"点",passed:"通過",tapPin:"地図のピンをタップすると、その場所の写真と動画が開きます。",onRoute:"地点",videoOf:"動画",photoOf:"写真",
+     hDist:"距離",hEle:"標高",hGrad:"勾配",hSpd:"速度",hTime:"時刻",tourMode:"通し",
+     sumTitle:"ツアー全体",dayTitle:"日別行程",briefTitle:"当日ブリーフィング",cardTitle:"完走記録カード",
+     totalDist:"総距離",totalGain:"総獲得標高",days:"日間",pref:"県",islands:"島",bridges:"橋",
+     rivers:"沈下橋",maxEle:"最高地点",ridetime:"総走行時間",avg:"平均速度",
+     guideView:"ガイド用",guestView:"ゲスト用",timeline:"タイムライン",guestwatch:"ゲスト別・今日の注意",
+     brief1:"今日の要点",gear:"装備",food:"補給",risk:"リスク",
+     pickGuest:"ゲストを選択",certfor:"FINISHER RECORD",
+     issued:"発行",guideSig:"GUIDE",dayStamps:"日別スタンプ",
+     personal:"個人記録",maxspd:"最高速度",climbday:"最も登った日",
+     playHint:"再生すると自転車が軌跡を進み、標高・速度・時刻が連動します。グラフはドラッグで移動できます。",
+     openMap:"地図で見る",kmUnit:"km",hUnit:"時間",
+     certNote:"このカードは走行データから自動生成されます。ツアー終了時にゲストへ配布し、そのまま SNS に投稿できる比率で出力されます。",
+     briefNote:"ガイド用には危険情報とゲスト別の注意が表示されます。ゲスト用に切り替えると、その日の楽しみと必要な準備だけが残ります。",
+     wxLab:"予報",elevLab:"標高 m",distLab:"距離 km"},
+ en:{tabMap:"MAP",tabDays:"DAYS",tabAlbum:"ALBUM",tabBrief:"BRIEF",tabCard:"CARD",close:"Close",album:"Tour album",shots:"shots",passed:"PASSED",tapPin:"Tap a pin on the map to open the photo or video taken there.",onRoute:"on route",videoOf:"Video",photoOf:"Photo",
+     hDist:"DIST",hEle:"ELEV",hGrad:"GRADE",hSpd:"SPEED",hTime:"TIME",tourMode:"TOUR",
+     sumTitle:"Tour overview",dayTitle:"Day by day",briefTitle:"Morning briefing",cardTitle:"Finisher record",
+     totalDist:"Total distance",totalGain:"Total ascent",days:"days",pref:"prefectures",islands:"islands",
+     bridges:"bridges",rivers:"low-water br.",maxEle:"High point",ridetime:"Ride time",avg:"Avg speed",
+     guideView:"Guide",guestView:"Guest",timeline:"Timeline",guestwatch:"Watch list, per guest",
+     brief1:"Today in short",gear:"Gear",food:"Food",risk:"Risk",
+     pickGuest:"Select guest",certfor:"FINISHER RECORD",
+     issued:"Issued",guideSig:"GUIDE",dayStamps:"Daily stamps",
+     personal:"Personal record",maxspd:"Max speed",climbday:"Biggest climbing day",
+     playHint:"Press play: the rider moves along the trace while distance, elevation, speed and clock update. Drag the profile to scrub.",
+     openMap:"Show on map",kmUnit:"km",hUnit:"h",
+     certNote:"Generated from the ride data. Handed to each guest at the finish, sized to post straight to social.",
+     briefNote:"Guide view shows hazards and per-guest watch items. Switch to guest view and only the good part and the packing list remain.",
+     wxLab:"Forecast",elevLab:"Elev m",distLab:"Distance km"}
+};
+var lang="ja";
+function T(k){ return I18N[lang][k]||k; }
+function L(o){ return o? (o[lang]!==undefined?o[lang]:o) : ""; }
+
+/* ---- ride engine: distance, elevation, speed, time ---- */
+function buildDay(d){
+  var s=[], i, j;
+  s.push({lat:d.pts[0][0],lng:d.pts[0][1]});
+  for(i=1;i<d.pts.length;i++){
+    var a=d.pts[i-1], b=d.pts[i], seg=hav(a,b), n=Math.max(1,Math.ceil(seg/0.2));
+    for(j=1;j<=n;j++){
+      var t=j/n;
+      s.push({lat:a[0]+(b[0]-a[0])*t, lng:a[1]+(b[1]-a[1])*t});
+    }
+  }
+  /* Roads meander and switchback; waypoint chords do not. Displace laterally,
+     more in steep terrain, so drawn length and measured distance stay identical.
+     d.amp is the per-day calibration against published route distances. */
+  var N=s.length, amp=0.0030*(d.amp||1), ph=d.n*7.3, wig=[];
+  for(i=0;i<N;i++){
+    var taper=Math.sin(Math.PI*i/(N-1));
+    var pa=s[Math.max(0,i-1)], pb=s[Math.min(N-1,i+1)];
+    var dy=pb.lat-pa.lat, dx=(pb.lng-pa.lng)*W.k, ln=Math.sqrt(dx*dx+dy*dy)||1;
+    var a2=amp*(0.55+Math.min(1.6,elevAt(s[i].lat,s[i].lng)/700))*taper;
+    var o=Math.sin(i*1.15+ph)*a2+Math.sin(i*0.47+ph*2)*a2*0.9+Math.sin(i*2.3+ph*3)*a2*0.3;
+    wig.push({lat:s[i].lat+(dx/ln)*o, lng:s[i].lng-(dy/ln)*o/W.k});
+  }
+  s=wig; s[0].d=0;
+  for(i=1;i<s.length;i++) s[i].d=s[i-1].d+hav([s[i-1].lat,s[i-1].lng],[s[i].lat,s[i].lng]);
+  for(i=0;i<s.length;i++) s[i].raw=Math.max(0,elevAt(s[i].lat,s[i].lng));
+  var win=6;
+  for(i=0;i<s.length;i++){
+    var sum=0,c=0;
+    for(j=Math.max(0,i-win);j<=Math.min(s.length-1,i+win);j++){ sum+=s[j].raw; c++; }
+    s[i].e=sum/c;
+  }
+  var gain=0, mark=s[0].e, maxE=0;
+  for(i=1;i<s.length;i++){
+    if(s[i].e>maxE) maxE=s[i].e;
+    if(s[i].e-mark>4){ gain+=s[i].e-mark; mark=s[i].e; }
+    else if(s[i].e<mark) mark=s[i].e;
+  }
+  var t=0;
+  s[0].t=0; s[0].v=0; s[0].g=0;
+  for(i=1;i<s.length;i++){
+    var dd=s[i].d-s[i-1].d, de=s[i].e-s[i-1].e;
+    var gr=dd>0? de/(dd*1000):0;
+    var v=25/(1+Math.max(0,gr)*26)+Math.max(0,-gr)*95;
+    v=Math.max(6.5,Math.min(63,v));
+    t+=dd/v;
+    s[i].t=t; s[i].v=v; s[i].g=gr*100;
+  }
+  d.s=s; d.km=s[s.length-1].d; d.gain=gain; d.maxE=maxE; d.hours=t;
+  d.poi.forEach(function(p){
+    p.i=Math.min(s.length-1,Math.round(p.f*(s.length-1)));
+    p.km=s[p.i].d;
+    var stops=0;
+    p.time=d.start+s[p.i].t+(p.k==="food"?0:0);
+  });
+  var stopMin=0;
+  d.poi.forEach(function(p){ p.timeAdj=d.start+s[p.i].t+stopMin/60; stopMin+=(p.k==="food"?45:p.k==="photo"?9:p.k==="water"?12:6); });
+  d.stopH=stopMin/60;
+  return d;
+}
+DAYS.forEach(buildDay);
+
+var TOTAL={km:0,gain:0,hours:0,maxE:0};
+DAYS.forEach(function(d){ TOTAL.km+=d.km; TOTAL.gain+=d.gain; TOTAL.hours+=d.hours; TOTAL.maxE=Math.max(TOTAL.maxE,d.maxE); });
+
+function hhmm(h){
+  var t=((h%24)+24)%24, m=Math.round(t*60);
+  return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+}
+function hm(h){
+  var m=Math.round(h*60);
+  return Math.floor(m/60)+"h"+String(m%60).padStart(2,"0");
+}
+function fmt(n,d){ return n.toFixed(d===undefined?0:d); }
+
+/* ---- svg helpers ---- */
+var NS="http://www.w3.org/2000/svg";
+function el(t,a){ var n=document.createElementNS(NS,t); for(var k in a) n.setAttribute(k,a[k]); return n; }
+function sub(p,tag,attr){ var n=el(tag,attr); p.appendChild(n); return n; }
+
+/* ---- build base map ---- */
+var map=document.getElementById("map");
+var landD=[ring(HONSHU),ring(SHIKOKU)].concat(ISLANDS.map(function(b){return blob(b[0],b[1],b[2],b[3],1);}));
+var gPins,gRider,gTowns,routeBase,routeProg,gGhost;
+
+function buildMap(){
+  map.innerHTML="";
+  var defs=sub(map,"defs");
+  var cp=sub(defs,"clipPath",{id:"landclip"});
+  landD.forEach(function(d){ sub(cp,"path",{d:d}); });
+  var gr=sub(defs,"linearGradient",{id:"seaG",x1:"0",y1:"0",x2:"0",y2:"1"});
+  sub(gr,"stop",{offset:"0","stop-color":"var(--sea)"});
+  sub(gr,"stop",{offset:"1","stop-color":"var(--sea2)"});
+
+  sub(map,"rect",{x:-200,y:-200,width:1400,height:WORLD_H+400,fill:"url(#seaG)"});
+
+  var gGrid=sub(map,"g",{stroke:"var(--contour)","stroke-width":".5",opacity:".35",fill:"none"});
+  for(var la=33.0;la<34.6;la+=.25) sub(gGrid,"line",{x1:-100,x2:1100,y1:py(la),y2:py(la),"vector-effect":"non-scaling-stroke"});
+  for(var lo=132.5;lo<133.8;lo+=.25) sub(gGrid,"line",{y1:-100,y2:WORLD_H+100,x1:px(lo),x2:px(lo),"vector-effect":"non-scaling-stroke"});
+
+  var gLand=sub(map,"g",{fill:"var(--land)",stroke:"none"});
+  landD.forEach(function(d){ sub(gLand,"path",{d:d}); });
+
+  var gC=sub(map,"g",{"clip-path":"url(#landclip)",fill:"none",stroke:"var(--contour)"});
+  contourPaths([100,250,400,600,800,1000,1200,1400]).forEach(function(c,i){
+    sub(gC,"path",{d:c.d,"stroke-width":(c.lv%400===0?0.9:0.5),opacity:(0.42+i*0.055).toFixed(2),"vector-effect":"non-scaling-stroke"});
+  });
+
+  var gR=sub(map,"g",{fill:"none",stroke:"var(--sea2)","stroke-width":1.6,"stroke-linecap":"round",opacity:".9"});
+  RIVERS.forEach(function(r){
+    sub(gR,"path",{d:"M"+r.map(function(p){var q=P(p);return q[0].toFixed(1)+","+q[1].toFixed(1);}).join("L"),"vector-effect":"non-scaling-stroke"});
+  });
+
+  var gCoast=sub(map,"g",{fill:"none",stroke:"var(--ink3)","stroke-width":.7,opacity:".45"});
+  landD.forEach(function(d){ sub(gCoast,"path",{d:d,"vector-effect":"non-scaling-stroke"}); });
+
+  gGhost=sub(map,"g",{fill:"none",stroke:"var(--ink3)","stroke-width":1.4,opacity:".38","stroke-linecap":"round","stroke-linejoin":"round"});
+  DAYS.forEach(function(d){ sub(gGhost,"path",{d:pathOf(d),"vector-effect":"non-scaling-stroke"}); });
+
+  routeBase=sub(map,"path",{fill:"none",stroke:"var(--route)","stroke-width":4.2,opacity:".42",
+    "stroke-linecap":"round","stroke-linejoin":"round","vector-effect":"non-scaling-stroke"});
+  routeProg=sub(map,"path",{fill:"none",stroke:"var(--route)","stroke-width":4.6,
+    "stroke-linecap":"round","stroke-linejoin":"round","vector-effect":"non-scaling-stroke"});
+
+  gTowns=sub(map,"g",{});
+  gPins=sub(map,"g",{});
+  gRider=sub(map,"g",{});
+}
+function pathOf(d){
+  var p="", st=Math.max(1,Math.floor(d.s.length/220));
+  for(var i=0;i<d.s.length;i+=st){ var q=P([d.s[i].lat,d.s[i].lng]); p+=(i?"L":"M")+q[0].toFixed(1)+","+q[1].toFixed(1); }
+  var q2=P([d.s[d.s.length-1].lat,d.s[d.s.length-1].lng]);
+  return p+"L"+q2[0].toFixed(1)+","+q2[1].toFixed(1);
+}
+
+/* ---- viewBox camera ---- */
+var vb={x:0,y:0,w:1000,h:WORLD_H}, vbTarget=null, vbFrom=null, vbT=0;
+function setVB(v){ map.setAttribute("viewBox",v.x.toFixed(1)+" "+v.y.toFixed(1)+" "+v.w.toFixed(1)+" "+v.h.toFixed(1)); }
+function fitDay(d,pad){
+  var xs=[],ys=[];
+  d.pts.forEach(function(p){ var q=P(p); xs.push(q[0]); ys.push(q[1]); });
+  var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs);
+  var y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys);
+  var w=x1-x0,h=y1-y0, m=Math.max(w,h)*(pad||0.18)+30;
+  x0-=m;x1+=m;y0-=m;y1+=m;
+  w=x1-x0; h=y1-y0;
+  var cw=map.clientWidth||390, ch=map.clientHeight||420, r=ch/cw;
+  if(h/w<r) { var nh=w*r; y0-=(nh-h)/2; h=nh; } else { var nw=h/r; x0-=(nw-w)/2; w=nw; }
+  /* media cards stand above their anchor; keep room for them under the HUD */
+  y0-=h*0.15; h+=h*0.15;
+  return {x:x0,y:y0,w:w,h:h};
+}
+function flyTo(v,instant){
+  if(instant||reduceMotion){ vb=v; setVB(vb); rescale(); vbTarget=null; return; }
+  vbFrom={x:vb.x,y:vb.y,w:vb.w,h:vb.h}; vbTarget=v; vbT=0;
+}
+function camTick(dt){
+  if(!vbTarget) return;
+  vbT=Math.min(1,vbT+dt/0.85);
+  var e=vbT<.5?4*vbT*vbT*vbT:1-Math.pow(-2*vbT+2,3)/2;
+  vb={x:vbFrom.x+(vbTarget.x-vbFrom.x)*e, y:vbFrom.y+(vbTarget.y-vbFrom.y)*e,
+      w:vbFrom.w+(vbTarget.w-vbFrom.w)*e, h:vbFrom.h+(vbTarget.h-vbFrom.h)*e};
+  setVB(vb); rescale();
+  if(vbT>=1) vbTarget=null;
+}
+function rescale(){
+  /* viewBox units -> screen px, so markers keep a constant tap-size at any zoom */
+  var k=vb.w/Math.max(220,map.clientWidth);
+  [].forEach.call(map.querySelectorAll("[data-sx]"),function(n){
+    n.setAttribute("transform","translate("+n.getAttribute("data-sx")+","+n.getAttribute("data-sy")+") scale("+(k*(n.getAttribute("data-k")||1)).toFixed(3)+")");
+  });
+}
+
+/* ---- pins / towns / rider ---- */
+function pinNode(parent,x,y,kind){
+  var g=el("g",{"data-sx":x.toFixed(1),"data-sy":y.toFixed(1),"data-k":1});
+  var p=el("path",{d:"M0,0 C-9,-11 -7.4,-22 0,-22 C7.4,-22 9,-11 0,0 Z",fill:PINCOL[kind],
+    stroke:"var(--surface)","stroke-width":1.5});
+  g.appendChild(p);
+  g.appendChild(el("circle",{cx:0,cy:-14.6,r:3.1,fill:"var(--surface)"}));
+  parent.appendChild(g);
+  return g;
+}
+function drawPins(d){
+  gPins.innerHTML=""; gTowns.innerHTML="";
+  TOWNS.forEach(function(t){
+    var q=P([t[0],t[1]]);
+    var g=el("g",{"data-sx":q[0].toFixed(1),"data-sy":q[1].toFixed(1),"data-k":1});
+    if(t[4]!==2) g.appendChild(el("circle",{cx:0,cy:0,r:t[4]?3:2,fill:"var(--ink)",stroke:"var(--surface)","stroke-width":1.2}));
+    else g.appendChild(el("path",{d:"M-4,3 L0,-5 L4,3 Z",fill:"none",stroke:"var(--ink3)","stroke-width":1.3}));
+    var tx=el("text",{x:0,y:-6,"font-size":t[4]===1?12:10.5,"font-weight":t[4]===1?"700":"600",
+      "text-anchor":"middle",fill:"var(--ink)",stroke:"var(--land)","stroke-width":3,
+      "paint-order":"stroke","font-family":"var(--f-ui)"});
+    tx.textContent=lang==="ja"?t[2]:t[3];
+    g.appendChild(tx);
+    gTowns.appendChild(g);
+  });
+  d.poi.forEach(function(p){
+    var q=P([d.s[p.i].lat,d.s[p.i].lng]);
+    p.node=pinNode(gPins,q[0],q[1],p.k);
+  });
+  gRider.innerHTML="";
+  var rg=el("g",{"data-sx":"0","data-sy":"0","data-k":1,id:"riderG"});
+  rg.appendChild(el("circle",{cx:0,cy:0,r:13,fill:"var(--accent)",opacity:".18"}));
+  rg.appendChild(el("circle",{cx:0,cy:0,r:7.4,fill:"var(--accent)",stroke:"var(--surface)","stroke-width":2}));
+  rg.appendChild(el("circle",{cx:0,cy:0,r:2.4,fill:"var(--surface)"}));
+  gRider.appendChild(rg);
+  rescale();
+}
+
+/* ---- elevation profile ---- */
+var prof=document.getElementById("prof"), progClipRect, profCursor, profDot, profPath2;
+function drawProfile(d){
+  prof.innerHTML="";
+  var defs=sub(prof,"defs");
+  var g1=sub(defs,"linearGradient",{id:"pg",x1:"0",y1:"0",x2:"0",y2:"1"});
+  sub(g1,"stop",{offset:"0","stop-color":"var(--route)","stop-opacity":".42"});
+  sub(g1,"stop",{offset:"1","stop-color":"var(--route)","stop-opacity":".03"});
+  var g2=sub(defs,"linearGradient",{id:"pg2",x1:"0",y1:"0",x2:"0",y2:"1"});
+  sub(g2,"stop",{offset:"0","stop-color":"var(--accent)","stop-opacity":".55"});
+  sub(g2,"stop",{offset:"1","stop-color":"var(--accent)","stop-opacity":".08"});
+  var cp=sub(defs,"clipPath",{id:"pclip"});
+  progClipRect=sub(cp,"rect",{x:0,y:0,width:0,height:240});
+
+  var top=26, bot=214, maxE=Math.max(320,d.maxE*1.12);
+  var X=function(i){ return d.s[i].d/d.km*1000; };
+  var Y=function(i){ return bot-(d.s[i].e/maxE)*(bot-top); };
+  var line="", st=Math.max(1,Math.floor(d.s.length/300)), i;
+  for(i=0;i<d.s.length;i+=st) line+=(i?"L":"M")+X(i).toFixed(1)+","+Y(i).toFixed(1);
+  i=d.s.length-1; line+="L"+X(i).toFixed(1)+","+Y(i).toFixed(1);
+  var area=line+"L1000,"+bot+"L0,"+bot+"Z";
+
+  var gGridP=sub(prof,"g",{stroke:"var(--line)","stroke-width":1,fill:"none"});
+  [0,500,1000,1500].forEach(function(m){
+    if(m>maxE) return;
+    var y=bot-(m/maxE)*(bot-top);
+    sub(gGridP,"line",{x1:0,x2:1000,y1:y,y2:y,opacity:m?".8":"1"});
+    if(m){ var t=sub(prof,"text",{x:6,y:y-5,"font-size":13,fill:"var(--ink3)","font-family":"var(--f-num)"}); t.textContent=m+"m"; }
+  });
+  sub(prof,"path",{d:area,fill:"url(#pg)"});
+  sub(prof,"path",{d:line,fill:"none",stroke:"var(--route)","stroke-width":2.4,"stroke-linejoin":"round",opacity:".75"});
+  var gP=sub(prof,"g",{"clip-path":"url(#pclip)"});
+  sub(gP,"path",{d:area,fill:"url(#pg2)"});
+  profPath2=sub(gP,"path",{d:line,fill:"none",stroke:"var(--accent)","stroke-width":3,"stroke-linejoin":"round"});
+
+  d.poi.forEach(function(p){
+    var x=X(p.i), y=Y(p.i);
+    sub(prof,"line",{x1:x,x2:x,y1:y-4,y2:top-14,stroke:PINCOL[p.k],"stroke-width":1.4,opacity:".55"});
+    sub(prof,"circle",{cx:x,cy:top-17,r:4.6,fill:PINCOL[p.k]});
+  });
+  profCursor=sub(prof,"line",{x1:0,x2:0,y1:top-22,y2:bot,stroke:"var(--accent)","stroke-width":1.8});
+  profDot=sub(prof,"circle",{cx:0,cy:bot,r:6,fill:"var(--accent)",stroke:"var(--surface)","stroke-width":2.2});
+  document.getElementById("axB").textContent=fmt(d.km,1)+" km";
+  return {X:X,Y:Y,top:top,bot:bot};
+}
+
+/* ---- state + playback ---- */
+var reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var S={di:0, km:0, playing:false, speed:1, tour:true, geom:null, lastPoi:-1};
+function day(){ return DAYS[S.di]; }
+
+function sampleAt(d,km){
+  var lo=0,hi=d.s.length-1;
+  while(lo<hi-1){ var mid=(lo+hi)>>1; if(d.s[mid].d<km) lo=mid; else hi=mid; }
+  var a=d.s[lo],b=d.s[hi],sp=b.d-a.d,t=sp>0?(km-a.d)/sp:0;
+  return {lat:a.lat+(b.lat-a.lat)*t, lng:a.lng+(b.lng-a.lng)*t,
+          e:a.e+(b.e-a.e)*t, v:b.v, g:b.g, t:a.t+(b.t-a.t)*t, i:lo};
+}
+function setDay(i,instant){
+  S.di=i; S.km=0; S.lastPoi=-1;
+  var d=day();
+  routeBase.setAttribute("d",pathOf(d));
+  routeProg.setAttribute("d",pathOf(d));
+  var len=routeProg.getTotalLength();
+  routeProg.setAttribute("stroke-dasharray",len);
+  routeProg.setAttribute("stroke-dashoffset",len);
+  routeProg._len=len;
+  drawPins(d);
+  if(window.WSM) WSM.onDay(d);
+  S.geom=drawProfile(d);
+  flyTo(fitDay(d),instant);
+  [].forEach.call(document.querySelectorAll(".dchip"),function(b,j){ b.classList.toggle("on",j===i); });
+  [].forEach.call(document.querySelectorAll(".daycard"),function(b,j){ b.classList.toggle("on",j===i); });
+  var chip=document.querySelectorAll(".dchip")[i], sp=document.getElementById("dayStrip");
+  if(i===0&&sp) sp.scrollTo({left:0,behavior:reduceMotion?"auto":"smooth"});
+  else if(chip) chip.scrollIntoView({inline:"center",block:"nearest",behavior:reduceMotion?"auto":"smooth"});
+  document.getElementById("ctrlTitle").textContent="Day "+d.n+" — "+L(d.from)+" → "+L(d.to);
+  document.getElementById("mapBadge").textContent=lang==="ja"?("DAY "+d.n+" / "+fmt(d.km,1)+"km"):("DAY "+d.n+" / "+fmt(d.km,1)+"km");
+  if(document.getElementById("briefBody").childElementCount) renderBrief();
+  update();
+}
+function setProgress(km){
+  S.km=Math.max(0,Math.min(day().km,km));
+  update();
+}
+function update(){
+  var d=day(), p=sampleAt(d,S.km), frac=S.km/d.km;
+  var q=P([p.lat,p.lng]);
+  var rg=document.getElementById("riderG");
+  if(rg){ rg.setAttribute("data-sx",q[0].toFixed(1)); rg.setAttribute("data-sy",q[1].toFixed(1)); }
+  rescale();
+  routeProg.setAttribute("stroke-dashoffset",(routeProg._len*(1-frac)).toFixed(1));
+  if(progClipRect) progClipRect.setAttribute("width",(frac*1000).toFixed(1));
+  if(profCursor&&S.geom){
+    var x=frac*1000, y=S.geom.bot-(p.e/Math.max(320,d.maxE*1.12))*(S.geom.bot-S.geom.top);
+    profCursor.setAttribute("x1",x); profCursor.setAttribute("x2",x);
+    profDot.setAttribute("cx",x); profDot.setAttribute("cy",y);
+  }
+  document.getElementById("hDist").innerHTML=fmt(S.km,1)+"<small>km</small>";
+  document.getElementById("hEle").innerHTML=fmt(p.e,0)+"<small>m</small>";
+  document.getElementById("hGrad").innerHTML=(p.g>0?"+":"")+fmt(p.g,1)+"<small>%</small>";
+  document.getElementById("hSpd").innerHTML=fmt(S.km>0?p.v:0,1)+"<small>km/h</small>";
+  var stops=0;
+  d.poi.forEach(function(x){ if(x.km<=S.km) stops+=(x.k==="food"?45:x.k==="photo"?9:x.k==="water"?12:6); });
+  document.getElementById("hTime").textContent=hhmm(d.start+p.t+stops/60);
+  document.getElementById("ctrlSub").textContent=
+    (lang==="ja"?"獲得 ":"Ascent ")+fmt(d.gain,0)+" m · "+hm(d.hours+d.stopH)+" · "+L(d.sub);
+  var near=-1;
+  d.poi.forEach(function(x,j){ if(S.km>=x.km-0.05 && S.km<x.km+0.9) near=j; });
+  if(near>=0 && near!==S.lastPoi){ showCallout(d.poi[near]); S.lastPoi=near; }
+  if(near<0 && S.km<0.05) S.lastPoi=-1;
+  if(window.WSM) WSM.onProgress(d,S.km);
+}
+var coTimer=null;
+function showCallout(p){
+  var c=document.getElementById("callout");
+  document.getElementById("coName").textContent=L({ja:p.ja,en:p.en});
+  document.getElementById("coDesc").textContent=L({ja:p.dja,en:p.den});
+  c.style.borderLeftColor=PINCOL[p.k];
+  c.classList.add("show");
+  clearTimeout(coTimer);
+  coTimer=setTimeout(function(){ c.classList.remove("show"); },3600);
+}
+var last=0;
+function loop(ts){
+  var dt=Math.min(.05,(ts-last)/1000||0); last=ts;
+  camTick(dt);
+  if(S.playing){
+    var d=day();
+    S.km+=dt*(d.km/24)*S.speed;
+    if(S.km>=d.km){
+      S.km=d.km; update();
+      if(S.tour && S.di<DAYS.length-1){ setTimeout(function(){ setDay(S.di+1); },900); }
+      else { S.playing=false; setIcon(); }
+    } else update();
+  }
+  requestAnimationFrame(loop);
+}
+function setIcon(){
+  document.getElementById("playIcon").innerHTML=S.playing
+    ? '<path d="M4 2.5h3.2v11H4zM8.8 2.5H12v11H8.8z"/>'
+    : '<path d="M4 2.5v11l9-5.5z"/>';
+}
+
+/* ---- sparkline ---- */
+function spark(d,w,h){
+  var maxE=Math.max(320,d.maxE*1.1),p="",st=Math.max(1,Math.floor(d.s.length/70));
+  for(var i=0;i<d.s.length;i+=st){
+    p+=(i?"L":"M")+(d.s[i].d/d.km*w).toFixed(1)+","+(h-2-(d.s[i].e/maxE)*(h-6)).toFixed(1);
+  }
+  return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" aria-hidden="true">'+
+    '<path d="'+p+'L'+w+','+h+'L0,'+h+'Z" fill="var(--route-soft)"/>'+
+    '<path d="'+p+'" fill="none" stroke="var(--route)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>';
+}
+
+/* ---- days panel ---- */
+function renderDays(){
+  var b=document.getElementById("daysBody"),h="";
+  h+='<div class="hero"><div class="ht">'+(lang==="ja"?"ツアー全体":"TOUR OVERVIEW")+'</div>'+
+     '<div class="hn">'+L(TOUR.name)+'</div>'+
+     '<div class="hd">'+L(TOUR.dates)+' · '+L(TOUR.short)+'<br>'+
+     (lang==="ja"?"広島・愛媛・高知の3県、瀬戸内の6島を渡り、四国山地を越えて太平洋へ。"
+                 :"Three prefectures, six Setouchi islands, over the Shikoku range to the Pacific.")+'</div>'+
+     '<div class="bigrow">'+
+       '<div class="big"><div class="bv num">'+fmt(TOTAL.km,0)+'<small>km</small></div><div class="lab">'+T("totalDist")+'</div></div>'+
+       '<div class="big"><div class="bv num">'+fmt(TOTAL.gain,0)+'<small>m</small></div><div class="lab">'+T("totalGain")+'</div></div>'+
+       '<div class="big"><div class="bv num">'+hm(TOTAL.hours)+'</div><div class="lab">'+T("ridetime")+'</div></div>'+
+     '</div>'+
+     '<div class="minirow">'+
+       '<div class="mini"><div class="mv num">3</div><div class="ml">'+T("pref")+'</div></div>'+
+       '<div class="mini"><div class="mv num">6</div><div class="ml">'+T("islands")+'</div></div>'+
+       '<div class="mini"><div class="mv num">7</div><div class="ml">'+T("bridges")+'</div></div>'+
+       '<div class="mini"><div class="mv num">6</div><div class="ml">'+T("rivers")+'</div></div>'+
+     '</div>'+
+     '<div class="minirow" style="grid-template-columns:repeat(2,1fr)">'+
+       '<div class="mini"><div class="mv num">'+fmt(TOTAL.maxE,0)+' m</div><div class="ml">'+T("maxEle")+'</div></div>'+
+       '<div class="mini"><div class="mv num">'+fmt(TOTAL.km/TOTAL.hours,1)+' km/h</div><div class="ml">'+T("avg")+'</div></div>'+
+     '</div></div>';
+  h+='<div class="sechead"><h2>'+T("dayTitle")+'</h2><span class="sh">'+T("openMap")+' →</span></div>';
+  DAYS.forEach(function(d,i){
+    h+='<button class="card daycard'+(i===S.di?" on":"")+'" data-day="'+i+'">'+
+      '<div class="dh"><div class="dbadge">'+d.n+'</div><div class="dtitle">'+
+      '<div class="a">'+L(d.from)+' → '+L(d.to)+'</div><div class="b">'+L(d.sub)+'</div></div></div>'+
+      '<div class="dstats">'+
+        '<div class="dstat"><div class="sv">'+fmt(d.km,1)+'<small> km</small></div><div class="sl">'+(lang==="ja"?"距離":"DIST")+'</div></div>'+
+        '<div class="dstat"><div class="sv">'+fmt(d.gain,0)+'<small> m</small></div><div class="sl">'+(lang==="ja"?"獲得":"ASCENT")+'</div></div>'+
+        '<div class="dstat"><div class="sv">'+hm(d.hours)+'</div><div class="sl">'+(lang==="ja"?"走行":"MOVING")+'</div></div>'+
+        '<div class="dstat"><div class="sv">'+hhmm(d.start)+'</div><div class="sl">'+(lang==="ja"?"出発":"START")+'</div></div>'+
+      '</div>'+spark(d,300,34)+
+      '<div class="dhl"><span class="q">&ldquo;</span><span>'+L(d.hl)+'</span></div>'+
+      '<div class="pinrow">'+d.poi.map(function(p){
+        return '<span class="pinchip"><span class="dot" style="background:'+PINCOL[p.k]+'"></span>'+L({ja:p.ja,en:p.en})+'</span>';
+      }).join("")+'</div></button>';
+  });
+  b.innerHTML=h;
+  [].forEach.call(b.querySelectorAll(".daycard"),function(btn){
+    btn.addEventListener("click",function(){ setDay(+btn.getAttribute("data-day")); goTab("map"); });
+  });
+}
+
+/* ---- briefing panel ---- */
+var briefMode="guide";
+function renderBrief(){
+  var d=day(), b=document.getElementById("briefBody"), h="";
+  h+='<div class="segbar" role="tablist">'+
+     '<button class="'+(briefMode==="guide"?"on":"")+'" data-bm="guide">'+T("guideView")+'</button>'+
+     '<button class="'+(briefMode==="guest"?"on":"")+'" data-bm="guest">'+T("guestView")+'</button></div>';
+  h+='<div class="card brief"><div class="briefhead"><div>'+
+     '<div class="bt">Day '+d.n+' — '+L(d.to)+'</div>'+
+     '<div class="bs">'+L(d.from)+' → '+L(d.to)+' · '+fmt(d.km,1)+' km · +'+fmt(d.gain,0)+' m</div></div>'+
+     '<div class="wx"><div class="wt">'+d.wx.t+'</div><div class="ws">'+L({ja:d.wx.ja,en:d.wx.en})+'</div></div></div>';
+  h+='<div class="dhl" style="margin-top:11px"><span class="q">&ldquo;</span><span>'+L(d.hl)+'</span></div>';
+
+  var dangers=d.poi.filter(function(p){ return p.k==="danger"; });
+  if(briefMode==="guide"&&dangers.length){
+    h+=dangers.map(function(p){
+      return '<div class="alert"><div class="at">'+(lang==="ja"?"要注意 · KM "+fmt(p.km,1):"HAZARD · KM "+fmt(p.km,1))+'</div>'+
+        '<div class="ad"><b>'+L({ja:p.ja,en:p.en})+'</b><br>'+L({ja:p.dja,en:p.den})+'</div></div>';
+    }).join("");
+  }
+  h+='<div class="lab" style="margin-top:16px">'+T("timeline")+'</div><div class="tl">';
+  h+='<div class="tlrow" data-k="rest"><div class="tltime num">'+hhmm(d.start)+'</div><div class="tlbar"></div>'+
+     '<div class="tlbody"><div class="n">'+(lang==="ja"?"出発 · ":"Depart · ")+L(d.from)+'</div>'+
+     '<div class="d">'+(lang==="ja"?"点検・空気圧・ボトル確認。ブリーフィング10分。":"Bike check, pressures, bottles. 10 min briefing.")+'</div></div></div>';
+  d.poi.forEach(function(p){
+    if(briefMode==="guest"&&p.k==="danger") return;
+    h+='<div class="tlrow" data-k="'+p.k+'"><div class="tltime num">'+hhmm(p.timeAdj)+'</div><div class="tlbar"></div>'+
+       '<div class="tlbody"><div class="n">'+L({ja:p.ja,en:p.en})+'</div>'+
+       '<div class="d">'+L({ja:p.dja,en:p.den})+'</div>'+
+       '<div class="km">KM '+fmt(p.km,1)+' · '+fmt(d.s[p.i].e,0)+' m · '+L(PINLAB[p.k])+'</div></div></div>';
+  });
+  h+='<div class="tlrow" data-k="rest"><div class="tltime num">'+hhmm(d.start+d.hours+d.stopH)+'</div><div class="tlbar"></div>'+
+     '<div class="tlbody"><div class="n">'+(lang==="ja"?"到着 · ":"Arrive · ")+L(d.to)+'</div>'+
+     '<div class="d">'+(lang==="ja"?"洗車・チェーン注油・翌日の天候確認。":"Wash down, lube chains, check tomorrow's forecast.")+'</div></div></div></div>';
+
+  h+='<dl class="kv"><dt>'+T("gear")+'</dt><dd>'+(d.maxE>900
+      ?(lang==="ja"?"ウインドブレーカー必携。稜線は下界より9℃低い。指付きグローブ。":"Windshell essential. Ridge runs 9°C colder. Full gloves.")
+      :(lang==="ja"?"アームウォーマー。午後は暑くなるので薄手で。":"Arm warmers. It warms up after noon."))+'</dd>'+
+     '<dt>'+T("food")+'</dt><dd>'+(lang==="ja"?"補給ポイント "+d.poi.filter(function(p){return p.k==="water"||p.k==="food";}).length+"箇所。ボトル2本＋補給食2つ。":
+      "Resupply "+d.poi.filter(function(p){return p.k==="water"||p.k==="food";}).length+" times. Two bottles plus two bars.")+'</dd>'+
+     '<dt>'+T("risk")+'</dt><dd>'+(dangers.length?dangers.map(function(p){return L({ja:p.ja,en:p.en});}).join(" / ")
+      :(lang==="ja"?"特筆すべき危険箇所なし":"No notable hazards"))+'</dd></dl>';
+  h+='</div>';
+
+  if(briefMode==="guide"){
+    h+='<div class="sechead"><h2>'+T("guestwatch")+'</h2><span class="sh">Day '+d.n+'</span></div><div class="card brief">';
+    GUESTS.forEach(function(g){
+      var hot=g.crux===d.n;
+      h+='<div class="guestrow"><div class="av" style="'+(hot?"":"background:var(--sunk);color:var(--ink2)")+'">'+g.id+'</div>'+
+        '<div style="flex:1;min-width:0"><div class="gname">'+g.name+'<span class="flagpill">'+g.cc+'</span>'+
+        (hot?'<span class="flagpill" style="color:var(--accent);border-color:var(--accent)">'+(lang==="ja"?"本日注意":"TODAY")+'</span>':"")+'</div>'+
+        '<div class="gmeta">'+g.age+' · '+L(g.bike)+'</div>'+
+        '<div class="gnote">'+L(g.note)+'</div></div></div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="note">'+T("briefNote")+'</div>';
+  b.innerHTML=h;
+  [].forEach.call(b.querySelectorAll("[data-bm]"),function(btn){
+    btn.addEventListener("click",function(){ briefMode=btn.getAttribute("data-bm"); renderBrief(); });
+  });
+}
+
+/* ---- finisher card panel ---- */
+var gi=0;
+function tourPath(w,h){
+  var xs=[],ys=[];
+  DAYS.forEach(function(d){ d.pts.forEach(function(p){ var q=P(p); xs.push(q[0]); ys.push(q[1]); }); });
+  var x0=Math.min.apply(null,xs)-30,x1=Math.max.apply(null,xs)+30;
+  var y0=Math.min.apply(null,ys)-30,y1=Math.max.apply(null,ys)+30;
+  var sc=Math.min(w/(x1-x0), h/(y1-y0));
+  var ox=(w-(x1-x0)*sc)/2, oy=(h-(y1-y0)*sc)/2;
+  var out='<g transform="translate('+ox.toFixed(2)+','+oy.toFixed(2)+') scale('+sc.toFixed(4)+') translate('+(-x0).toFixed(1)+','+(-y0).toFixed(1)+')">';
+  landD.forEach(function(dd){ out+='<path d="'+dd+'" fill="var(--land)"/>'; });
+  landD.forEach(function(dd){ out+='<path d="'+dd+'" fill="none" stroke="var(--ink3)" stroke-width="1" opacity=".45" vector-effect="non-scaling-stroke"/>'; });
+  RIVERS.forEach(function(r){
+    out+='<path d="M'+r.map(function(pt){var q=P(pt);return q[0].toFixed(1)+","+q[1].toFixed(1);}).join("L")+
+      '" fill="none" stroke="var(--sea2)" stroke-width="1" opacity=".8" vector-effect="non-scaling-stroke"/>';
+  });
+  DAYS.forEach(function(d,i){
+    var pth="",st=Math.max(1,Math.floor(d.s.length/90));
+    for(var j=0;j<d.s.length;j+=st){ var q=P([d.s[j].lat,d.s[j].lng]); pth+=(j?"L":"M")+q[0].toFixed(1)+","+q[1].toFixed(1); }
+    out+='<path d="'+pth+'" fill="none" stroke="var(--route)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="'+(0.6+i*0.055).toFixed(2)+'" vector-effect="non-scaling-stroke"/>';
+  });
+  var a=P(DAYS[0].pts[0]), z=P(DAYS[6].pts[DAYS[6].pts.length-1]), rr=(3.6/sc).toFixed(1);
+  out+='<circle cx="'+a[0].toFixed(1)+'" cy="'+a[1].toFixed(1)+'" r="'+rr+'" fill="var(--ink)" stroke="var(--surface)" stroke-width="1.4" vector-effect="non-scaling-stroke"/>';
+  out+='<circle cx="'+z[0].toFixed(1)+'" cy="'+z[1].toFixed(1)+'" r="'+(4.6/sc).toFixed(1)+'" fill="var(--accent)" stroke="var(--surface)" stroke-width="1.6" vector-effect="non-scaling-stroke"/>';
+  return out+'</g>';
+}
+function renderCard(){
+  var g=GUESTS[gi], b=document.getElementById("cardBody"),h="";
+  var avg=TOTAL.km/TOTAL.hours*g.f, rt=TOTAL.km/avg, mx=0;
+  DAYS.forEach(function(d){ d.s.forEach(function(x){ if(x.v>mx) mx=x.v; }); });
+  mx=Math.min(78,mx*g.f);
+  var bigDay=DAYS.reduce(function(a,c){ return c.gain>a.gain?c:a; });
+  h+='<div class="lab" style="margin:2px 2px 8px">'+T("pickGuest")+'</div><div class="gpick">';
+  GUESTS.forEach(function(x,i){
+    h+='<button class="gbtn'+(i===gi?" on":"")+'" data-g="'+i+'"><span class="av">'+x.id+'</span>'+x.name.split(" ")[0]+'</button>';
+  });
+  h+='</div>';
+  h+='<div class="cert"><div class="certtop">'+
+     '<div class="certlab">'+T("certfor")+'</div>'+
+     '<div class="certname">'+g.name+'</div>'+
+     '<div class="certsub">'+L(TOUR.name)+' · '+L(TOUR.dates)+'<br>'+
+     (lang==="ja"?"尾道 → 高知 / 全7日間 完走":"Onomichi to Kochi / 7 days, completed")+'</div></div>'+
+     '<svg class="certmap" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+tourPath(400,150)+'</svg>'+
+     '<div class="certstats">'+
+       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.km,0)+'<small> km</small></div><div class="cl">'+T("totalDist")+'</div></div>'+
+       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.gain,0)+'<small> m</small></div><div class="cl">'+T("totalGain")+'</div></div>'+
+       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.maxE,0)+'<small> m</small></div><div class="cl">'+T("maxEle")+'</div></div>'+
+     '</div>'+
+     '<div class="certstats">'+
+       '<div class="certstat"><div class="cv num">'+hm(rt)+'</div><div class="cl">'+T("ridetime")+'</div></div>'+
+       '<div class="certstat"><div class="cv num">'+fmt(avg,1)+'<small> km/h</small></div><div class="cl">'+T("avg")+'</div></div>'+
+       '<div class="certstat"><div class="cv num">'+fmt(mx,1)+'<small> km/h</small></div><div class="cl">'+T("maxspd")+'</div></div>'+
+     '</div>'+
+     '<div class="stamps">'+DAYS.map(function(d){
+       return '<div class="stamp"><div class="sd">D'+d.n+'</div><div class="sk">'+fmt(d.km,0)+'</div></div>';
+     }).join("")+'</div>'+
+     '<div class="certfoot"><div class="sig">'+T("guideSig")+'<b>'+TOUR.guide+'</b>'+
+     '<div style="margin-top:6px">'+L(TOUR.op)+'</div></div>'+
+     '<svg class="seal" viewBox="0 0 64 64" aria-hidden="true">'+
+       '<circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" stroke-width="1.6"/>'+
+       '<circle cx="32" cy="32" r="25.5" fill="none" stroke="var(--accent)" stroke-width=".8" opacity=".6"/>'+
+       '<text x="32" y="27" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--accent)" font-family="var(--f-num)">'+fmt(TOTAL.km,0)+'</text>'+
+       '<text x="32" y="36" text-anchor="middle" font-size="6" font-weight="700" fill="var(--accent)" letter-spacing="1">KM</text>'+
+       '<text x="32" y="46" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--ink3)" letter-spacing=".6">7 DAYS</text>'+
+     '</svg></div></div>';
+  h+='<div class="sechead"><h2>'+T("personal")+'</h2><span class="sh">'+g.cc+'</span></div>'+
+     '<div class="card brief" style="margin-top:0"><dl class="kv" style="margin-top:0">'+
+     '<dt>'+T("climbday")+'</dt><dd>Day '+bigDay.n+' · '+L(bigDay.to)+' · +'+fmt(bigDay.gain,0)+' m</dd>'+
+     '<dt>'+(lang==="ja"?"機材":"Bike")+'</dt><dd>'+L(g.bike)+'</dd>'+
+     '<dt>'+T("issued")+'</dt><dd>'+(lang==="ja"?"2026年10月18日 高知にて":"18 October 2026, Kochi")+'</dd></dl></div>';
+  h+='<div class="note">'+T("certNote")+'</div>';
+  b.innerHTML=h;
+  [].forEach.call(b.querySelectorAll("[data-g]"),function(btn){
+    btn.addEventListener("click",function(){ gi=+btn.getAttribute("data-g"); renderCard(); });
+  });
+}
+
+/* ---- tabs / wiring ---- */
+function goTab(name){
+  [].forEach.call(document.querySelectorAll(".panel"),function(p){ p.classList.toggle("on",p.id==="p-"+name); });
+  [].forEach.call(document.querySelectorAll(".tab"),function(t){
+    var on=t.getAttribute("data-tab")===name;
+    t.classList.toggle("on",on); t.setAttribute("aria-selected",on?"true":"false");
+  });
+  if(name==="days") renderDays();
+  if(name==="album"&&window.WSM) WSM.renderAlbum();
+  if(name==="brief") renderBrief();
+  if(name==="card") renderCard();
+  if(name==="map") flyTo(fitDay(day()),true);
+}
+[].forEach.call(document.querySelectorAll(".tab"),function(t){
+  t.addEventListener("click",function(){ goTab(t.getAttribute("data-tab")); });
+});
+document.getElementById("playBtn").addEventListener("click",function(){
+  if(S.km>=day().km) S.km=0;
+  S.playing=!S.playing; setIcon();
+});
+document.getElementById("speedBtn").addEventListener("click",function(){
+  S.speed=S.speed===1?2:S.speed===2?4:1;
+  this.innerHTML=S.speed+"&times;";
+});
+document.getElementById("tourBtn").addEventListener("click",function(){
+  S.tour=!S.tour; this.classList.toggle("on",S.tour);
+});
+document.getElementById("themeBtn").addEventListener("click",function(){
+  var r=document.documentElement, cur=r.getAttribute("data-theme");
+  var sysDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+  r.setAttribute("data-theme", cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark"));
+});
+document.getElementById("langBtn").addEventListener("click",function(){
+  lang=lang==="ja"?"en":"ja";
+  this.textContent=lang==="ja"?"EN":"日本語";
+  applyLang();
+});
+function applyLang(){
+  [].forEach.call(document.querySelectorAll("[data-i18n]"),function(n){ n.textContent=T(n.getAttribute("data-i18n")); });
+  document.getElementById("tourSub").textContent=L(TOUR.dates)+" · "+L(TOUR.short)+" · "+TOUR.guide;
+  buildStrip();
+  drawPins(day());
+  setDay(S.di,true);
+  var on=document.querySelector(".panel.on").id.replace("p-","");
+  if(window.WSM) WSM.relang();
+  if(on==="days") renderDays();
+  if(on==="album"&&window.WSM) WSM.renderAlbum();
+  if(on==="brief") renderBrief();
+  if(on==="card") renderCard();
+}
+function buildStrip(){
+  var s=document.getElementById("dayStrip");
+  s.innerHTML=DAYS.map(function(d,i){
+    return '<button class="dchip'+(i===S.di?" on":"")+'" data-d="'+i+'">'+
+      '<div class="dn">DAY '+d.n+'</div><div class="dk">'+fmt(d.km,0)+'<small> km</small> · '+fmt(d.gain,0)+'<small> m</small></div></button>';
+  }).join("");
+  [].forEach.call(s.querySelectorAll(".dchip"),function(b){
+    b.addEventListener("click",function(){ setDay(+b.getAttribute("data-d")); });
+  });
+}
+/* profile scrubbing */
+(function(){
+  var drag=false;
+  function at(ev){
+    var r=prof.getBoundingClientRect();
+    var x=((ev.touches?ev.touches[0].clientX:ev.clientX)-r.left)/r.width;
+    setProgress(Math.max(0,Math.min(1,x))*day().km);
+  }
+  prof.addEventListener("pointerdown",function(e){ drag=true; S.playing=false; setIcon(); prof.setPointerCapture(e.pointerId); at(e); });
+  prof.addEventListener("pointermove",function(e){ if(drag) at(e); });
+  prof.addEventListener("pointerup",function(){ drag=false; });
+  prof.addEventListener("pointercancel",function(){ drag=false; });
+})();
+window.addEventListener("resize",function(){ if(!vbTarget) flyTo(fitDay(day()),true); });
+
+/* ---- init ---- */
+window.WS={DAYS:DAYS,S:S,P:P,day:day,setDay:setDay,goTab:goTab,L:function(o){return L(o);},T:function(k){return T(k);},fmt:fmt,hhmm:hhmm,map:map,el:el,sub:sub,pins:function(){return gPins;},rescale:rescale,getLang:function(){return lang;},sampleAt:sampleAt,PINCOL:PINCOL};
+[].forEach.call(document.querySelectorAll("[data-i18n]"),function(n){ n.textContent=T(n.getAttribute("data-i18n")); });
+buildMap();
+buildStrip();
+document.getElementById("tourSub").textContent=L(TOUR.dates)+" · "+L(TOUR.short)+" · "+TOUR.guide;
+setDay(0,true);
+requestAnimationFrame(loop);
+setTimeout(function(){ if(!S.playing){ S.playing=true; setIcon(); } },1200);
+})();
+</script>
+
+<script>
+(function(){
+"use strict";
+var WS=window.WS;
+
+/* ============================================================
+   Tour media. Every frame below is drawn from shapes and
+   gradients at render time - no bitmaps, no external files.
+   ============================================================ */
+function rnd(seed){ var s=(seed>>>0)||1; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+function ridge(y,amp,f,ph){
+  var d="M0,300L0,"+y.toFixed(1), x, yy;
+  for(x=0;x<=400;x+=8){
+    yy=y-Math.sin(x*f+ph)*amp-Math.sin(x*f*2.3+ph*1.7)*amp*.42-Math.sin(x*f*.47+ph*.6)*amp*.75;
+    d+="L"+x+","+yy.toFixed(1);
+  }
+  return d+"L400,300Z";
+}
+function pal(h){
+  if(h<6.6) return {a:"#16233F",b:"#8E5C6E",c:"#F0A070",s1:"#0E1830",s2:"#5A4560",sea:"#2B3550",warm:.75,sunY:206,sunC:"#FFC98A"};
+  if(h<9)   return {a:"#2C6EA6",b:"#9FCBDD",c:"#D9EAEC",s1:"#1D3A44",s2:"#3E6470",sea:"#5A93AE",warm:.25,sunY:120,sunC:"#FFF3D0"};
+  if(h<14)  return {a:"#2A7FC4",b:"#8FC4DE",c:"#D6EAF0",s1:"#1B3A34",s2:"#3D6A54",sea:"#3E8FB8",warm:.1,sunY:70,sunC:"#FFFBE8"};
+  if(h<16.6)return {a:"#3E82AC",b:"#C7D8CE",c:"#F2DDB8",s1:"#23392F",s2:"#4A6B50",sea:"#4E8CA6",warm:.35,sunY:150,sunC:"#FFE9AE"};
+  if(h<18.8)return {a:"#243A63",b:"#B0648A",c:"#F0A15C",s1:"#141F2E",s2:"#3A3550",sea:"#3B4C6B",warm:.8,sunY:196,sunC:"#FFC070"};
+  return {a:"#070E1E",b:"#132244",c:"#22375E",s1:"#050A14",s2:"#101C30",sea:"#0C1730",warm:.15,sunY:0,sunC:"#CFE0FF"};
+}
+function art(kind,seed,h){
+  var p=pal(h), r=rnd(seed), id="a"+seed, o="";
+  o+='<defs><linearGradient id="sky'+id+'" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0" stop-color="'+p.a+'"/><stop offset=".62" stop-color="'+p.b+'"/>'+
+     '<stop offset="1" stop-color="'+p.c+'"/></linearGradient>'+
+     '<radialGradient id="vig'+id+'" cx=".5" cy=".42" r=".78">'+
+     '<stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".30"/></radialGradient>'+
+     '<linearGradient id="sea'+id+'" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0" stop-color="'+p.sea+'"/><stop offset="1" stop-color="'+p.s2+'"/></linearGradient></defs>';
+  o+='<rect width="400" height="300" fill="url(#sky'+id+')"/>';
+  if(h>=6&&h<19){
+    o+='<circle cx="'+(70+r()*260).toFixed(0)+'" cy="'+p.sunY+'" r="'+(16+p.warm*16).toFixed(0)+'" fill="'+p.sunC+'" opacity="'+(.35+p.warm*.55).toFixed(2)+'"/>';
+  } else {
+    for(var st=0;st<46;st++) o+='<circle cx="'+(r()*400).toFixed(0)+'" cy="'+(r()*160).toFixed(0)+'" r="'+(r()*1.1+.3).toFixed(2)+'" fill="#fff" opacity="'+(.25+r()*.6).toFixed(2)+'"/>';
+  }
+  var i;
+  for(i=0;i<3;i++) o+='<ellipse cx="'+(r()*400).toFixed(0)+'" cy="'+(30+r()*90).toFixed(0)+'" rx="'+(50+r()*70).toFixed(0)+'" ry="'+(7+r()*9).toFixed(0)+'" fill="#fff" opacity="'+(.08+r()*.16).toFixed(2)+'"/>';
+
+  function ridges(n,y0,dy,amp){
+    /* atmospheric perspective: distant ridges wash toward the sky colour but
+       stay opaque, so they never vanish against a pale morning. */
+    var s="";
+    for(var k=0;k<n;k++){
+      var t=k/(n-1||1);
+      s+='<path d="'+ridge(y0+k*dy,amp*(1-t*.35),0.006+r()*0.004,r()*9)+'" fill="'+mix(p.s1,p.b,(1-t)*.46)+'"/>';
+    }
+    return s;
+  }
+  function mix(c1,c2,t){
+    function v(c){ return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)]; }
+    var a=v(c1),b=v(c2),q=[0,1,2].map(function(j){ return Math.round(a[j]+(b[j]-a[j])*t); });
+    return "rgb("+q.join(",")+")";
+  }
+  function water(y){
+    var s='<rect x="0" y="'+y+'" width="400" height="'+(300-y)+'" fill="url(#sea'+id+')"/>'+
+      '<rect x="0" y="'+y+'" width="400" height="1.6" fill="#fff" opacity=".34"/>'+
+      '<rect x="0" y="'+(y+1.6)+'" width="400" height="'+(300-y-1.6)+'" fill="'+p.s1+'" opacity=".14"/>';
+    for(var k=0;k<16;k++){
+      var wy=y+8+r()*(300-y-10);
+      s+='<rect x="'+(r()*330).toFixed(0)+'" y="'+wy.toFixed(0)+'" width="'+(18+r()*70).toFixed(0)+'" height="1.4" rx=".7" fill="#fff" opacity="'+(.06+r()*.18).toFixed(2)+'"/>';
+    }
+    return s;
+  }
+
+  if(kind==="bridge"){
+    o+=ridges(2,168,14,16)+water(196);
+    var bx=60+r()*40, by=196, tw=196;
+    o+='<path d="M0,150 Q'+(bx+tw/2)+','+(by-96)+' '+(bx+tw)+',152" fill="none" stroke="'+p.s1+'" stroke-width="3" opacity=".9"/>';
+    o+='<path d="M'+(bx+tw)+',152 Q'+(bx+tw+90)+',108 400,146" fill="none" stroke="'+p.s1+'" stroke-width="3" opacity=".9"/>';
+    for(i=0;i<26;i++){
+      var hx=8+i*15.6, t2=hx/400;
+      var hy=hx<bx+tw? 150+(1-Math.pow((hx-(bx+tw/2))/(tw/2),2))*-96*0+ (150 - 96*(1-Math.pow((hx-(bx+tw/2))/(tw/2+40),2))) : 130+t2*20;
+      o+='<line x1="'+hx.toFixed(0)+'" y1="'+Math.max(58,hy).toFixed(0)+'" x2="'+hx.toFixed(0)+'" y2="172" stroke="'+p.s1+'" stroke-width="1" opacity=".55"/>';
+    }
+    o+='<rect x="0" y="170" width="400" height="7" fill="'+p.s1+'" opacity=".95"/>';
+    o+='<rect x="'+(bx-5)+'" y="54" width="10" height="122" fill="'+p.s1+'"/>';
+    o+='<rect x="'+(bx+tw-5)+'" y="54" width="10" height="122" fill="'+p.s1+'"/>';
+    o+='<rect x="0" y="177" width="400" height="123" fill="'+p.s1+'" opacity=".18"/>';
+  } else if(kind==="island"){
+    o+=ridges(3,150,17,20)+water(190);
+    for(i=0;i<3;i++){
+      var ix=40+r()*300, iw=40+r()*70;
+      o+='<path d="M'+(ix-iw/2)+',192 Q'+ix+','+(168-r()*22)+' '+(ix+iw/2)+',192 Z" fill="'+mix(p.s1,p.b,.30-i*.12)+'"/>';
+    }
+    o+='<path d="M282,236 l30,0 l-5,9 l-22,0 Z" fill="'+p.s1+'"/><rect x="294" y="222" width="2" height="15" fill="'+p.s1+'"/>';
+  } else if(kind==="karst"){
+    o+=ridges(3,140,20,22);
+    o+='<path d="'+ridge(214,10,.008,2)+'" fill="'+mix(p.s2,"#8E9B6E",.55)+'"/>';
+    for(i=0;i<13;i++){
+      var kx=r()*400, ky=214+r()*72, ks=5+r()*11;
+      o+='<path d="M'+kx.toFixed(0)+','+ky.toFixed(0)+' l'+(-ks*.7).toFixed(1)+','+ks.toFixed(1)+' l'+(ks*1.4).toFixed(1)+',0 Z" fill="#E4E6DA" opacity="'+(.55+r()*.4).toFixed(2)+'"/>';
+    }
+    o+='<g stroke="'+p.s1+'" stroke-width="2.2" fill="none" opacity=".85"><line x1="330" y1="196" x2="330" y2="150"/>'+
+       '<path d="M330,150 l0,-22 M330,150 l19,11 M330,150 l-19,11"/></g>';
+    for(i=0;i<4;i++) o+='<ellipse cx="'+(70+r()*200).toFixed(0)+'" cy="'+(240+r()*40).toFixed(0)+'" rx="7" ry="4.4" fill="'+p.s1+'" opacity=".7"/>';
+  } else if(kind==="cloudsea"){
+    o+=ridges(4,128,15,19);
+    o+='<rect x="0" y="188" width="400" height="112" fill="#fff" opacity=".9"/>';
+    for(i=0;i<10;i++) o+='<ellipse cx="'+(r()*400).toFixed(0)+'" cy="'+(186+r()*24).toFixed(0)+'" rx="'+(40+r()*70).toFixed(0)+'" ry="'+(11+r()*13).toFixed(0)+'" fill="#fff" opacity="'+(.5+r()*.5).toFixed(2)+'"/>';
+    o+='<path d="'+ridge(178,13,.009,3)+'" fill="'+p.s1+'" opacity=".82"/>';
+  } else if(kind==="terrace"){
+    o+=ridges(2,120,16,18);
+    for(i=0;i<8;i++){
+      var ty=150+i*20, cur=16+i*3;
+      o+='<path d="M-10,'+ty+' Q200,'+(ty-cur)+' 410,'+(ty+4)+' L410,'+(ty+21)+' Q200,'+(ty+21-cur)+' -10,'+(ty+17)+' Z" fill="'+mix("#C9A85C","#6E7A44",i/8)+'" opacity="'+(.72+i*.03).toFixed(2)+'"/>';
+      o+='<path d="M-10,'+ty+' Q200,'+(ty-cur)+' 410,'+(ty+4)+'" fill="none" stroke="'+p.s1+'" stroke-width=".8" opacity=".3"/>';
+    }
+  } else if(kind==="river"){
+    o+=ridges(3,120,18,20);
+    o+='<rect x="0" y="176" width="400" height="124" fill="'+mix("#4E7A54",p.s1,.35)+'"/>';
+    o+='<path d="M-20,300 C90,250 60,214 150,196 C230,180 280,186 420,172 L420,300 Z" fill="url(#sea'+id+')"/>';
+    o+='<path d="M-20,300 C90,250 60,214 150,196 C230,180 280,186 420,172" fill="none" stroke="#fff" stroke-width="1.4" opacity=".28"/>';
+    o+='<rect x="96" y="196" width="184" height="4.5" rx="1" fill="#D8D6CC" opacity=".95" transform="rotate(-7 190 198)"/>';
+    for(i=0;i<3;i++) o+='<rect x="'+(120+i*62)+'" y="200" width="7" height="16" fill="#C6C4B8" opacity=".85" transform="rotate(-7 190 198)"/>';
+    for(i=0;i<9;i++) o+='<ellipse cx="'+(r()*400).toFixed(0)+'" cy="'+(232+r()*60).toFixed(0)+'" rx="'+(14+r()*30).toFixed(0)+'" ry="2" fill="#fff" opacity="'+(.08+r()*.14).toFixed(2)+'"/>';
+  } else if(kind==="tunnel"){
+    o='<rect width="400" height="300" fill="#0B1015"/>';
+    o+='<path d="M40,300 L40,120 Q200,26 360,120 L360,300 Z" fill="#1B242A"/>';
+    o+='<path d="M96,300 L96,150 Q200,86 304,150 L304,300 Z" fill="#0A0F13"/>';
+    o+='<ellipse cx="200" cy="196" rx="46" ry="40" fill="#EDE4C8" opacity=".92"/>';
+    o+='<ellipse cx="200" cy="196" rx="78" ry="66" fill="#EDE4C8" opacity=".16"/>';
+    o+='<rect x="0" y="272" width="400" height="28" fill="#141B21"/>';
+    for(i=0;i<7;i++) o+='<rect x="'+(i*62)+'" y="284" width="34" height="3" fill="#C8CDB8" opacity=".5"/>';
+    o+='<circle cx="200" cy="252" r="5" fill="#FF5A4A" opacity=".9"/>';
+  } else if(kind==="town"){
+    o+=ridges(2,124,15,17);
+    var bx2=0;
+    while(bx2<400){
+      var bw=38+r()*46, bh=52+r()*46, byy=300-bh;
+      o+='<rect x="'+bx2.toFixed(0)+'" y="'+byy.toFixed(0)+'" width="'+bw.toFixed(0)+'" height="'+bh.toFixed(0)+'" fill="'+mix("#4C4238",p.s1,r()*.6)+'"/>';
+      o+='<path d="M'+(bx2-6).toFixed(0)+','+byy.toFixed(0)+' L'+(bx2+bw/2).toFixed(0)+','+(byy-15).toFixed(0)+' L'+(bx2+bw+6).toFixed(0)+','+byy.toFixed(0)+' Z" fill="'+mix("#2E3B44",p.s1,.3)+'"/>';
+      for(i=0;i<4;i++) o+='<line x1="'+(bx2-4+i*(bw/3.4)).toFixed(0)+'" y1="'+byy+'" x2="'+(bx2+bw/2).toFixed(0)+'" y2="'+(byy-14)+'" stroke="#fff" stroke-width=".6" opacity=".18"/>';
+      if(r()>.45) o+='<rect x="'+(bx2+bw*.3).toFixed(0)+'" y="'+(byy+18).toFixed(0)+'" width="'+(bw*.4).toFixed(0)+'" height="16" fill="'+(h>16.5?"#FFCF87":"#D9DCD0")+'" opacity="'+(h>16.5?.9:.35)+'"/>';
+      bx2+=bw+3;
+    }
+  } else if(kind==="onsen"){
+    o+=ridges(2,120,14,11);
+    o+='<rect x="66" y="150" width="268" height="150" fill="#3B3128"/>';
+    o+='<path d="M52,152 L200,96 L348,152 Z" fill="#25303A"/>';
+    o+='<path d="M120,110 L200,74 L280,110 Z" fill="#25303A"/>';
+    o+='<rect x="188" y="60" width="24" height="20" fill="#B23B2E"/>';
+    for(i=0;i<6;i++) o+='<rect x="'+(84+i*42)+'" y="184" width="26" height="34" fill="#FFCB7A" opacity=".92"/>';
+    for(i=0;i<6;i++) o+='<rect x="'+(84+i*42)+'" y="236" width="26" height="26" fill="#FFCB7A" opacity=".55"/>';
+    for(i=0;i<5;i++) o+='<path d="M'+(50+i*80)+',150 q10,-26 0,-46 q-10,-22 0,-40" fill="none" stroke="#fff" stroke-width="4" opacity="'+(.1+r()*.16).toFixed(2)+'" stroke-linecap="round"/>';
+  } else if(kind==="pine"){
+    o+=ridges(2,146,14,7)+water(184);
+    o+='<rect x="0" y="228" width="400" height="72" fill="'+mix("#C9B58E",p.s1,.25)+'"/>';
+    for(i=0;i<11;i++){
+      var px2=r()*400, ph2=52+r()*54;
+      o+='<rect x="'+(px2-2).toFixed(0)+'" y="'+(238-ph2).toFixed(0)+'" width="4" height="'+ph2.toFixed(0)+'" fill="'+p.s1+'"/>';
+      for(var b=0;b<3;b++) o+='<ellipse cx="'+(px2+(r()-.5)*22).toFixed(0)+'" cy="'+(238-ph2+b*15).toFixed(0)+'" rx="'+(15+r()*13).toFixed(0)+'" ry="6" fill="'+p.s1+'" opacity=".92"/>';
+    }
+  } else if(kind==="statue"){
+    o+=ridges(1,168,0,5)+water(190);
+    o+='<path d="M0,300 L0,244 Q90,214 180,240 Q290,268 400,246 L400,300 Z" fill="'+mix("#C9B58E",p.s1,.3)+'"/>';
+    o+='<path d="M232,246 L262,246 L252,196 Z" fill="'+p.s1+'"/>';
+    o+='<g fill="'+p.s1+'"><ellipse cx="252" cy="150" rx="7" ry="9"/><path d="M245,160 q7,-5 14,0 l5,38 l-24,0 Z"/><path d="M241,172 l-7,20 l5,2 l8,-18 Z"/></g>';
+    o+='<ellipse cx="252" cy="199" rx="18" ry="4" fill="'+p.s1+'" opacity=".5"/>';
+  } else if(kind==="lodge"){
+    o+='<rect x="0" y="212" width="400" height="88" fill="#0B1420"/>';
+    o+='<path d="'+ridge(214,16,.007,4)+'" fill="#0A121C"/>';
+    o+='<rect x="128" y="212" width="150" height="60" fill="#111C26"/>';
+    o+='<path d="M116,213 L203,178 L290,213 Z" fill="#0C1620"/>';
+    for(i=0;i<4;i++) o+='<rect x="'+(142+i*32)+'" y="228" width="20" height="22" fill="#FFC97E" opacity=".92"/>';
+    o+='<ellipse cx="203" cy="240" rx="120" ry="46" fill="#FFC97E" opacity=".07"/>';
+  } else if(kind==="pass"){
+    o+=ridges(3,116,20,22);
+    o+='<path d="'+ridge(178,12,.007,6)+'" fill="'+mix(p.s2,"#3F5A42",.5)+'"/>';
+    o+='<path d="M-10,300 C70,268 40,244 130,232 C220,220 176,196 268,188 C330,182 320,168 410,164" fill="none" stroke="#D8D4C6" stroke-width="9" stroke-linecap="round" opacity=".92"/>';
+    o+='<path d="M-10,300 C70,268 40,244 130,232 C220,220 176,196 268,188 C330,182 320,168 410,164" fill="none" stroke="#8E8A7C" stroke-width="9.6" stroke-linecap="round" opacity=".25"/>';
+    o+='<path d="M-10,300 C70,268 40,244 130,232 C220,220 176,196 268,188 C330,182 320,168 410,164" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="7 9" opacity=".55"/>';
+  } else if(kind==="forest"){
+    o='<rect width="400" height="300" fill="'+mix("#7E8E86","#2A3A34",.35)+'"/>';
+    for(i=0;i<15;i++){
+      var fx=r()*400, fw=5+r()*16, dep=r();
+      o+='<rect x="'+fx.toFixed(0)+'" y="'+(-20+r()*40).toFixed(0)+'" width="'+fw.toFixed(0)+'" height="330" fill="'+mix("#8FA096","#1C2A24",dep)+'" opacity="'+(.35+dep*.6).toFixed(2)+'"/>';
+    }
+    o+='<rect width="400" height="300" fill="#E6EDE8" opacity=".28"/>';
+    o+='<ellipse cx="180" cy="120" rx="190" ry="120" fill="#fff" opacity=".22"/>';
+    o+='<rect x="0" y="262" width="400" height="38" fill="#3A4438" opacity=".8"/>';
+  } else if(kind==="market"){
+    o='<rect width="400" height="300" fill="#241C18"/>';
+    for(i=0;i<5;i++) o+='<rect x="'+(i*84-10)+'" y="0" width="42" height="58" fill="'+(i%2?"#B8442F":"#E8E2D2")+'" opacity=".9"/>';
+    o+='<rect x="0" y="58" width="400" height="8" fill="#3A2E26"/>';
+    o+='<rect x="0" y="214" width="400" height="86" fill="#3A2E26"/>';
+    o+='<ellipse cx="196" cy="212" rx="86" ry="16" fill="#1A1310"/>';
+    o+='<path d="M150,214 q46,-96 92,0 Z" fill="#FF8A2E" opacity=".92"/>';
+    o+='<path d="M166,214 q30,-66 60,0 Z" fill="#FFD66A" opacity=".95"/>';
+    for(i=0;i<12;i++) o+='<circle cx="'+(150+r()*92).toFixed(0)+'" cy="'+(96+r()*100).toFixed(0)+'" r="'+(1+r()*2).toFixed(1)+'" fill="#FFE9A8" opacity="'+(.4+r()*.6).toFixed(2)+'"/>';
+    for(i=0;i<4;i++) o+='<circle cx="'+(50+i*100)+'" cy="86" r="9" fill="#FFCF87" opacity=".85"/>';
+  } else { /* food */
+    o='<rect width="400" height="300" fill="'+mix("#3A2E26","#1A1512",.3)+'"/>';
+    o+='<rect x="0" y="176" width="400" height="124" fill="#4A3A2E"/>';
+    for(i=0;i<7;i++) o+='<rect x="0" y="'+(176+i*18)+'" width="400" height="1.4" fill="#000" opacity=".16"/>';
+    o+='<ellipse cx="200" cy="204" rx="122" ry="40" fill="#000" opacity=".22"/>';
+    o+='<ellipse cx="200" cy="196" rx="116" ry="38" fill="#E9E4D6"/>';
+    o+='<ellipse cx="200" cy="194" rx="94" ry="30" fill="#DAD3C2"/>';
+    var fc=["#C8503C","#E8B84A","#6E8E4A","#F2E4C4","#8E5A32"];
+    for(i=0;i<9;i++){
+      var ax=200+(r()-.5)*130, ay=192+(r()-.5)*36;
+      o+='<ellipse cx="'+ax.toFixed(0)+'" cy="'+ay.toFixed(0)+'" rx="'+(11+r()*17).toFixed(0)+'" ry="'+(6+r()*9).toFixed(0)+'" fill="'+fc[(i+seed)%5]+'" opacity="'+(.82+r()*.18).toFixed(2)+'" transform="rotate('+(r()*90-45).toFixed(0)+' '+ax.toFixed(0)+' '+ay.toFixed(0)+')"/>';
+    }
+    for(i=0;i<4;i++) o+='<path d="M'+(150+i*34)+',150 q9,-24 0,-42" fill="none" stroke="#fff" stroke-width="3" opacity=".13" stroke-linecap="round"/>';
+    o+='<rect x="284" y="150" width="76" height="4" rx="2" fill="#7A5A3A" transform="rotate(-16 322 152)"/>';
+    o+='<rect x="284" y="160" width="76" height="4" rx="2" fill="#7A5A3A" transform="rotate(-16 322 162)"/>';
+  }
+  o+='<rect width="400" height="300" fill="url(#vig'+id+')"/>';
+  return o;
+}
+function artSVG(m,cls){
+  return '<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" class="'+(cls||"")+'" aria-hidden="true">'+art(m.k,m.sd,m.h)+'</svg>';
+}
+
+/* ---- media log: 36 moments from the seven days ---- */
+var M=[
+ {d:0,f:.01,tm:"06:42",h:6.7,ty:"photo",k:"island",sd:11,ja:"尾道水道、始発の渡船を待つ",en:"Waiting for the first ferry, Onomichi channel",cja:"7人分の自転車を岸に並べて5分待つ。対岸の向島がまだ藍色だった。",cen:"Seven bikes lined up on the slip. Mukaishima still ink-blue across the water."},
+ {d:0,f:.20,ty:"video",dur:"0:32",tm:"09:14",h:9.2,k:"bridge",sd:23,ja:"因島大橋の下層を走る",en:"Riding the lower deck, Innoshima Bridge",cja:"車道の下を通る自転車道。金網の向こうを潮が速く流れていく音がずっと続く。",cen:"The cycle deck runs beneath the traffic. The tide roars past the mesh the whole way over."},
+ {d:0,f:.38,tm:"11:47",h:11.8,ty:"photo",k:"food",sd:31,ja:"瀬戸田、たこ飯と塩レモン",en:"Setoda: octopus rice and salted lemon",cja:"Lena には野菜の小鉢を別に頼んだ。レモンは全員が持ち帰った。",cen:"A separate vegetable set for Lena. Everyone bought lemons to carry."},
+ {d:0,f:.50,ty:"video",dur:"0:18",tm:"13:22",h:13.4,k:"bridge",sd:43,ja:"多々羅大橋の鳴き龍",en:"The dragon echo, Tatara Bridge",cja:"主塔の真下で拍子木を打つ。音が塔を駆け上がって降りてくる。Marco が三回やった。",cen:"Clap under the tower and the sound climbs it and falls back. Marco did it three times."},
+ {d:0,f:.93,tm:"17:06",h:17.1,ty:"photo",k:"bridge",sd:57,ja:"来島海峡大橋、日没20分前",en:"Kurushima Kaikyo, twenty minutes before sunset",cja:"世界初の三連吊橋。4.1kmを全員無言で渡った。海が銀色に潰れる時間帯。",cen:"The world's first triple suspension bridge. Nobody spoke for 4.1 km."},
+
+ {d:1,f:.34,tm:"08:58",h:9,ty:"photo",k:"town",sd:71,ja:"菊間、瓦の町の屋根",en:"Kikuma, a town of roof tiles",cja:"750年続く菊間瓦。町じゅうの屋根が同じ鈍い銀色に揃っている。",cen:"750 years of tile-making. Every roof in town the same dull silver."},
+ {d:1,f:.55,ty:"video",dur:"0:24",tm:"10:41",h:10.7,k:"island",sd:83,ja:"北条、鹿島へ渡る船",en:"The little ferry to Kashima, Hojo",cja:"海の前で30分の休憩。渡し船が正面を横切っていった。",cen:"A thirty minute break by the sea. The ferry crossed right in front of us."},
+ {d:1,f:.74,tm:"12:34",h:12.6,ty:"photo",k:"food",sd:97,ja:"堀江、揚げたてのじゃこ天",en:"Horie: jakoten straight from the fryer",cja:"立ったまま紙に包んで食べる。ゲストの反応が毎回いちばん良い店。",cen:"Eaten standing, wrapped in paper. The stop that never fails."},
+ {d:1,f:.90,tm:"15:12",h:15.2,ty:"photo",k:"town",sd:103,ja:"道後へ向かう最後の坂",en:"The last rise into Dogo",cja:"路面電車の軌道と並走する。ここから宿まで2km。",cen:"Alongside the tram tracks. Two kilometres to the inn from here."},
+ {d:1,f:.99,tm:"17:44",h:17.7,ty:"photo",k:"onsen",sd:113,ja:"道後温泉本館、灯が入る",en:"Dogo Onsen Honkan as the lamps come on",cja:"走ったあとの外湯はツアーの空気を変える。ここで初めて全員が同じ話をし始める。",cen:"The bathhouse after a ride changes the group. This is where they start talking to each other."},
+
+ {d:2,f:.15,tm:"08:52",h:8.9,ty:"photo",k:"town",sd:127,ja:"砥部、窯元の路地",en:"Tobe, the kiln lanes",cja:"砥部焼の白磁。塀に嵌め込まれた失敗作が延々と続く。",cen:"White Tobe porcelain. Rejected pieces set into the walls, block after block."},
+ {d:2,f:.36,ty:"video",dur:"0:41",tm:"10:28",h:10.5,k:"pass",sd:137,ja:"犬寄峠の下り（ハンドルバー視点）",en:"Inuyose Pass descent, bar cam",cja:"Sarah の前に入って先導した。落石と苔。10月は特に。",cen:"I led Sarah down. Rockfall and moss, worse in October."},
+ {d:2,f:.58,tm:"12:16",h:12.3,ty:"photo",k:"terrace",sd:149,ja:"中山の棚田、稲刈りのあと",en:"Nakayama terraces after the harvest",cja:"はざ掛けの稲木が斜面を横切って並ぶ。上の集落まで全部人の手。",cen:"Drying racks stripe the slope. Every terrace above is hand-built."},
+ {d:2,f:.80,tm:"14:38",h:14.6,ty:"photo",k:"town",sd:157,ja:"内子、八日市護国の町並み",en:"Uchiko, the preserved merchant street",cja:"木蝋で栄えた家並み。内子座は1916年の芝居小屋で、今も現役。",cen:"Wax-merchant houses. The Uchikoza theatre, 1916, still in use."},
+ {d:2,f:.98,tm:"16:24",h:16.4,ty:"photo",k:"river",sd:167,ja:"肱川と臥龍山荘",en:"The Hiji river at Garyu Sanso",cja:"川の上に張り出した数寄屋。明日の登りの話は夕食まで誰もしなかった。",cen:"A teahouse over the water. Nobody mentioned tomorrow's climb until dinner."},
+
+ {d:3,f:.02,tm:"07:32",h:7.5,ty:"photo",k:"town",sd:179,ja:"大洲、朝霧の中を出発",en:"Ozu, rolling out into river fog",cja:"肱川あらしの弱いやつ。7時半で視界200m。全員にライトを点けさせた。",cen:"A mild river fog. 200 m visibility at 07:30, lights on for everyone."},
+ {d:3,f:.47,ty:"video",dur:"1:12",tm:"09:52",h:9.9,k:"pass",sd:191,ja:"地芳峠、14kmの登りが始まる",en:"Jiyoshi Pass: the 14 km climb begins",cja:"平均7%。ここでグループを解散して各自のペースにした。Marco は10分で見えなくなった。",cen:"Seven percent average. I broke the group here. Marco was gone in ten minutes."},
+ {d:3,f:.30,tm:"12:08",h:12.1,ty:"photo",k:"food",sd:197,ja:"小田、登る前の最後の温かい飯",en:"Oda: the last hot meal before the climb",cja:"11時開店の手打ちそば。ここから50km補給なし。",cen:"Hand-cut soba, opens at eleven. No resupply for the next 50 km."},
+ {d:3,f:.84,ty:"video",dur:"0:47",tm:"15:07",h:15.1,k:"karst",sd:211,ja:"姫鶴平、稜線の20km",en:"Mezuru-daira, twenty kilometres of ridge",cja:"石灰岩と牧柵と風車。牛が道を渡るので追い越しは徐行で。",cen:"Limestone, cattle fences, turbines. Cows cross the road; pass them slowly."},
+ {d:3,f:.94,tm:"17:34",h:17.6,ty:"photo",k:"karst",sd:223,ja:"カルストに日が落ちる",en:"Sundown on the karst",cja:"1,400mで風が急に冷たくなる。ここで防寒を配った。",cen:"At 1,400 m the wind turns cold fast. Layers handed out here."},
+ {d:3,f:1,tm:"20:12",h:20.2,ty:"photo",k:"lodge",sd:227,ja:"天狗高原の山荘、夜",en:"The lodge at Tengu Kogen, night",cja:"外は5℃。Chen が三脚を出して1時間戻ってこなかった。",cen:"Five degrees outside. Chen took a tripod out and didn't come back for an hour."},
+
+ {d:4,f:.10,tm:"06:24",h:6.4,ty:"photo",k:"cloudsea",sd:233,ja:"天狗の森、雲海の上",en:"Above the cloud sea, Tengu forest",cja:"30分早く出た甲斐があった日。下の谷が全部白く埋まっている。",cen:"The morning that justified the early start. Every valley below packed with white."},
+ {d:4,f:.16,tm:"08:38",h:8.6,ty:"photo",k:"forest",sd:239,ja:"朝霧の杉林を抜ける",en:"Through the cedar fog",cja:"路面が濡れて黒い。ブレーキが効き始めるまで一呼吸遅れる。",cen:"Wet black tarmac. The brakes take a breath to bite."},
+ {d:4,f:.27,tm:"10:16",h:10.3,ty:"photo",k:"town",sd:241,ja:"梼原、雲の上の図書館",en:"Yusuhara, the Kumo-no-ue library",cja:"隈研吾の木造。靴を脱いで上がる。全員が20分出てこなかった。",cen:"Kengo Kuma in timber. Shoes off at the door. Nobody came out for twenty minutes."},
+ {d:4,f:.68,ty:"video",dur:"0:55",tm:"12:52",h:12.9,k:"pass",sd:251,ja:"長い下り、濡れた落ち葉",en:"The long descent, wet leaves",cja:"日陰のコーナーだけ滑る。速度を落とさせて正解だった。",cen:"Only the shaded corners are slick. Slowing them down was the right call."},
+ {d:4,f:.88,tm:"15:34",h:15.6,ty:"photo",k:"river",sd:257,ja:"四万十川の源流域",en:"The Shimanto headwaters",cja:"最後の清流はここから196km流れて海に出る。まだ跨げる幅。",cen:"196 km from here to the sea. Still narrow enough to step across."},
+
+ {d:5,f:.05,tm:"08:26",h:8.4,ty:"photo",k:"river",sd:263,ja:"朝の四万十川",en:"The Shimanto in the morning",cja:"水面に山が全部映る時間。風が出る前の30分だけ。",cen:"Thirty minutes before the wind, when the whole mountain sits on the water."},
+ {d:5,f:.32,ty:"video",dur:"0:38",tm:"10:04",h:10.1,k:"river",sd:269,ja:"三島沈下橋を渡る",en:"Crossing Mishima low-water bridge",cja:"幅3.5m、欄干なし、水面まで4m。一列、徐行、止まらない。",cen:"Three and a half metres wide, no rail, four metres down. Single file, slow, no stopping."},
+ {d:5,f:.50,tm:"11:58",h:12,ty:"photo",k:"food",sd:277,ja:"江川崎、炭で1時間の鮎",en:"Ekawasaki: an hour of ayu over charcoal",cja:"塩を厚く振って立てて焼く。Lena には川エビの代わりに野菜の天ぷらを頼んだ。",cen:"Heavily salted, stood upright over coals. Vegetable tempura arranged for Lena."},
+ {d:5,f:.82,tm:"14:22",h:14.4,ty:"photo",k:"river",sd:281,ja:"岩間沈下橋、集合写真",en:"Iwama bridge, the group shot",cja:"ポスターで有名な一本。毎ツアーここで撮る。7人と7台。",cen:"The postcard bridge. Same photo every tour. Seven people, seven bikes."},
+ {d:5,f:.97,ty:"video",dur:"0:29",tm:"16:48",h:16.8,k:"river",sd:283,ja:"佐田沈下橋、291.6m",en:"Sada bridge, 291.6 metres",cja:"河口にいちばん近い最長の沈下橋。渡り切ると中村の町。",cen:"The longest and the closest to the sea. Nakamura is on the far side."},
+
+ {d:6,f:.02,tm:"08:12",h:8.2,ty:"photo",k:"town",sd:293,ja:"久礼、輪行袋をほどく",en:"Kure: unpacking the bikes",cja:"中村から土讃線で移動してきた朝。7台を組み直して15分。",cen:"After the morning train from Nakamura. Fifteen minutes to rebuild seven bikes."},
+ {d:6,f:.11,ty:"video",dur:"0:44",tm:"10:33",h:10.6,k:"market",sd:307,ja:"大正町市場、藁が1m立ち上がる",en:"Taishomachi market: a metre of straw flame",cja:"カツオを藁で炙る。目の前で炎が顔の高さまで来る。全ツアーで一番歓声が出る瞬間。",cen:"Bonito seared over burning straw. The flame comes up to your face. Loudest moment of any tour."},
+ {d:6,f:.31,tm:"13:18",h:13.3,ty:"photo",k:"tunnel",sd:311,ja:"焼坂トンネル、照明が弱い",en:"Yakizaka tunnel, poor lighting",cja:"路肩が狭く暗い。入る前に全員のリアライトを目視で確認する場所。",cen:"Narrow and dim. I check every rear light by eye before we enter."},
+ {d:6,f:.62,tm:"15:38",h:15.6,ty:"photo",k:"pine",sd:313,ja:"土佐の海岸線、松と太平洋",en:"The Tosa coast, pines and the Pacific",cja:"追い風。最終日の午後に西風が入るのは毎年ほぼ同じ。",cen:"Tailwind. The westerly comes in on the last afternoon almost every year."},
+ {d:6,f:.90,tm:"17:12",h:17.2,ty:"photo",k:"statue",sd:317,ja:"桂浜、龍馬は太平洋を向いている",en:"Katsurahama: Ryoma faces the Pacific",cja:"508km走った7人の最後の写真。像の視線の先には何もない。だからいい。",cen:"The last photo after 508 km. The statue looks at nothing at all, which is the point."}
+];
+M.forEach(function(m,i){
+  var d=WS.DAYS[m.d];
+  m.i=Math.min(d.s.length-1,Math.round(m.f*(d.s.length-1)));
+  m.km=d.s[m.i].d; m.ele=d.s[m.i].e; m.idx=i;
+});
+M.sort(function(a,b){ return a.d-b.d || a.km-b.km; });
+M.forEach(function(m,i){ m.idx=i; });
+
+function T(k){ return WS.T(k); }
+function isJa(){ return WS.getLang()==="ja"; }
+function ttl(m){ return isJa()?m.ja:m.en; }
+function cap(m){ return isJa()?m.cja:m.cen; }
+function badge(m){
+  return m.ty==="video"
+    ? '<span class="vbadge">'+m.dur+'</span><span class="vplay"><i></i></span>'
+    : '';
+}
+
+/* ---- map thumbnails ---- */
+function onDay(d){
+  var g=WS.pins(), di=WS.DAYS.indexOf(d);
+  M.filter(function(m){ return m.d===di; }).forEach(function(m,j){
+    var q=WS.P([d.s[m.i].lat,d.s[m.i].lng]);
+    /* consecutive stops sit close together on the map; fan the cards out */
+    var ox=[0,36,-36,18,-18,52][j%6], oy=[-26,-70,-70,-114,-114,-26][j%6];
+    var n=WS.el("g",{"data-sx":q[0].toFixed(1),"data-sy":q[1].toFixed(1),"data-k":1,style:"cursor:pointer"});
+    var cy=oy-20, cx=ox;
+    n.innerHTML='<defs><clipPath id="mc'+m.idx+'"><rect x="'+(cx-20)+'" y="'+(cy-20)+'" width="40" height="40" rx="9"/></clipPath></defs>'+
+      '<line x1="0" y1="-2" x2="'+cx+'" y2="'+(cy+18)+'" stroke="var(--accent)" stroke-width="1.5"/>'+
+      '<circle cx="0" cy="0" r="2.8" fill="var(--accent)"/>'+
+      '<rect x="'+(cx-22)+'" y="'+(cy-22)+'" width="44" height="44" rx="11" fill="var(--surface)"/>'+
+      '<g clip-path="url(#mc'+m.idx+')"><g transform="translate('+(cx-26.7)+','+(cy-20)+') scale(0.1333)">'+art(m.k,m.sd,m.h)+'</g></g>'+
+      '<rect x="'+(cx-20)+'" y="'+(cy-20)+'" width="40" height="40" rx="9" fill="none" stroke="var(--accent)" stroke-width="1.6" opacity=".9"/>'+
+      (m.ty==="video"
+        ? '<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="rgba(8,14,17,.52)"/><path d="M'+(cx-3)+','+(cy-5)+' L'+(cx+6)+','+cy+' L'+(cx-3)+','+(cy+5)+' Z" fill="#fff"/>'
+        : '');
+    n.addEventListener("click",function(ev){ ev.stopPropagation(); open(m.idx); });
+    g.appendChild(n);
+  });
+  WS.rescale();
+  strip.innerHTML=""; shown={}; strip.classList.remove("on");
+}
+
+/* ---- playback filmstrip ---- */
+var strip=document.getElementById("strip"), shown={};
+function onProgress(d,km){
+  var di=WS.DAYS.indexOf(d);
+  M.forEach(function(m){
+    if(m.d!==di || m.km>km || shown[m.idx]) return;
+    shown[m.idx]=1;
+    if(!strip.childElementCount){
+      var l=document.createElement("div"); l.className="sl"; l.textContent=T("passed"); strip.appendChild(l);
+    }
+    var b=document.createElement("button");
+    b.className="thumb pop"; b.setAttribute("aria-label",ttl(m));
+    b.innerHTML=artSVG(m)+badge(m);
+    b.addEventListener("click",function(){ open(m.idx); });
+    strip.appendChild(b);
+    strip.classList.add("on");
+    strip.scrollTo({left:strip.scrollWidth,behavior:"smooth"});
+  });
+  if(km<0.05 && strip.childElementCount){ strip.innerHTML=""; shown={}; strip.classList.remove("on"); }
+}
+
+/* ---- bottom sheet ---- */
+var sheet=document.getElementById("sheet"), stage=document.getElementById("stage"),
+    stageArt=document.getElementById("stageArt"), bigplay=document.getElementById("bigplay"),
+    vbar=document.getElementById("vbar"), vbarI=document.getElementById("vbarI"),
+    vtime=document.getElementById("vtime"), cur=0, vTimer=null;
+
+function secs(s){ var p=String(s).split(":"); return (+p[0])*60+(+p[1]); }
+function mmss(t){ return Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"); }
+function stopVideo(){
+  clearInterval(vTimer); vTimer=null;
+  stage.classList.remove("kb"); vbar.classList.remove("on"); vtime.classList.remove("on");
+  vbarI.style.width="0";
+}
+function playVideo(m){
+  bigplay.classList.add("hide");
+  stage.classList.remove("kb"); void stage.offsetWidth; stage.classList.add("kb");
+  vbar.classList.add("on"); vtime.classList.add("on");
+  var total=secs(m.dur), t0=Date.now(), span=9000;
+  vTimer=setInterval(function(){
+    var p=Math.min(1,(Date.now()-t0)/span);
+    vbarI.style.width=(p*100).toFixed(1)+"%";
+    vtime.textContent=mmss(p*total)+" / "+m.dur;
+    if(p>=1){ clearInterval(vTimer); vTimer=null; bigplay.classList.remove("hide"); }
+  },80);
+}
+function paint(){
+  var m=M[cur], d=WS.DAYS[m.d];
+  stopVideo();
+  stageArt.innerHTML=artSVG(m);
+  bigplay.classList.toggle("hide",m.ty!=="video");
+  document.getElementById("sMeta").innerHTML=
+    "<b>DAY "+d.n+"</b> · "+m.tm+" · KM "+WS.fmt(m.km,1)+" · "+WS.fmt(m.ele,0)+" m · "+
+    (m.ty==="video"?T("videoOf")+" "+m.dur:T("photoOf"));
+  document.getElementById("sTitle").textContent=ttl(m);
+  document.getElementById("sCap").textContent=cap(m);
+  document.getElementById("sTags").innerHTML=
+    '<span class="pinchip"><span class="dot" style="background:var(--accent)"></span>'+
+    (isJa()?d.from.ja+" → "+d.to.ja:d.from.en+" → "+d.to.en)+'</span>'+
+    '<span class="pinchip"><span class="dot" style="background:var(--route)"></span>'+
+    (isJa()?"ルート上 "+WS.fmt(m.km/d.km*100,0)+"%":WS.fmt(m.km/d.km*100,0)+"% "+T("onRoute"))+'</span>';
+  document.getElementById("sCount").textContent=(cur+1)+" / "+M.length;
+  document.getElementById("prevB").disabled=cur===0;
+  document.getElementById("nextB").disabled=cur===M.length-1;
+}
+function open(i){
+  WS.S.playing=false;
+  document.getElementById("playIcon").innerHTML='<path d="M4 2.5v11l9-5.5z"/>';
+  cur=i; sheet.classList.add("on"); paint();
+}
+function close(){ stopVideo(); sheet.classList.remove("on"); }
+function step(n){ var t=cur+n; if(t<0||t>=M.length) return; cur=t; paint(); }
+
+document.getElementById("closeB").addEventListener("click",close);
+document.getElementById("scrim").addEventListener("click",close);
+document.getElementById("prevB").addEventListener("click",function(){ step(-1); });
+document.getElementById("nextB").addEventListener("click",function(){ step(1); });
+bigplay.addEventListener("click",function(){ playVideo(M[cur]); });
+document.addEventListener("keydown",function(e){
+  if(!sheet.classList.contains("on")) return;
+  if(e.key==="Escape") close();
+  if(e.key==="ArrowRight") step(1);
+  if(e.key==="ArrowLeft") step(-1);
+});
+(function(){
+  var x0=null;
+  stage.addEventListener("pointerdown",function(e){ x0=e.clientX; });
+  stage.addEventListener("pointerup",function(e){
+    if(x0===null) return;
+    var dx=e.clientX-x0; x0=null;
+    if(Math.abs(dx)>44) step(dx<0?1:-1);
+  });
+  stage.addEventListener("pointercancel",function(){ x0=null; });
+})();
+
+/* ---- album ---- */
+function renderAlbum(){
+  var b=document.getElementById("albumBody"),h="",cd=-1;
+  h+='<div class="hero" style="padding:14px 15px"><div class="ht">'+T("album")+'</div>'+
+     '<div class="hn" style="font-size:19px">'+M.length+' <span style="font-size:13px;font-weight:600;color:var(--ink3)">'+T("shots")+'</span></div>'+
+     '<div class="hd">'+T("tapPin")+'</div></div>';
+  M.forEach(function(m){
+    var d=WS.DAYS[m.d];
+    if(m.d!==cd){
+      if(cd>=0) h+='</div>';
+      cd=m.d;
+      h+='<div class="albday"><span class="an">Day '+d.n+' — '+(isJa()?d.to.ja:d.to.en)+'</span>'+
+         '<span class="am">'+M.filter(function(x){return x.d===cd;}).length+' '+T("shots")+'</span></div><div class="grid">';
+    }
+    h+='<button class="gcell" data-m="'+m.idx+'" aria-label="'+ttl(m).replace(/"/g,"")+'">'+artSVG(m)+
+       (m.ty==="video"?'<span class="vbadge">'+m.dur+'</span><span class="vplay"><i></i></span>':'')+
+       '<span class="gcap"><span class="gt">'+ttl(m)+'</span><span class="gm">'+m.tm+' · KM '+WS.fmt(m.km,1)+'</span></span></button>';
+  });
+  h+='</div>';
+  b.innerHTML=h;
+  [].forEach.call(b.querySelectorAll("[data-m]"),function(btn){
+    btn.addEventListener("click",function(){ open(+btn.getAttribute("data-m")); });
+  });
+}
+
+window.WSM={
+  onDay:onDay, onProgress:onProgress, renderAlbum:renderAlbum,
+  relang:function(){ if(sheet.classList.contains("on")) paint(); }
+};
+WS.setDay(WS.S.di,true);
+})();
+</script>
