@@ -63,6 +63,7 @@ body{
   font-family:var(--f-body); font-weight:500; font-size:16px; line-height:1.85;
   -webkit-font-smoothing:antialiased; overflow-x:hidden;
   font-synthesis-weight:none;
+  word-break:auto-phrase; /* Chrome では本文も文節で折れる。Safari では無視されるだけ */
 }
 h1,h2,h3,h4{font-family:var(--f-head); font-weight:900; line-height:1.28; margin:0; letter-spacing:.005em; font-synthesis-weight:none}
 /* 特大サイズに900を当てると丸ゴシックは字面が潰れて団子に見える。
@@ -71,7 +72,9 @@ h1{font-weight:700; letter-spacing:-.02em; line-height:1.25}
 h2{font-weight:800; letter-spacing:-.015em; line-height:1.27}
 p{margin:0}
 a{color:inherit}
-.nb{display:inline-block}
+/* 文節ごとの折返し。max-width で行箱をはみ出せないようにし、
+   どうしても入らない時だけ内部で折る（狭幅での文字切れ防止） */
+.nb{display:inline-block; max-width:100%; overflow-wrap:anywhere}
 .num{font-variant-numeric:tabular-nums; letter-spacing:-.01em}
 :focus-visible{outline:3px solid var(--gold); outline-offset:3px; border-radius:4px}
 img,svg{max-width:100%}
@@ -89,7 +92,7 @@ section{position:relative}
   display:flex; align-items:center; gap:10px;
 }
 .eyebrow::before{content:""; width:26px; height:3px; background-color:var(--gold); border-radius:2px}
-h2{font-size:clamp(30px,5.2vw,46px)}
+h2{font-size:clamp(29px,5.2vw,46px)}
 h3{font-size:clamp(20px,3vw,25px)}
 .lead{font-size:clamp(16px,2.1vw,19px); color:var(--ink2); max-width:62ch; margin-top:18px}
 .body{color:var(--ink2); max-width:64ch}
@@ -134,7 +137,7 @@ h3{font-size:clamp(20px,3vw,25px)}
 .hero .contour{position:absolute; inset:-10% -6% auto -6%; height:150%; opacity:.5; pointer-events:none}
 .hero .wrap{position:relative; z-index:2}
 .hero .eyebrow{color:var(--gold)}
-.hero h1{font-size:clamp(37px,7.7vw,74px); font-weight:700; line-height:1.25; letter-spacing:-.022em; max-width:17ch}
+.hero h1{font-size:clamp(36px,7.7vw,74px); font-weight:700; line-height:1.25; letter-spacing:-.022em; max-width:17ch}
 .hero .sub{margin-top:26px; font-size:clamp(16px,2.2vw,20px); color:#B7C4DA; max-width:52ch; line-height:1.8}
 .hero .who{
   margin-top:34px; display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center;
