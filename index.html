@@ -401,6 +401,31 @@ tr.ours .price{color:var(--gold-text); font-size:19px}
 .voice .rl{font-size:12px; color:var(--ink3); line-height:1.4}
 .voice.guide .rl{color:#7C8AA4}
 
+/* ============ together (一緒にやりたいこと) ============ */
+.pm ul,.pricenote ul{list-style:none; margin:11px 0 0; padding:0; display:grid; gap:9px}
+.pm li,.pricenote li{font-size:14.5px; color:var(--ink2); line-height:1.8; padding-left:21px; position:relative}
+.pm li::before,.pricenote li::before{content:""; position:absolute; left:0; top:12px; width:12px; height:2px; border-radius:2px; background-color:var(--gold)}
+.mgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:18px}
+@media (max-width:860px){.mgrid{grid-template-columns:1fr}}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:5px 13px; margin:14px 0 0; font-size:13px; line-height:1.7}
+.kv dt{font-family:var(--f-head); font-weight:900; font-size:11px; letter-spacing:.08em; color:var(--ink3); padding-top:3px; white-space:nowrap}
+.kv dd{margin:0; color:var(--ink2)}
+.effort .kv dt{color:var(--gold)}
+.effort .kv dd{color:#B7C4DA}
+.loop{list-style:none; margin:22px 0 0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; counter-reset:lp}
+@media (max-width:860px){.loop{grid-template-columns:1fr}}
+.loop li{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 18px 17px; box-shadow:var(--sh)}
+.loop li::before{counter-increment:lp; content:counter(lp); font-family:var(--f-head); font-weight:900; font-size:11.5px; letter-spacing:.1em; color:var(--gold-text); display:block; margin-bottom:5px}
+.loop li b{display:block; font-family:var(--f-head); font-weight:900; font-size:15.5px; line-height:1.45}
+.loop li span{display:block; font-size:13.5px; color:var(--ink2); line-height:1.75; margin-top:4px}
+.loopback{
+  margin-top:14px; padding:13px 18px; border-radius:12px;
+  background-color:var(--card2); border:1px dashed var(--line);
+  font-size:14px; font-weight:700; color:var(--ink2);
+  display:flex; gap:11px; align-items:center; line-height:1.7;
+}
+.loopback svg{flex:none; color:var(--gold)}
+
 /* ============ close ============ */
 .closing{background-color:var(--ai-deep); color:#E7ECF5; padding:80px 0; position:relative; overflow:hidden}
 .closing .contour{position:absolute; inset:auto -6% -30% -6%; height:120%; opacity:.45; pointer-events:none}
@@ -469,8 +494,8 @@ footer a{color:#A7B4CC}
   <svg class="contour" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#ct"/></svg>
   <div class="wrap anim">
     <p class="eyebrow">masaya さんへの提案 / Wildstride</p>
-    <h1><span class="nb">ツアーが</span><span class="nb">終わった瞬間、</span><span class="nb">7日間は</span><span class="nb">誰の手元にも</span><span class="nb">残らない。</span></h1>
-    <p class="sub">写真はガイドとゲストのスマホに散り、峠の名前は3ヶ月で誰も思い出せなくなる。<br>その7日間を、最終日の夜にそのままゲストへ渡せる<b>一冊</b>にする。それがこの提案です。</p>
+    <h1><span class="nb">7日間を、</span><span class="nb">そのまま</span><span class="nb">ゲストに渡す。</span></h1>
+    <p class="sub">走った軌跡も、撮った写真も、あの峠の名前も。<br>最終日の夜に<b>一冊</b>にまとめて、ゲストの手に残す。それがこの提案です。</p>
     <div class="statrow">
       <div class="stat"><div class="v num">7</div><div class="k">Days</div></div>
       <div class="stat"><div class="v num">490<span style="font-size:.55em">km</span></div><div class="k">Distance</div></div>
@@ -490,7 +515,7 @@ footer a{color:#A7B4CC}
     <div class="reveal">
       <p class="eyebrow">01 / 困りごと</p>
       <h2><span class="nb">いま、</span><span class="nb">こういうことが</span><span class="nb">起きているはずです。</span></h2>
-      <p class="lead">1週間のマルチデイツアーは、密度が高いほど記録が残りません。走っている間は撮る余裕があっても、ツアーが終わった瞬間に「まとめる時間」だけが誰にもない。</p>
+      <p class="lead">1週間のマルチデイツアーは、密度が高いほど記録が残りません。走っている間は撮る余裕があっても、ツアーが終わった瞬間に「まとめる時間」だけが誰にもない。自分も秋葉原で訪日ゲスト向けのツアーをやっていて、たった1日でも同じところで詰まります。7日間なら尚更だろう、というのがこの提案の出発点です。</p>
     </div>
 
     <div class="probgrid">
@@ -1008,6 +1033,164 @@ footer a{color:#A7B4CC}
         </div>
       </article>
 
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. 一緒にやりたいこと ============ -->
+<section class="sec" id="together">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="eyebrow">07 / 一緒にやりたいこと</p>
+      <h2><span class="nb">masaya さん監修、</span><span class="nb">という形で</span><span class="nb">世に出したい。</span></h2>
+      <p class="lead">最初に書いた通り、自分も秋葉原で訪日ゲスト向けのアニメツアーをやっています（予約は Airbnb と Viator から入ります）。だからこれは売り込みではなく、同じ問題を抱えたガイド同士の相談のつもりです。ここから先は、ひとりでは決められない部分の話をさせてください。</p>
+    </div>
+
+    <!-- 役割分担 -->
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">役割分担</span></span>
+        <span class="pd">作れる方が作る / 現場の判断が強い方が監修する</span>
+      </div>
+      <p class="body">アプリを基本無料で配って、アプリストアにも出してみたいと考えています。ただ、自分ひとりで出すと「自転車に詳しくない人が作ったそれっぽいアプリ」にしかなりません。中身の正しさを保証できるのは、実際に現場を走っている人だけです。</p>
+      <div class="probmini">
+        <div class="pm">
+          <h4><span class="nb">ユウキがやること</span></h4>
+          <ul>
+            <li>アプリを作る・直す・アプリストアに出す。開発と登録の費用はこちら持ちです</li>
+            <li>ゲスト用画面、英語対応、渡し方の設計</li>
+            <li>使って出てきた不満を、次の版に反映する</li>
+          </ul>
+        </div>
+        <div class="pm">
+          <h4><span class="nb">masaya さんに</span><span class="nb">お願いしたいこと</span></h4>
+          <ul>
+            <li>名前を貸してもらう（「プロアドベンチャーガイド masaya 監修」）</li>
+            <li>ルート1本ぶんだけ、頭の中の判断を言葉にしてもらう（危険箇所・補給・撮影ポイント）</li>
+            <li>実際のツアーで1回使って、ダメなところを言ってもらう</li>
+          </ul>
+          <p class="small" style="margin-top:12px">お願いはこの3つだけです。ツアーの合間にできない量は、お願いしません。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- マネタイズ案 -->
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">マネタイズ案</span></span>
+        <span class="pd">本命は1つ / 残りは枝です</span>
+      </div>
+      <p class="body">無料で配ること自体は正しいと思っています。裾野が広がらないと何も始まらないからです。なので無料は維持したまま、収益は別の場所から取る形を考えました。以下、規模感も含めて正直に書きます。</p>
+
+      <div class="effort">
+        <div class="tagrow"><span class="who-v">本命</span></div>
+        <h4><span class="nb">この記録が、</span><span class="nb">次のゲストを</span><span class="nb">連れてくる。</span></h4>
+        <p>渡された記録が本当に良ければ、ゲストは人に見せます。SNSに貼る。見た人の何人かは「自分もこれをやりたい」と思う。そこにツアーへの入口が1つあるかないか、それだけの差です。<span class="hl">無料で配るほど記録が増え、記録が増えるほど入口が増える</span>。無料と収益が同じ方向を向いている案は、これだけでした。だから本命にしています。</p>
+        <dl class="kv">
+          <dt>収益源</dt><dd>masaya さんの本業のツアー売上。アプリ側では課金しません。送客先の第1号は masaya さんのツアーです</dd>
+          <dt>規模感</dt><dd>ツアー1本の単価が大きいので、年に数本増えるだけでも効きます。ただし何本増えるかは、やってみるまで読めません</dd>
+          <dt>労力</dt><dd>ほぼゼロ。記録の最後に入口を1つ置くだけです</dd>
+          <dt>リスク</dt><dd>売り込みが前に出ると記録が安っぽくなります。入口は1箇所・小さく、が前提です</dd>
+        </dl>
+      </div>
+
+      <div class="mgrid">
+        <div class="pm">
+          <div class="tagrow"><span class="st-plan">枝として</span></div>
+          <h4><span class="nb">監修ルートを、</span><span class="nb">自走したい人に。</span></h4>
+          <p>masaya さんが引いた行程と、その上の判断だけを、ガイドなしで走る人向けに出す。判断そのものを売る形です。</p>
+          <dl class="kv">
+            <dt>収益源</dt><dd>閲覧者からの少額課金</dd>
+            <dt>規模感</dt><dd>小さい。まとまった額にはなりません</dd>
+            <dt>労力</dt><dd>ルート1本につき数十分</dd>
+            <dt>リスク</dt><dd>本業のツアー客を自分で減らしかねません。現地判断が要る区間は出さない、という線引きが要ります</dd>
+          </dl>
+        </div>
+        <div class="pm">
+          <div class="tagrow"><span class="st-plan">枝として</span></div>
+          <h4><span class="nb">最終日の夜だけ、</span><span class="nb">紙が売れる。</span></h4>
+          <p>旅の終わりは財布が緩みます。記録は無料のまま、欲しい人だけ写真集や修了証を紙で。印刷と発送は外部に任せます。</p>
+          <dl class="kv">
+            <dt>収益源</dt><dd>ゲストの自費</dd>
+            <dt>規模感</dt><dd>頼む人は一部。小さい</dd>
+            <dt>労力</dt><dd>仕組みを作るまで。在庫も梱包も持ちません</dd>
+            <dt>リスク</dt><dd>刷り上がりが悪いと masaya さんの評判に直撃します。試作を見てからでないと出せません</dd>
+          </dl>
+        </div>
+        <div class="pm">
+          <div class="tagrow"><span class="st-plan">検討したが、見送り</span></div>
+          <h4><span class="nb">広告は、</span><span class="nb">たぶん割に合いません。</span></h4>
+          <p>無料なら広告、と考えるのが普通ですが、この規模とニッチさだと収入は月に数千円のオーダーにしかなりません。</p>
+          <dl class="kv">
+            <dt>収益源</dt><dd>表示回数</dd>
+            <dt>規模感</dt><dd>月に数千円のオーダー。事業にはなりません</dd>
+            <dt>労力</dt><dd>入れるだけなら簡単</dd>
+            <dt>リスク</dt><dd>ゲストに渡す記録に広告が挟まると、体験の格が落ちます。masaya さんの商品価値を削ってまで取る額ではありません</dd>
+          </dl>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:18px">他に、ガイド事業者向けの月額サービス、旅行会社へのホワイトラベル提供、自治体への納品も検討しましたが、どれも masaya さんかこちらの時間を大量に使う話になるので外しました。営業と請求と解約対応が始まった時点で、たぶん続きません。</p>
+    </div>
+
+    <!-- 最初の一歩 -->
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">最初の一歩</span></span>
+        <span class="pd">ここだけ返事をもらえれば動けます</span>
+      </div>
+      <div class="probmini">
+        <div class="pm">
+          <h4><span class="nb">① 名前を貸してもいいか、</span><span class="nb">決めてもらう。</span></h4>
+          <p>それだけで、こちらはアプリストアに出す準備を始められます。出し方（本名か、屋号か）も時期も masaya さんの指定に合わせます。嫌ならこの話はここで止まります。</p>
+        </div>
+        <div class="pm">
+          <h4><span class="nb">② 次のツアー1本で、</span><span class="nb">試してもらう。</span></h4>
+          <p>ルートを1本ぶんもらえれば、こちらで入れて、渡せる状態にします。ゲストの反応を見て、ダメならやめる。masaya さんの持ち出しは、ツアー前の30分だけです。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- この先の景色 -->
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">その先に</span><span class="nb">見えている景色</span></span>
+        <span class="pd">まだ遠い話です / 先に一歩目を確かめたい</span>
+      </div>
+      <p class="body">なぜ「送客」が本命だと言い切れるのか。記録アプリの中から、おすすめのツアーページにも飛ばせるからです。記録が集客装置になり、送客で回収する。ここが一周つながります。</p>
+
+      <ol class="loop">
+        <li><b>記録を渡す</b><span>最終日の夜、ゲストにリンクを1つ。</span></li>
+        <li><b>ゲストが人に見せる</b><span>綺麗だから見せたくなる。SNSに貼る。</span></li>
+        <li><b>見た人が来たくなる</b><span>「四国のこれ、自分もやりたい」</span></li>
+        <li><b>アプリの中で探す</b><span>記録から、おすすめのツアーへ飛べる。</span></li>
+        <li><b>予約が入る</b><span>入口の第1号は masaya さんのツアー。</span></li>
+        <li><b>また記録が生まれる</b><span>そのツアーが、次の記録になる。</span></li>
+      </ol>
+      <div class="loopback">
+        <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 8a7 7 0 10-.6 5.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M17 3v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>そして 1 に戻ります。無料で配るほど記録が増え、記録が増えるほど入口が増える。これが「無料でいい」と言い切れる理由です。</span>
+      </div>
+
+      <p class="body" style="margin-top:26px">この先に、訪日観光をまるごと助けるアプリという景色もあります。ただ Google やじゃらんと同じ土俵で、いま手元にあるのはプロトタイプ1本だけです。勝てる可能性があるとすれば1点だけで、<b>現地でガイドをやっている人間が「これは本物だ」と判断したツアーしか載らない</b>こと。検索順位でも広告費順でもない。真似できないのはそこだけで、逆にそこは真似されません。</p>
+      <p class="body" style="margin-top:16px">形ができれば、乗り物が変わっても同じ構造が乗ります。自分の秋葉原のツアーは徒歩ですが、ルート・ポイント・写真・ガイドの知見という骨格は変わらないので、2例目として自分で試すつもりです。<b>その最初の型が、masaya さんとの1本になります。</b>最初の監修者で、最初の送客先。後から入る人は、その形をなぞることになります。</p>
+    </div>
+
+    <!-- 正直な但し書き -->
+    <div class="pricenote reveal">
+      <b>先に、はっきりさせておきたいこと。</b>
+      <ul>
+        <li>これはまだプロトタイプで、実際のツアーで使われたことは一度もありません</li>
+        <li>収益の保証はありません。当面は1円にもならない前提で考えています。上のマネタイズ案は「うまくいったら」の話で、約束ではありません</li>
+        <li>masaya さんに金銭的な負担をお願いする話ではありません。開発も、アプリストアの登録費用も、こちらで持ちます</li>
+        <li>自分も自分のツアーがあるので、進みは速くありません。期限を切ってお待たせすることはしません</li>
+        <li>途中でやめたくなったら、いつでも言ってください。名前を外して畳みます</li>
+      </ul>
+    </div>
+
+    <div class="thesis reveal">
+      <p class="q"><span class="nb">まずは</span><em><span class="nb">面白そうかどうか、</span></em><span class="nb">それだけ</span><span class="nb">聞かせてください。</span></p>
+      <p>断られてもこの提案は無駄になりません。作ったものは残るし、どこが違ったかが分かるだけで十分な収穫です。デモを触った感想でも、「ここは違う」の一言でも、返ってきたらそこから考えます。</p>
     </div>
   </div>
 </section>
