@@ -189,6 +189,9 @@ h3{font-size:clamp(20px,3vw,25px)}
 .reveal{animation:revealIn linear both; animation-timeline:view(); animation-range:entry 6% cover 30%}
 @keyframes revealIn{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:none}}
 @supports not (animation-timeline: view()){ .reveal{animation:none; opacity:1; transform:none} }
+/* Jumped to via an anchor: show it fully at once. Otherwise a tall section can
+   land mid scroll-range and greet the visitor half-faded. */
+.sec:target .reveal{animation:none; opacity:1; transform:none}
 
 /* ============ problem ============ */
 .probgrid{display:grid; gap:18px; margin-top:var(--s5)}
