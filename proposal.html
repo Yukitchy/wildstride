@@ -336,6 +336,9 @@ h3{font-size:clamp(20px,3vw,25px)}
 .phasehead{display:flex; align-items:baseline; gap:14px; padding-bottom:12px; border-bottom:2px solid var(--ink); margin-bottom:var(--s3); flex-wrap:wrap}
 .phasehead .pn{font-family:var(--f-head); font-weight:900; font-size:clamp(20px,3vw,26px)}
 .phasehead .pd{font-size:13.5px; color:var(--ink3); margin-left:auto}
+/* Once it wraps to its own line, margin-left:auto strands the subtitle at the
+   right edge, far from the heading it belongs to. Pull it back under the label. */
+@media (max-width:700px){ .phasehead .pd{margin-left:0; width:100%} }
 .steps{display:grid; gap:18px}
 .step{
   display:grid; grid-template-columns:64px 108px minmax(0,1fr); gap:0 20px; align-items:start;
@@ -399,6 +402,34 @@ tr.ours .price{color:var(--gold-text); font-size:19px}
 .srcs a:hover{text-decoration-color:var(--gold); color:var(--ink)}
 .pricenote{margin-top:var(--s3); padding:26px; font-size:14.5px; color:var(--ink2); line-height:1.85}
 .pricenote b{color:var(--ink); font-weight:900}
+
+/* ============ aimenu (できることメニュー) ============ */
+/* カードは .pm（共通カードレシピ）をそのまま使い、中の並べ方だけここで足す。
+   grid ではなく flex にしてあるのは #how で踏んだ「フル幅の子が自動配置で
+   先頭列に潜り込んで1文字幅になる」事故を構造的に起こさないため。 */
+.amgrid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:var(--s3)}
+@media (max-width:759px){.amgrid{grid-template-columns:1fr}}
+.amcard{display:flex; gap:14px; align-items:stretch}
+.amcard .amn{
+  flex:none; width:32px; height:32px; border-radius:50%;
+  background-color:var(--gold); color:var(--gold-ink);
+  font-family:var(--f-head); font-weight:900; font-size:15px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+}
+.amtx{min-width:0; flex:1; display:flex; flex-direction:column}
+/* 「渡すもの」＝初心者が止まる場所なので、カードの最後に独立した1行として出す。
+   margin-top:auto で横に並ぶ2枚の高さが違っても同じ位置に揃う（.kv の margin に勝つため .amcard 起点） */
+.amcard .amgive{margin-top:auto; padding-top:13px; border-top:1px dashed var(--line)}
+.amguard h4{color:var(--gold)}
+.amguard ul{list-style:none; margin:12px 0 0; padding:0; display:grid; gap:9px; color:#B7C4DA; font-size:14.5px; line-height:1.85}
+.amguard li{padding-left:21px; position:relative}
+.amguard li::before{content:""; position:absolute; left:0; top:12px; width:12px; height:2px; border-radius:2px; background-color:var(--gold)}
+.amclose{
+  margin-top:var(--s4); text-align:center; font-family:var(--f-head); font-weight:900;
+  font-size:clamp(18px,3vw,26px); line-height:1.5; color:var(--gold-text);
+}
+.amkit{margin-top:var(--s2); display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; text-align:center}
+a.chipbtn{text-decoration:none}
 
 /* ============ voices ============ */
 .imgwarn{
@@ -1024,11 +1055,167 @@ footer a{color:#A7B4CC}
   </div>
 </section>
 
-<!-- ============ 5. 利用者の声 ============ -->
+<!-- ============ 6. できることメニュー ============ -->
+<section class="sec" id="aimenu">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="eyebrow">06 / AI × ガイド業 できることメニュー</p>
+      <h2><span class="nb">AIを</span><span class="nb">触ったことがなくても、</span><span class="nb">ここまでできます。</span></h2>
+      <p class="lead">ここに並んでいるのは、masaya さんがいま手でやっていることです。どれも特別な設定はいりません。パソコンに向かって、日本語で話しかけるだけです。「渡すもの」に書いてあるものを手元に用意して、そのまま言えば返ってきます。</p>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">A. ゲストのまわり</span></span>
+        <span class="pd">ツアーの前・最中・あとで、ゲストに渡すもの</span>
+      </div>
+      <div class="amgrid">
+
+        <article class="pm amcard">
+          <div class="amn num">1</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">5分</span><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">英語の問い合わせに、</span><span class="nb">日本語で返事を書く</span></h4>
+            <p>届いた英文をそのまま貼って「これに返事を」と言うだけ。日本語で内容を確認してから、英語の文面が出てきます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>届いたメールの本文</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">2</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">日英2枚の</span><span class="nb">「旅のしおり」にする</span></h4>
+            <p>日程・宿・集合時刻・持ち物を箇条書きで言うだけ。そのまま印刷して渡せる形になります。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>日程のメモ（走り書きで可）</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">3</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="who-v">⭐効果大</span></div>
+            <h4><span class="nb">ゲスト1人ずつの</span><span class="nb">注意メモを1枚に</span></h4>
+            <p>「下りが苦手」「ベジタリアン」「E-BIKEの残量が読めない」。いまノートに書いていることを、当日の朝に読める1枚にまとめます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>ゲストの人数と、気をつけたいこと</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">4</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">その日中</span><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">ツアーが終わった夜の御礼を、</span><span class="nb">1人ずつ</span></h4>
+            <p>全員に同じ文を送らずに済みます。名前とその人に起きたことを言えば、5人なら5通、それぞれの言語で出てきます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>名前と、その人の印象に残った場面</dd></dl>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">B. 準備のうら側</span></span>
+        <span class="pd">毎回ゼロから始めているところを、残す</span>
+      </div>
+      <div class="amgrid">
+
+        <article class="pm amcard">
+          <div class="amn num">5</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="who-v">⭐効果大</span></div>
+            <h4><span class="nb">下見のメモを、</span><span class="nb">次に使える形に清書する</span></h4>
+            <p>走り書きや音声メモを渡すと、距離・登り・補給ポイントが並んだルート表になります。次の下見はここから始められます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>下見のときのメモや写真</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">6</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">一度きり</span></div>
+            <h4><span class="nb">毎回口で言っていることを、</span><span class="nb">書き出しておく</span></h4>
+            <p>「この下りは落石があるから一列」「この先50kmは補給ゼロ」。一度書き出せば、次から読み上げるだけになります。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>いつも注意していること（思いつく順で可）</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">7</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">安全に効く</span></div>
+            <h4><span class="nb">雨と体調不良の</span><span class="nb">「逃げ道」を</span><span class="nb">先に用意する</span></h4>
+            <p>ルートと季節を伝えると、短縮案・輪行区間・代替の宿の候補が出ます。当日に慌てて探さなくて済みます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>ルート名と、走る時期</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">8</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">5分</span></div>
+            <h4><span class="nb">見積りと請求の</span><span class="nb">文面を作る</span></h4>
+            <p>人数・日数・含むものを言えば、そのまま送れる文章になります。金額を決めるのはご本人です。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>人数・日数・含むもの</dd></dl>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phasehead">
+        <span class="pn"><span class="nb">C. 見つけてもらう</span></span>
+        <span class="pd">次のゲストが来る状態をつくる</span>
+      </div>
+      <div class="amgrid">
+
+        <article class="pm amcard">
+          <div class="amn num">9</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">ツアーの紹介文を、</span><span class="nb">3つの長さで</span></h4>
+            <p>同じ内容から、SNS用の短い文・申し込みページ用の説明・写真に添える1行が同時に出ます。日本語と英語の両方で。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>ツアーの日程と、見どころ3つ</dd></dl>
+          </div>
+        </article>
+
+        <article class="pm amcard">
+          <div class="amn num">10</div>
+          <div class="amtx">
+            <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">その日中</span></div>
+            <h4><span class="nb">走った1日を、</span><span class="nb">読み物にする</span></h4>
+            <p>その日にあったことを話すだけで記事の下書きになります。写真を選んで並べるところまで一緒にできます。</p>
+            <dl class="kv amgive"><dt>渡すもの</dt><dd>その日の写真と、覚えていること</dd></dl>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="effort amguard reveal">
+      <h4><span class="nb">🔒 ちゃんと守るところ</span></h4>
+      <ul>
+        <li>中止・迂回・搬送の判断はAIにさせません。候補を並べるところまでで、決めるのは現場のガイドです。</li>
+        <li>ゲストの氏名・持病・アレルギー・連絡先は、ご本人の同意なくAIに渡しません。</li>
+        <li>保険・許認可・医療にかかる文章は下書きまで。出す前に必ず人が確認します。</li>
+      </ul>
+    </div>
+
+    <p class="amclose reveal"><span class="nb">気になった番号を</span><span class="nb">言ってもらえれば、</span><span class="nb">その場で一緒に作ります。</span></p>
+    <p class="small amkit">
+      <span>いくつかは、すでに手順とセリフを用意してあります →</span>
+      <a class="chipbtn" href="kit/" target="_blank" rel="noopener">自分で試せるキットを見る</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ 7. 利用者の声 ============ -->
 <section class="sec" id="voices">
   <div class="wrap">
     <div class="reveal">
-      <p class="eyebrow">06 / 利用者の声</p>
+      <p class="eyebrow">07 / 利用者の声</p>
       <h2><span class="nb">渡したとき、</span><span class="nb">たぶんこう言われます。</span></h2>
       <div class="imgwarn">
         <span class="b">重要</span>
@@ -1082,11 +1269,11 @@ footer a{color:#A7B4CC}
   </div>
 </section>
 
-<!-- ============ 7. 一緒にやりたいこと ============ -->
+<!-- ============ 8. 一緒にやりたいこと ============ -->
 <section class="sec" id="together">
   <div class="wrap">
     <div class="reveal">
-      <p class="eyebrow">07 / 一緒にやりたいこと</p>
+      <p class="eyebrow">08 / 一緒にやりたいこと</p>
       <h2><span class="nb">masaya さん監修、</span><span class="nb">という形で</span><span class="nb">世に出したい。</span></h2>
       <p class="lead">最初に書いた通り、自分も秋葉原で訪日ゲスト向けのアニメツアーをやっています（予約は Airbnb と Viator から入ります）。だからこれは売り込みではなく、同じ問題を抱えたガイド同士の相談のつもりです。ここから先は、ひとりでは決められない部分の話をさせてください。</p>
     </div>
