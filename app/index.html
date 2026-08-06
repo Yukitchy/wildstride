@@ -21,8 +21,11 @@
   --accent:#D9640F; --accent-ink:#FFFFFF;
   --danger:#C8402F; --water:#0E8F94; --photo:#A87A08; --food:#7A5AA8; --rest:#3E6E57;
   --shadow:0 1px 2px rgba(16,30,34,.10),0 8px 24px rgba(16,30,34,.08);
+  --shadow2:0 1px 2px rgba(16,30,34,.08),0 2px 8px rgba(16,30,34,.06);
   --f-ui:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --f-round:"Hiragino Maru Gothic ProN","Hiragino Maru Gothic Pro",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",system-ui,sans-serif;
   --f-num:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --gut:16px; --r:16px;
 }
 @media (prefers-color-scheme:dark){
   :root{
@@ -33,6 +36,7 @@
     --accent:#FF9040; --accent-ink:#16120C;
     --danger:#F0625C; --water:#3ECBCF; --photo:#DCAE2E; --food:#B49BE8; --rest:#5FB88C;
     --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.42);
+    --shadow2:0 1px 2px rgba(0,0,0,.45),0 3px 10px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="light"]{
@@ -43,6 +47,7 @@
   --accent:#D9640F; --accent-ink:#FFFFFF;
   --danger:#C8402F; --water:#0E8F94; --photo:#A87A08; --food:#7A5AA8; --rest:#3E6E57;
   --shadow:0 1px 2px rgba(16,30,34,.10),0 8px 24px rgba(16,30,34,.08);
+  --shadow2:0 1px 2px rgba(16,30,34,.08),0 2px 8px rgba(16,30,34,.06);
 }
 :root[data-theme="dark"]{
   --bg:#080E11; --surface:#111B1F; --surface2:#162226; --sunk:#0C1417;
@@ -52,30 +57,41 @@
   --accent:#FF9040; --accent-ink:#16120C;
   --danger:#F0625C; --water:#3ECBCF; --photo:#DCAE2E; --food:#B49BE8; --rest:#5FB88C;
   --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.42);
+  --shadow2:0 1px 2px rgba(0,0,0,.45),0 3px 10px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg)}
+@media (min-width:481px){
+  html,body{background:#C9D2CC}
+  @media (prefers-color-scheme:dark){ html,body{background:#05090B} }
+  :root[data-theme="light"],:root[data-theme="light"] body{background:#C9D2CC}
+  :root[data-theme="dark"],:root[data-theme="dark"] body{background:#05090B}
+}
 #app{
   font-family:var(--f-ui); color:var(--ink); background:var(--bg);
-  height:100vh; height:100dvh; max-width:440px; margin:0 auto;
+  height:100vh; height:100dvh; max-width:480px; margin:0 auto;
   display:flex; flex-direction:column; overflow:hidden; position:relative;
-  border-left:1px solid var(--line); border-right:1px solid var(--line);
   -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:anywhere; line-break:strict;
 }
-@media (min-width:441px){ #app{box-shadow:0 0 80px rgba(0,0,0,.18)} }
-button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+@media (min-width:481px){ #app{box-shadow:0 0 80px rgba(0,0,0,.22);border-left:1px solid var(--line);border-right:1px solid var(--line)} }
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-align:left}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .lab{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+h1,h2,h3{font-family:var(--f-round);margin:0}
 
 /* ---- top bar ---- */
-.top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);
-  border-bottom:1px solid var(--line);flex:0 0 auto;z-index:20}
+.top{display:flex;align-items:center;gap:10px;padding:9px var(--gut);background:var(--surface);
+  border-bottom:1px solid var(--line);flex:0 0 auto;z-index:20;
+  padding-top:calc(9px + env(safe-area-inset-top,0px))}
+#app.hidehead .top{display:none}
 .brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
 .mark{width:26px;height:26px;flex:0 0 auto}
-.t1{font-size:12.5px;font-weight:750;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t1{font-family:var(--f-round);font-size:12.5px;font-weight:800;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .t2{font-size:10.5px;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbtns{display:flex;gap:6px;flex:0 0 auto}
-.chip{height:28px;padding:0 10px;border-radius:14px;background:var(--surface2);border:1px solid var(--line);
+.chip{height:30px;padding:0 11px;border-radius:15px;background:var(--surface2);border:1px solid var(--line);
   font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink2);display:flex;align-items:center;gap:5px}
 .chip:active{transform:scale(.96)}
 .chip.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
@@ -84,185 +100,305 @@ button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:p
 main{flex:1 1 auto;position:relative;overflow:hidden}
 .panel{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
 .panel.on{display:flex}
-.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1;padding:14px 14px 24px}
+.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1;
+  padding:14px var(--gut) 28px;overscroll-behavior:contain}
+.scroll.flush{padding:0 0 28px}
 
-/* ---- map ---- */
-.mapwrap{position:relative;flex:1 1 auto;min-height:180px;background:var(--sea);overflow:hidden}
+/* ---- generic ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow2)}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:24px 0 10px}
+.sechead h2{font-size:14px;font-weight:800;letter-spacing:.01em}
+.sechead .sh{font-size:10.5px;color:var(--ink3)}
+.dsec{padding:0 var(--gut)}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:700;color:var(--ink2);background:var(--surface2);border:1px solid var(--line);
+  border-radius:12px;padding:3px 9px;white-space:nowrap}
+.toast{position:absolute;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ink);color:var(--bg);
+  font-size:11.5px;font-weight:700;padding:9px 15px;border-radius:18px;z-index:80;opacity:0;
+  transition:opacity .25s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:.96}
+
+/* ---- home feed ---- */
+.feedhead{font-family:var(--f-round);font-size:17px;font-weight:800;margin:2px 0 12px}
+.feedhead small{display:block;font-family:var(--f-ui);font-size:10.5px;font-weight:600;color:var(--ink3);margin-top:3px;letter-spacing:.02em}
+.actcard{display:block;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow2);overflow:hidden;margin-bottom:14px}
+.actcard:active{transform:scale(.995)}
+.acover{position:relative;aspect-ratio:16/9;background:var(--sunk);overflow:hidden}
+.acover svg{display:block;width:100%;height:100%}
+.acover.tourmap{aspect-ratio:2/1;background:var(--sea)}
+.abadge{position:absolute;left:10px;top:10px;background:rgba(8,14,17,.62);backdrop-filter:blur(6px);color:#fff;
+  font-size:9.5px;font-weight:800;letter-spacing:.12em;border-radius:11px;padding:4px 9px}
+.abadge.accent{background:var(--accent);color:var(--accent-ink)}
+.abody{padding:13px 14px 12px}
+.atitle{font-family:var(--f-round);font-size:15px;font-weight:800;line-height:1.35}
+.asub{font-size:11.5px;color:var(--ink2);margin-top:3px;line-height:1.5}
+.ameta{font-size:10.5px;color:var(--ink3);margin-top:8px;font-variant-numeric:tabular-nums}
+.actcard .tagrow{margin-top:7px}
+.stat3{display:flex;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.stat3>div{flex:1;min-width:0}
+.sv{font-size:17px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.sv small{font-size:10px;font-weight:600;color:var(--ink3);margin-left:2px;letter-spacing:0}
+.sl{font-size:9.5px;color:var(--ink3);margin-top:4px;font-weight:600}
+.spark{width:100%;height:32px;display:block;margin-top:10px}
+.afoot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--ink3);font-weight:700}
+.afoot .ic{display:inline-flex;align-items:center;gap:5px}
+.afoot svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- detail ---- */
+.cover{position:relative;aspect-ratio:16/9;background:var(--sunk);overflow:hidden}
+.cover svg{display:block;width:100%;height:100%}
+.cover.tourmap{aspect-ratio:16/9;background:var(--sea)}
+.fab{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));width:44px;height:44px;border-radius:50%;
+  background:rgba(8,14,17,.5);backdrop-filter:blur(8px);display:grid;place-items:center;color:#fff;z-index:4;
+  border:1px solid rgba(255,255,255,.22)}
+.fab:active{transform:scale(.93)}
+.fab svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fab.l{left:12px} .fab.r{right:12px}
+.dhead{padding:16px var(--gut) 0}
+.dh1{font-family:var(--f-round);font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.01em}
+.dh2{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.55}
+.ddate{font-size:11px;color:var(--ink3);margin-top:10px;font-variant-numeric:tabular-nums}
+.dhead .tagrow{margin-top:8px}
+.author{display:flex;align-items:center;gap:10px;margin:16px 0 0;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.av{width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-size:14px;font-weight:800;color:var(--accent-ink);background:var(--accent);font-family:var(--f-round)}
+.aname{font-size:13px;font-weight:800}
+.arole{font-size:10.5px;color:var(--ink3);margin-top:2px}
+
+/* summary grid */
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;background:var(--surface);box-shadow:var(--shadow2)}
+.sumcell{padding:13px 8px 12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}
+.sumcell:nth-child(3n){border-right:none}
+.sumcell:nth-child(n+4){border-bottom:none}
+.sumcell .cv{font-size:20px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+.sumcell .cv small{font-size:10px;font-weight:600;color:var(--ink3);margin-left:2px;letter-spacing:0}
+.sumcell .cl{font-size:9.5px;color:var(--ink3);margin-top:6px;font-weight:600}
+
+/* map card */
+.mapcard{position:relative;aspect-ratio:4/3;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:var(--sea);box-shadow:var(--shadow2)}
+.mapslot{position:absolute;inset:0;display:flex}
+.mapslot>.mapwrap{position:absolute;inset:0;flex:none}
+.mapslot .hud,.mapslot .mapbadge{display:none}
+.fullbtn{position:absolute;right:10px;bottom:10px;z-index:5;height:32px;padding:0 12px;border-radius:16px;
+  background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(8px);border:1px solid var(--line);
+  font-size:11px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:5px;box-shadow:var(--shadow2)}
+.fullbtn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* elevation scrub */
+.profcard{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);box-shadow:var(--shadow2)}
+.scrubread{display:flex;border-bottom:1px solid var(--line)}
+.scrubread>div{flex:1;padding:9px 10px 8px;border-right:1px solid var(--line)}
+.scrubread>div:last-child{border-right:none}
+.scrubread .rv{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05}
+.scrubread .rv small{font-size:9.5px;font-weight:600;color:var(--ink3);margin-left:2px}
+.scrubread .rl{font-size:9px;color:var(--ink3);margin-top:4px;font-weight:600;letter-spacing:.06em}
+.profslot{position:relative}
+.profslot #prof{height:150px}
+.profhint{font-size:10.5px;color:var(--ink3);line-height:1.5;margin-top:8px;padding:0 2px}
+
+/* course time */
+.ct{margin-top:2px}
+.ctrow{display:flex;gap:11px;padding:11px 0}
+.cttime{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;width:44px;flex:0 0 auto;padding-top:1px}
+.ctrail{width:2px;background:var(--line);flex:0 0 auto;position:relative;border-radius:1px}
+.ctrow:first-child .ctrail{background:linear-gradient(var(--surface) 0 9px,var(--line) 9px)}
+.ctrow:last-child .ctrail{background:linear-gradient(var(--line) 0 9px,var(--surface) 9px)}
+.ctrail::before{content:"";position:absolute;left:-4px;top:5px;width:10px;height:10px;border-radius:50%;
+  background:var(--ink3);border:2px solid var(--surface)}
+.ctrow[data-k="danger"] .ctrail::before{background:var(--danger)}
+.ctrow[data-k="water"] .ctrail::before{background:var(--water)}
+.ctrow[data-k="photo"] .ctrail::before{background:var(--photo)}
+.ctrow[data-k="food"] .ctrail::before{background:var(--food)}
+.ctrow[data-k="rest"] .ctrail::before{background:var(--rest)}
+.ctbody{flex:1;min-width:0;padding-bottom:2px}
+.ctname{font-size:12.5px;font-weight:750;line-height:1.4}
+.ctseg{font-size:10.5px;color:var(--ink3);margin-top:3px;font-variant-numeric:tabular-nums}
+.ctdesc{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.5}
+
+/* photo grid */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pcell{position:relative;aspect-ratio:1;border-radius:9px;overflow:hidden;background:var(--sunk);
+  border:1px solid var(--line);display:block;padding:0}
+.pcell svg{display:block;width:100%;height:100%}
+.pcell:active{transform:scale(.97)}
+.vbadge{position:absolute;right:4px;bottom:4px;background:rgba(8,14,17,.72);color:#fff;font-size:8.5px;
+  font-weight:700;border-radius:4px;padding:1px 4px;font-variant-numeric:tabular-nums}
+.vplay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.vplay i{width:22px;height:22px;border-radius:50%;background:rgba(8,14,17,.5);display:grid;place-items:center;
+  backdrop-filter:blur(2px);border:1px solid rgba(255,255,255,.5)}
+.vplay i::after{content:"";border-left:7px solid #fff;border-top:4.5px solid transparent;
+  border-bottom:4.5px solid transparent;margin-left:2px}
+
+/* body text + domo */
+.bodytext{font-size:13px;color:var(--ink);line-height:1.85}
+.wxline{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:11.5px;color:var(--ink2);
+  background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.wxline b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+.domo{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:54px;border-radius:27px;
+  background:var(--surface);border:1.5px solid var(--line);font-size:13.5px;font-weight:800;color:var(--ink2);
+  box-shadow:var(--shadow2)}
+.domo svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.domo .dc{font-variant-numeric:tabular-nums}
+.domo.on{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+.domo.on svg{fill:currentColor}
+.domo.bump{animation:bump .42s cubic-bezier(.2,1.5,.4,1)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+
+/* ---- map screen ---- */
+.mslot{flex:1 1 auto;min-height:170px;position:relative;display:flex}
+.mapwrap{position:relative;flex:1 1 auto;min-height:170px;background:var(--sea);overflow:hidden}
 #map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
-.hud{position:absolute;left:8px;top:8px;right:8px;display:flex;gap:6px;pointer-events:none}
-.hudcell{background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:9px;padding:5px 8px 6px;flex:1;min-width:0}
-.hudcell .v{font-size:17px;font-weight:700;line-height:1.05;white-space:nowrap}
-.hudcell .v small{font-size:9.5px;font-weight:600;color:var(--ink3);margin-left:2px}
-.hudcell .lab{margin-bottom:2px}
-.callout{position:absolute;left:8px;right:8px;bottom:8px;background:var(--surface);border:1px solid var(--line);
-  border-left:3px solid var(--accent);border-radius:9px;padding:7px 10px;box-shadow:var(--shadow);
+.hud{position:absolute;left:60px;top:calc(10px + env(safe-area-inset-top,0px));right:10px;display:flex;gap:5px;pointer-events:none}
+.hudcell{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:9px;padding:5px 7px 6px;flex:1;min-width:0}
+.hudcell .v{font-size:15px;font-weight:800;line-height:1.05;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hudcell .v small{font-size:9px;font-weight:600;color:var(--ink3);margin-left:1px}
+.hudcell .lab{margin-bottom:2px;font-size:8.5px;letter-spacing:.1em}
+.mapback{position:absolute;left:12px;top:calc(10px + env(safe-area-inset-top,0px));z-index:9;width:44px;height:44px;
+  border-radius:50%;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(8px);
+  border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);box-shadow:var(--shadow2)}
+.mapback svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.callout{position:absolute;left:10px;right:10px;bottom:10px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:11px;padding:8px 11px;box-shadow:var(--shadow);
   opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;z-index:5}
 .callout.show{opacity:1;transform:none}
-.callout .cn{font-size:12.5px;font-weight:700}
-.callout .cd{font-size:10.5px;color:var(--ink2);margin-top:1px;line-height:1.4}
-.mapbadge{position:absolute;right:8px;bottom:8px;background:color-mix(in srgb,var(--surface) 84%,transparent);
+.callout .cn{font-size:12.5px;font-weight:800}
+.callout .cd{font-size:10.5px;color:var(--ink2);margin-top:2px;line-height:1.45}
+.mapbadge{position:absolute;right:10px;top:calc(60px + env(safe-area-inset-top,0px));
+  background:color-mix(in srgb,var(--surface) 84%,transparent);
   backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:7px;padding:3px 7px;font-size:9px;
-  letter-spacing:.08em;color:var(--ink3);font-weight:600;pointer-events:none}
+  letter-spacing:.08em;color:var(--ink3);font-weight:700;pointer-events:none}
 
-/* ---- controls ---- */
-.ctrl{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--surface);
+/* controls */
+.ctrl{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:9px var(--gut);background:var(--surface);
   border-top:1px solid var(--line)}
-.play{width:42px;height:42px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
+.play{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
   display:grid;place-items:center;flex:0 0 auto;box-shadow:0 3px 10px color-mix(in srgb,var(--accent) 35%,transparent)}
 .play:active{transform:scale(.93)}
 .play svg{width:17px;height:17px;fill:currentColor}
 .ctrlmeta{flex:1;min-width:0}
-.ctrlmeta .d1{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctrlmeta .d1{font-size:12.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ctrlmeta .d2{font-size:10px;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ---- profile ---- */
+/* profile */
 .profwrap{flex:0 0 auto;background:var(--surface);padding:0 0 4px;position:relative}
-#prof{display:block;width:100%;height:96px;touch-action:none;cursor:ew-resize}
+#prof{display:block;width:100%;height:104px;touch-action:none;cursor:ew-resize}
 .profax{position:absolute;left:10px;right:10px;bottom:2px;display:flex;justify-content:space-between;
-  font-size:8.5px;color:var(--ink3);pointer-events:none;font-family:var(--f-num)}
+  font-size:8.5px;color:var(--ink3);pointer-events:none;font-variant-numeric:tabular-nums}
 
-/* ---- day strip ---- */
-.daystrip{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:9px 12px 11px;
+/* day strip */
+.daystrip{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:9px var(--gut) 11px;
   background:var(--surface);border-top:1px solid var(--line);scrollbar-width:none}
 .daystrip::-webkit-scrollbar{display:none}
-.dchip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface2);border-radius:10px;
-  padding:6px 9px;text-align:left;min-width:76px}
-.dchip .dn{font-size:9px;letter-spacing:.1em;font-weight:700;color:var(--ink3)}
-.dchip .dk{font-size:13px;font-weight:700;margin-top:1px;font-family:var(--f-num)}
+.dchip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface2);border-radius:11px;
+  padding:7px 10px;text-align:left;min-width:82px}
+.dchip .dn{font-size:9px;letter-spacing:.1em;font-weight:800;color:var(--ink3)}
+.dchip .dk{font-size:13px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
 .dchip .dk small{font-size:9px;color:var(--ink3);font-weight:600}
 .dchip.on{background:var(--ink);border-color:var(--ink)}
 .dchip.on .dn{color:color-mix(in srgb,var(--bg) 70%,transparent)}
 .dchip.on .dk{color:var(--bg)}
 .dchip.on .dk small{color:color-mix(in srgb,var(--bg) 60%,transparent)}
 
-/* ---- generic cards ---- */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:20px 2px 9px}
-.sechead:first-child{margin-top:2px}
-.sechead h2{font-size:13px;font-weight:750;letter-spacing:.01em;margin:0}
-.sechead .sh{font-size:10px;color:var(--ink3)}
+/* filmstrip */
+.strip{flex:0 0 auto;display:none;gap:7px;overflow-x:auto;overflow-y:hidden;padding:8px var(--gut);
+  background:var(--surface);border-top:1px solid var(--line);scrollbar-width:none;align-items:center}
+.strip::-webkit-scrollbar{display:none}
+.strip.on{display:flex}
+.strip .sl{font-size:8.5px;letter-spacing:.12em;color:var(--ink3);font-weight:700;flex:0 0 auto;
+  white-space:nowrap;opacity:.85;padding-right:2px;margin:0}
+.thumb{flex:0 0 auto;width:58px;height:44px;border-radius:8px;overflow:hidden;position:relative;
+  border:1px solid var(--line);background:var(--sunk);display:block;padding:0}
+.thumb svg{display:block;width:100%;height:100%}
+.thumb.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.4) translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.thumb .vbadge{font-size:7.5px;padding:1px 3px;right:3px;bottom:3px}
 
-/* summary */
-.hero{padding:16px 15px 15px;background:var(--surface);border:1px solid var(--line);border-radius:16px;
-  box-shadow:var(--shadow);position:relative;overflow:hidden}
-.hero .ht{font-size:10px;letter-spacing:.16em;color:var(--accent);font-weight:700}
-.hero .hn{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-top:5px;line-height:1.15}
-.hero .hd{font-size:11px;color:var(--ink2);margin-top:5px;line-height:1.5}
-.bigrow{display:flex;gap:12px;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
-.big{flex:1}
-.big .bv{font-size:26px;font-weight:800;line-height:1;letter-spacing:-.03em}
-.big .bv small{font-size:11px;font-weight:600;color:var(--ink3);margin-left:2px;letter-spacing:0}
-.big .lab{margin-top:5px}
-.minirow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.mini{background:var(--surface2);border-radius:10px;padding:8px 6px;text-align:center}
-.mini .mv{font-size:15px;font-weight:750;line-height:1}
-.mini .ml{font-size:8.5px;color:var(--ink3);margin-top:4px;font-weight:600;letter-spacing:.04em}
+/* ---- album ---- */
+.albhead{margin:20px 0 9px;display:flex;align-items:baseline;gap:9px}
+.albhead .an{font-family:var(--f-round);font-size:13.5px;font-weight:800}
+.albhead .am{font-size:10.5px;color:var(--ink3)}
 
-/* day card */
-.daycard{width:100%;text-align:left;padding:12px 13px;display:block;margin-bottom:9px}
-.daycard.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
-.dh{display:flex;align-items:center;gap:8px}
-.dbadge{width:30px;height:30px;border-radius:9px;background:var(--sunk);display:grid;place-items:center;
-  font-size:11px;font-weight:800;flex:0 0 auto;font-family:var(--f-num)}
-.daycard.on .dbadge{background:var(--accent);color:var(--accent-ink)}
-.dtitle{flex:1;min-width:0}
-.dtitle .a{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dtitle .b{font-size:10px;color:var(--ink3);margin-top:1px}
-.dstats{display:flex;gap:12px;margin-top:9px}
-.dstat .sv{font-size:14px;font-weight:750;font-family:var(--f-num);letter-spacing:-.02em}
-.dstat .sv small{font-size:9px;color:var(--ink3);font-weight:600}
-.dstat .sl{font-size:8.5px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-top:2px}
-.spark{width:100%;height:34px;display:block;margin-top:8px}
-.dhl{font-size:10.5px;color:var(--ink2);margin-top:8px;line-height:1.45;display:flex;gap:6px;align-items:flex-start}
-.dhl .q{color:var(--accent);font-weight:800;flex:0 0 auto}
-.pinrow{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
-.pinchip{display:flex;align-items:center;gap:4px;font-size:9.5px;font-weight:600;color:var(--ink2);
-  background:var(--surface2);border-radius:6px;padding:3px 6px}
-.dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
-
-/* briefing */
-.segbar{display:flex;background:var(--sunk);border-radius:10px;padding:3px;gap:3px}
-.segbar button{flex:1;font-size:11px;font-weight:700;padding:7px 4px;border-radius:8px;color:var(--ink3)}
-.segbar button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.brief{padding:15px 15px 14px;margin-top:11px}
+/* ---- guide / record ---- */
+.hero{padding:16px 15px 15px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow2);position:relative;overflow:hidden}
+.hero .ht{font-size:10px;letter-spacing:.16em;color:var(--accent);font-weight:800}
+.hero .hn{font-family:var(--f-round);font-size:21px;font-weight:800;margin-top:6px;line-height:1.25}
+.hero .hd{font-size:11.5px;color:var(--ink2);margin-top:6px;line-height:1.6}
+.segbar{display:flex;background:var(--sunk);border-radius:11px;padding:3px;gap:3px}
+.segbar button{flex:1;font-size:11.5px;font-weight:700;padding:8px 4px;border-radius:9px;color:var(--ink3);text-align:center}
+.segbar button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow2)}
+.brief{padding:15px 15px 14px;margin-top:12px}
 .briefhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.briefhead .bt{font-size:16px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
-.briefhead .bs{font-size:10.5px;color:var(--ink3);margin-top:3px}
+.briefhead .bt{font-family:var(--f-round);font-size:16px;font-weight:800;line-height:1.3}
+.briefhead .bs{font-size:10.5px;color:var(--ink3);margin-top:4px;font-variant-numeric:tabular-nums}
 .wx{text-align:right;flex:0 0 auto}
-.wx .wt{font-size:17px;font-weight:750;font-family:var(--f-num)}
-.wx .ws{font-size:9.5px;color:var(--ink3);margin-top:1px}
-.tl{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
-.tlrow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
-.tlrow:last-child{border-bottom:none}
-.tltime{font-family:var(--f-num);font-size:11.5px;font-weight:700;width:42px;flex:0 0 auto;padding-top:1px}
-.tlbar{width:2px;background:var(--line);flex:0 0 auto;border-radius:1px;position:relative}
-.tlbar::before{content:"";position:absolute;left:-3px;top:3px;width:8px;height:8px;border-radius:50%;background:var(--ink3)}
-.tlrow[data-k="danger"] .tlbar::before{background:var(--danger)}
-.tlrow[data-k="water"] .tlbar::before{background:var(--water)}
-.tlrow[data-k="photo"] .tlbar::before{background:var(--photo)}
-.tlrow[data-k="food"] .tlbar::before{background:var(--food)}
-.tlrow[data-k="rest"] .tlbar::before{background:var(--rest)}
-.tlbody{flex:1;min-width:0}
-.tlbody .n{font-size:12px;font-weight:700}
-.tlbody .d{font-size:10.5px;color:var(--ink2);margin-top:2px;line-height:1.45}
-.tlbody .km{font-size:9.5px;color:var(--ink3);font-family:var(--f-num);margin-top:3px}
-.guestrow{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.wx .wt{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.wx .ws{font-size:9.5px;color:var(--ink3);margin-top:2px}
+.quote{font-size:11.5px;color:var(--ink2);margin-top:11px;line-height:1.65;display:flex;gap:7px;align-items:flex-start}
+.quote .q{color:var(--accent);font-weight:800;flex:0 0 auto}
+.guestrow{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
 .guestrow:last-child{border-bottom:none}
-.av{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
-  font-size:10.5px;font-weight:800;color:var(--accent-ink);background:var(--accent)}
-.gname{font-size:11.5px;font-weight:700}
-.gmeta{font-size:9.5px;color:var(--ink3);margin-top:1px}
-.gnote{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.guestrow .av{width:32px;height:32px;font-size:11px}
+.gname{font-size:12px;font-weight:800}
+.gmeta{font-size:10px;color:var(--ink3);margin-top:2px}
+.gnote{font-size:11px;color:var(--ink2);margin-top:5px;line-height:1.55}
 .flagpill{font-size:8.5px;font-weight:800;letter-spacing:.08em;color:var(--ink3);border:1px solid var(--line);
   border-radius:4px;padding:1px 4px;margin-left:5px;vertical-align:1px}
 .alert{background:color-mix(in srgb,var(--danger) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--danger) 32%,var(--line));
-  border-radius:10px;padding:9px 11px;margin-top:12px}
-.alert .at{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--danger)}
-.alert .ad{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.45}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin-top:12px;font-size:11px}
-.kv dt{color:var(--ink3);font-weight:600;white-space:nowrap}
-.kv dd{margin:0;color:var(--ink2)}
-
-/* certificate */
-.cert{margin-top:12px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface);
+  border-radius:11px;padding:10px 12px;margin-top:12px}
+.alert .at{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--danger);font-variant-numeric:tabular-nums}
+.alert .ad{font-size:11px;color:var(--ink2);margin-top:5px;line-height:1.5}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin-top:13px;font-size:11.5px}
+.kv dt{color:var(--ink3);font-weight:700;white-space:nowrap}
+.kv dd{margin:0;color:var(--ink2);line-height:1.55}
+.cert{margin-top:12px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surface);
   box-shadow:var(--shadow);position:relative}
-.certtop{padding:16px 16px 12px;background:linear-gradient(160deg,var(--sunk),var(--surface));
-  border-bottom:1px dashed var(--line);position:relative}
+.certtop{padding:16px 16px 13px;background:linear-gradient(160deg,var(--sunk),var(--surface));
+  border-bottom:1px dashed var(--line)}
 .certlab{font-size:8.5px;letter-spacing:.28em;color:var(--accent);font-weight:800}
-.certname{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-top:7px;line-height:1.15}
-.certsub{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.5}
+.certname{font-family:var(--f-round);font-size:20px;font-weight:800;margin-top:8px;line-height:1.2}
+.certsub{font-size:10.5px;color:var(--ink2);margin-top:5px;line-height:1.55}
 .certmap{display:block;width:100%;height:150px;background:var(--sea)}
 .certstats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
-.certstat{padding:11px 8px;text-align:center;border-right:1px solid var(--line)}
+.certstat{padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
 .certstat:last-child{border-right:none}
-.certstat .cv{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.certstat .cv{font-size:17px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .certstat .cv small{font-size:9px;color:var(--ink3);font-weight:600}
-.certstat .cl{font-size:8px;color:var(--ink3);letter-spacing:.1em;margin-top:4px;font-weight:700}
+.certstat .cl{font-size:8.5px;color:var(--ink3);margin-top:5px;font-weight:700}
 .stamps{display:flex;gap:5px;padding:12px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
-.stamp{flex:1;min-width:38px;border:1px solid var(--line);border-radius:7px;padding:5px 2px;text-align:center;background:var(--surface2)}
-.stamp .sd{font-size:8px;color:var(--ink3);font-weight:700;letter-spacing:.06em}
-.stamp .sk{font-size:10px;font-weight:750;font-family:var(--f-num);margin-top:2px}
-.certfoot{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 15px 15px;border-top:1px solid var(--line)}
+.stamp{flex:1;min-width:38px;border:1px solid var(--line);border-radius:8px;padding:6px 2px;text-align:center;background:var(--surface2)}
+.stamp .sd{font-size:8px;color:var(--ink3);font-weight:800;letter-spacing:.06em}
+.stamp .sk{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:3px}
+.certfoot{display:flex;justify-content:space-between;align-items:flex-end;padding:13px 15px 15px;border-top:1px solid var(--line)}
 .sig{font-size:10px;color:var(--ink3)}
 .sig b{display:block;font-size:13px;color:var(--ink);margin-top:3px;letter-spacing:.02em}
 .seal{width:56px;height:56px;flex:0 0 auto}
 .gpick{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .gpick::-webkit-scrollbar{display:none}
-.gbtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
-  border-radius:20px;padding:4px 11px 4px 4px;font-size:11px;font-weight:650}
-.gbtn .av{width:24px;height:24px;font-size:9px;background:var(--sunk);color:var(--ink2)}
+.gbtn{flex:0 0 auto;display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);
+  border-radius:21px;padding:5px 12px 5px 5px;font-size:11.5px;font-weight:700}
+.gbtn .av{width:26px;height:26px;font-size:9.5px;background:var(--sunk);color:var(--ink2)}
 .gbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .gbtn.on .av{background:var(--accent);color:var(--accent-ink)}
-.note{font-size:10px;color:var(--ink3);line-height:1.55;margin-top:11px;padding:0 2px}
+.note{font-size:10.5px;color:var(--ink3);line-height:1.6;margin-top:12px;padding:0 2px}
+.pinchip{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--ink2);
+  background:var(--surface2);border-radius:7px;padding:4px 7px}
+.dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
 
-/* tabs */
+/* ---- bottom nav ---- */
 .tabs{flex:0 0 auto;display:flex;background:var(--surface);border-top:1px solid var(--line);
-  padding:5px 4px calc(5px + env(safe-area-inset-bottom,0px))}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;color:var(--ink3)}
-.tab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.tab span{font-size:9px;font-weight:700;letter-spacing:.03em}
+  padding:5px 2px calc(4px + env(safe-area-inset-bottom,0px));z-index:30}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:6px 2px 4px;min-height:46px;color:var(--ink3)}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tab span{font-size:9.5px;font-weight:700;letter-spacing:.02em}
 .tab.on{color:var(--accent)}
+#rigpark{display:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -275,7 +411,7 @@ main{flex:1 1 auto;position:relative;overflow:hidden}
         <circle cx="22" cy="9" r="3.1" fill="var(--accent)"/>
       </svg>
       <div style="min-width:0">
-        <div class="t1">SETOUCHI &rarr; SHIKOKU TRAVERSE</div>
+        <div class="t1" id="tourTitle">瀬戸内から四国へ</div>
         <div class="t2" id="tourSub"></div>
       </div>
     </div>
@@ -288,19 +424,14 @@ main{flex:1 1 auto;position:relative;overflow:hidden}
   </header>
 
   <main>
-    <section class="panel on" id="p-map">
-      <div class="mapwrap">
-        <svg id="map" viewBox="0 0 1000 1470" preserveAspectRatio="xMidYMid slice" aria-label="Route map"></svg>
-        <div class="hud">
-          <div class="hudcell"><div class="lab" data-i18n="hDist">DIST</div><div class="v num" id="hDist">0.0<small>km</small></div></div>
-          <div class="hudcell"><div class="lab" data-i18n="hEle">ELEV</div><div class="v num" id="hEle">0<small>m</small></div></div>
-          <div class="hudcell"><div class="lab" data-i18n="hGrad">GRADE</div><div class="v num" id="hGrad">0.0<small>%</small></div></div>
-          <div class="hudcell"><div class="lab" data-i18n="hSpd">SPEED</div><div class="v num" id="hSpd">0.0<small>km/h</small></div></div>
-          <div class="hudcell"><div class="lab" data-i18n="hTime">TIME</div><div class="v num" id="hTime">08:00</div></div>
-        </div>
-        <div class="callout" id="callout"><div class="cn" id="coName"></div><div class="cd" id="coDesc"></div></div>
-        <div class="mapbadge" id="mapBadge"></div>
-      </div>
+    <section class="panel on" id="p-home"><div class="scroll" id="homeBody"></div></section>
+    <section class="panel" id="p-detail"><div class="scroll flush" id="detailBody"></div></section>
+
+    <section class="panel" id="p-map">
+      <div class="mslot" id="mapSlotFull"></div>
+      <button class="mapback" id="mapBack" aria-label="Back">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+      </button>
       <div class="strip" id="strip"></div>
       <div class="ctrl">
         <button class="play" id="playBtn" aria-label="Play"><svg id="playIcon" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></svg></button>
@@ -309,113 +440,97 @@ main{flex:1 1 auto;position:relative;overflow:hidden}
           <div class="d2" id="ctrlSub"></div>
         </div>
         <button class="chip" id="speedBtn">1&times;</button>
-        <button class="chip on" id="tourBtn" data-i18n="tourMode">TOUR</button>
+        <button class="chip on" id="tourBtn" data-i18n="tourMode">通し</button>
       </div>
-      <div class="profwrap">
-        <svg id="prof" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-label="Elevation profile"></svg>
-        <div class="profax"><span id="axA">0 km</span><span id="axB"></span></div>
-      </div>
+      <div id="profSlotFull"></div>
       <div class="daystrip" id="dayStrip"></div>
     </section>
 
-    <section class="panel" id="p-days"><div class="scroll" id="daysBody"></div></section>
     <section class="panel" id="p-album"><div class="scroll" id="albumBody"></div></section>
-    <section class="panel" id="p-brief"><div class="scroll" id="briefBody"></div></section>
-    <section class="panel" id="p-card"><div class="scroll" id="cardBody"></div></section>
+    <section class="panel" id="p-record"><div class="scroll" id="recordBody"></div></section>
+    <section class="panel" id="p-guide"><div class="scroll" id="guideBody"></div></section>
   </main>
 
-  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Media">
+  <div id="rigpark">
+    <div class="mapwrap" id="mapwrap">
+      <svg id="map" viewBox="0 0 1000 1470" preserveAspectRatio="xMidYMid slice" aria-label="Route map"></svg>
+      <div class="hud">
+        <div class="hudcell"><div class="lab" data-i18n="hDist">距離</div><div class="v" id="hDist">0.0<small>km</small></div></div>
+        <div class="hudcell"><div class="lab" data-i18n="hEle">標高</div><div class="v" id="hEle">0<small>m</small></div></div>
+        <div class="hudcell"><div class="lab" data-i18n="hGrad">勾配</div><div class="v" id="hGrad">0.0<small>%</small></div></div>
+        <div class="hudcell"><div class="lab" data-i18n="hSpd">速度</div><div class="v" id="hSpd">0.0<small>km/h</small></div></div>
+        <div class="hudcell"><div class="lab" data-i18n="hTime">時刻</div><div class="v" id="hTime">08:00</div></div>
+      </div>
+      <div class="callout" id="callout"><div class="cn" id="coName"></div><div class="cd" id="coDesc"></div></div>
+      <div class="mapbadge" id="mapBadge"></div>
+    </div>
+    <div class="profwrap" id="profwrap">
+      <svg id="prof" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-label="Elevation profile"></svg>
+      <div class="profax"><span id="axA">0 km</span><span id="axB"></span></div>
+    </div>
+  </div>
+
+  <div class="viewer" id="sheet" role="dialog" aria-modal="true" aria-label="Media">
     <div class="scrim" id="scrim"></div>
-    <div class="sbody">
-      <div class="grab"></div>
+    <div class="vbody">
+      <button class="vclose" id="closeB" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
       <div class="stage" id="stage">
         <div id="stageArt"></div>
         <button class="bigplay hide" id="bigplay" aria-label="Play"><i></i></button>
         <div class="vbar" id="vbar"><i id="vbarI"></i></div>
         <div class="vtime" id="vtime"></div>
       </div>
-      <div class="sinfo">
+      <div class="vinfo">
         <div class="smeta" id="sMeta"></div>
         <div class="stitle" id="sTitle"></div>
         <div class="scap" id="sCap"></div>
-        <div class="stags" id="sTags"></div>
+        <button class="vmapbtn" id="toMapB" data-i18n="openMap">地図で見る</button>
       </div>
       <div class="snav">
         <button class="nbtn" id="prevB" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
         <button class="nbtn" id="nextB" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button>
         <div class="ncount" id="sCount"></div>
-        <button class="closeb" id="closeB" data-i18n="close">閉じる</button>
       </div>
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <nav class="tabs" role="tablist">
-    <button class="tab on" data-tab="map" role="tab" aria-selected="true">
+    <button class="tab on" data-tab="home" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M9.5 20v-6h5v6"/></svg>
+      <span data-i18n="navHome">ホーム</span></button>
+    <button class="tab" data-tab="map" role="tab" aria-selected="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5 9 4z"/><path d="M9 4v13M15 6.5v13"/></svg>
-      <span data-i18n="tabMap">MAP</span></button>
-    <button class="tab" data-tab="days" role="tab" aria-selected="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      <span data-i18n="tabDays">DAYS</span></button>
+      <span data-i18n="navMap">地図</span></button>
     <button class="tab" data-tab="album" role="tab" aria-selected="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 15 5-4.5 4 3.5 3.5-3 5.5 4.5"/><circle cx="8.5" cy="9.5" r="1.4"/></svg>
-      <span data-i18n="tabAlbum">ALBUM</span></button>
-    <button class="tab" data-tab="brief" role="tab" aria-selected="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h4"/></svg>
-      <span data-i18n="tabBrief">BRIEF</span></button>
-    <button class="tab" data-tab="card" role="tab" aria-selected="false">
+      <span data-i18n="navPhotos">写真</span></button>
+    <button class="tab" data-tab="record" role="tab" aria-selected="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9.5" r="5.5"/><path d="M8 14.5 6.5 21l5.5-2.8L17.5 21 16 14.5"/></svg>
-      <span data-i18n="tabCard">CARD</span></button>
+      <span data-i18n="navRecord">記録</span></button>
+    <button class="tab" data-tab="guide" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h4"/></svg>
+      <span data-i18n="navGuide">ガイド</span></button>
   </nav>
 </div>
 <style>
-/* ---- media: filmstrip, map thumbs, album, sheet ---- */
-.strip{flex:0 0 auto;display:none;gap:7px;overflow-x:auto;overflow-y:hidden;padding:8px 12px;
-  background:var(--surface);border-top:1px solid var(--line);scrollbar-width:none;align-items:center}
-.strip::-webkit-scrollbar{display:none}
-.strip.on{display:flex}
-.strip .sl{font-size:8.5px;letter-spacing:.12em;color:var(--ink3);font-weight:700;flex:0 0 auto;
-  white-space:nowrap;opacity:.85;padding-right:2px}
-.thumb{flex:0 0 auto;width:58px;height:44px;border-radius:7px;overflow:hidden;position:relative;
-  border:1px solid var(--line);background:var(--sunk);display:block;padding:0}
-.thumb svg{display:block;width:100%;height:100%}
-.thumb.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
-@keyframes pop{from{transform:scale(.4) translateY(8px);opacity:0}to{transform:none;opacity:1}}
-.vbadge{position:absolute;right:3px;bottom:3px;background:rgba(8,14,17,.72);color:#fff;font-size:7.5px;
-  font-weight:700;border-radius:3px;padding:1px 3px;font-family:var(--f-num);letter-spacing:.02em}
-.vplay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.vplay i{width:20px;height:20px;border-radius:50%;background:rgba(8,14,17,.5);display:grid;place-items:center;
-  backdrop-filter:blur(2px);border:1px solid rgba(255,255,255,.5)}
-.vplay i::after{content:"";border-left:6px solid #fff;border-top:4px solid transparent;
-  border-bottom:4px solid transparent;margin-left:2px}
-
-/* album */
-.albday{margin:18px 2px 8px;display:flex;align-items:baseline;gap:8px}
-.albday .an{font-size:12.5px;font-weight:750}
-.albday .am{font-size:10px;color:var(--ink3)}
-.albday:first-child{margin-top:2px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.gcell{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--sunk);
-  aspect-ratio:4/3;padding:0;display:block;box-shadow:var(--shadow)}
-.gcell svg{display:block;width:100%;height:100%}
-.gcap{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 7px;
-  background:linear-gradient(to top,rgba(6,12,14,.82),rgba(6,12,14,0));text-align:left}
-.gcap .gt{font-size:10px;font-weight:700;color:#fff;line-height:1.25;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.gcap .gm{font-size:8.5px;color:rgba(255,255,255,.72);margin-top:2px;font-family:var(--f-num)}
-.gcell .vbadge{font-size:8.5px;padding:2px 4px;right:5px;bottom:auto;top:5px}
-
-/* sheet */
-.sheet{position:absolute;inset:0;z-index:60;display:none}
-.sheet.on{display:block}
-.scrim{position:absolute;inset:0;background:rgba(4,9,11,.55);backdrop-filter:blur(3px);
-  animation:fade .25s ease}
+/* ---- full-screen media viewer ---- */
+.viewer{position:absolute;inset:0;z-index:60;display:none}
+.viewer.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(4,9,11,.92);animation:fade .22s ease}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.sbody{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;
-  box-shadow:0 -8px 40px rgba(0,0,0,.35);animation:rise .32s cubic-bezier(.2,.9,.3,1);
-  max-height:94%;display:flex;flex-direction:column;overflow:hidden}
-@keyframes rise{from{transform:translateY(102%)}to{transform:none}}
-.grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:8px auto 0;flex:0 0 auto}
-.stage{position:relative;margin:10px 12px 0;border-radius:14px;overflow:hidden;background:var(--sunk);
+.vbody{position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:calc(10px + env(safe-area-inset-top,0px)) 0 calc(8px + env(safe-area-inset-bottom,0px));
+  animation:vin .26s cubic-bezier(.2,.9,.3,1)}
+@keyframes vin{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.vclose{position:absolute;right:12px;top:calc(12px + env(safe-area-inset-top,0px));z-index:5;
+  width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;color:#fff;
+  border:1px solid rgba(255,255,255,.2)}
+.vclose svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.stage{position:relative;margin:52px 12px 0;border-radius:14px;overflow:hidden;background:#000;
   aspect-ratio:4/3;flex:0 0 auto;touch-action:pan-y}
 .stage svg{display:block;width:100%;height:100%;transform-origin:52% 46%}
 .stage.kb svg{animation:kb 9s ease-out forwards}
@@ -431,25 +546,23 @@ main{flex:1 1 auto;position:relative;overflow:hidden}
   background:rgba(255,255,255,.28);overflow:hidden;display:none}
 .vbar.on{display:block}
 .vbar i{display:block;height:100%;width:0;background:#fff;border-radius:2px}
-.vtime{position:absolute;right:10px;bottom:16px;font-size:9px;color:#fff;font-family:var(--f-num);
+.vtime{position:absolute;right:10px;bottom:16px;font-size:9px;color:#fff;font-variant-numeric:tabular-nums;
   text-shadow:0 1px 3px rgba(0,0,0,.6);display:none}
 .vtime.on{display:block}
-.sinfo{padding:12px 15px 4px;overflow-y:auto;flex:1}
-.smeta{display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--ink3);font-family:var(--f-num);
-  letter-spacing:.04em}
+.vinfo{padding:14px 18px 6px;overflow-y:auto;flex:1;color:#fff}
+.smeta{font-size:10px;color:rgba(255,255,255,.62);font-variant-numeric:tabular-nums;letter-spacing:.06em;font-weight:700}
 .smeta b{color:var(--accent);font-weight:800}
-.stitle{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-top:5px;line-height:1.25;text-wrap:balance}
-.scap{font-size:11.5px;color:var(--ink2);line-height:1.62;margin-top:7px}
-.stags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
-.snav{display:flex;align-items:center;gap:9px;padding:11px 14px calc(13px + env(safe-area-inset-bottom,0px));
-  border-top:1px solid var(--line);flex:0 0 auto}
-.nbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);
-  display:grid;place-items:center;flex:0 0 auto}
-.nbtn:disabled{opacity:.35}
-.nbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ncount{flex:1;text-align:center;font-size:10px;color:var(--ink3);font-family:var(--f-num);letter-spacing:.08em}
-.closeb{height:34px;padding:0 14px;border-radius:17px;background:var(--ink);color:var(--bg);
-  font-size:11px;font-weight:700;letter-spacing:.06em;flex:0 0 auto}
+.stitle{font-family:var(--f-round);font-size:17px;font-weight:800;margin-top:6px;line-height:1.35}
+.scap{font-size:12px;color:rgba(255,255,255,.76);line-height:1.7;margin-top:8px}
+.vmapbtn{margin-top:14px;height:42px;padding:0 18px;border-radius:21px;background:var(--accent);color:var(--accent-ink);
+  font-size:12.5px;font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.vmapbtn:active{transform:scale(.97)}
+.snav{display:flex;align-items:center;gap:10px;padding:10px 16px 4px;flex:0 0 auto}
+.nbtn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);
+  display:grid;place-items:center;flex:0 0 auto;color:#fff}
+.nbtn:disabled{opacity:.3}
+.nbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ncount{flex:1;text-align:right;font-size:11px;color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums;letter-spacing:.08em}
 </style>
 
 <script>
@@ -630,7 +743,7 @@ var DAYS=[
        [34.0900,132.9880],[34.0760,132.9930],[34.0651,132.9979]],
   poi:[{f:.02,k:"rest",ja:"尾道渡船 / 向島へ",en:"Onomichi ferry to Mukaishima",dja:"自転車ごと乗船・片道110円。5分間隔。",den:"Bikes ride free-flow, 110 yen, every 5 min."},
        {f:.20,k:"photo",ja:"因島大橋",en:"Innoshima Bridge",dja:"車道の下層が自転車道。金網越しの海。",den:"Cyclists use the deck below the traffic lane."},
-       {f:.38,k:"food",ja:"瀬戸田 / レモンとタコ",en:"Setoda: lemon and octopus",dja:"11:40着予定。ここで昼。塩レモン補給。",den:"Lunch stop. Salt-lemon refill here."},
+       {f:.38,k:"food",ja:"瀬戸田 / レモンとタコ",en:"Setoda: lemon and octopus",dja:"ここで昼。塩レモン補給。",den:"Lunch stop. Salt-lemon refill here."},
        {f:.50,k:"photo",ja:"多々羅大橋 / 鳴き龍",en:"Tatara Bridge multi-echo",dja:"主塔の真下で手を叩くとドラゴンが鳴く。全員やる。",den:"Clap under the tower. Everyone does it."},
        {f:.62,k:"water",ja:"大三島 道の駅",en:"Omishima roadside station",dja:"この先20kmは自販機のみ。ボトル2本満タンに。",den:"Last real refill for 20 km. Fill both bottles."},
        {f:.79,k:"danger",ja:"大島 宮窪の下り",en:"Miyakubo descent, Oshima",dja:"路面が粗く採石場のダンプが多い。車間を開けて一列。",den:"Coarse surface, quarry trucks. Single file, wide gaps."},
@@ -676,7 +789,7 @@ var DAYS=[
   wx:{t:"18° / 稜線 11°",ja:"晴 / 稜線は西風 8m",en:"Clear / 8m/s on the ridge"},
   pts:[[33.5060,132.5450],[33.5120,132.5750],[33.5220,132.6100],[33.5300,132.6400],[33.5350,132.6560],[33.5420,132.6900],[33.5460,132.7250],[33.5380,132.7600],[33.5250,132.7900],[33.5330,132.8250],[33.5450,132.8550],[33.5400,132.8850],[33.5220,132.9050],[33.5020,132.9120],[33.4880,132.9020],[33.4760,132.8860],[33.4700,132.8900],[33.4640,132.9050],[33.4590,132.9180],[33.4560,132.9280],[33.4520,132.9450],[33.4480,132.9620],[33.4450,132.9800]],
   poi:[{f:.12,k:"water",ja:"内子 最後のコンビニ",en:"Uchiko: last convenience store",dja:"この先50km 補給ゼロ。全員に確認する場所。",den:"No resupply for 50 km. Check every rider here."},
-       {f:.30,k:"food",ja:"小田 / 手打ちそば",en:"Oda soba house",dja:"11時開店。登坂前の最後の温かい食事。",den:"Opens at 11. Last hot food before the climb."},
+       {f:.30,k:"food",ja:"小田 / 手打ちそば",en:"Oda soba house",dja:"登坂前の最後の温かい食事。開店時刻は前夜に確認する。",den:"Last hot food before the climb. Confirm opening hours the night before."},
        {f:.47,k:"danger",ja:"地芳峠 本格登坂 開始",en:"Jiyoshi Pass climb begins",dja:"平均7%・14km。ここでグループを解散し各自のペースへ。",den:"14 km at 7%. Break the group, everyone rides own pace."},
        {f:.71,k:"water",ja:"地芳峠 湧水",en:"Jiyoshi Pass spring",dja:"冷たい。稜線に出る前の最終給水。",den:"Ice cold. Final water before the ridge."},
        {f:.84,k:"photo",ja:"姫鶴平",en:"Mezuru-daira",dja:"牧柵と風車と雲。ゲスト全員を止めて撮る。",den:"Fences, turbines, cloud. Stop everyone and shoot."},
@@ -708,7 +821,7 @@ var DAYS=[
        [32.9900,132.9200],[32.9880,132.9330]],
   poi:[{f:.14,k:"water",ja:"十和 道の駅",en:"Towa roadside station",dja:"川エビとアイスクリン。トイレあり。",den:"River shrimp and ice cream. Toilets."},
        {f:.32,k:"photo",ja:"三島沈下橋",en:"Mishima low-water bridge",dja:"中州の集落へ渡る橋。朝の斜光が一番。",den:"Crosses to a mid-river island hamlet."},
-       {f:.50,k:"food",ja:"江川崎 / 鮎の塩焼き",en:"Ekawasaki: salt-grilled ayu",dja:"炭で1時間かけて焼く。11:50に電話予約済み。",den:"An hour over charcoal. Booked for 11:50."},
+       {f:.50,k:"food",ja:"江川崎 / 鮎の塩焼き",en:"Ekawasaki: salt-grilled ayu",dja:"炭で1時間かけて焼く。到着予定を伝えて電話予約済み。",den:"An hour over charcoal. Booked, arrival time given."},
        {f:.64,k:"danger",ja:"沈下橋は欄干なし",en:"No railings on the bridges",dja:"幅3.5m、両側は水面まで4m。必ず一列・徐行・立ち止まらない。",den:"3.5 m wide, 4 m drop, no rail. Single file, slow, no stopping."},
        {f:.82,k:"photo",ja:"岩間沈下橋",en:"Iwama low-water bridge",dja:"ポスターで有名な一本。ここで集合写真を撮る。",den:"The postcard one. Group photo here."},
        {f:.97,k:"photo",ja:"佐田沈下橋",en:"Sada low-water bridge",dja:"河口に一番近い最長の沈下橋。291.6m。",den:"Longest and closest to the sea. 291.6 m."}]},
@@ -721,7 +834,7 @@ var DAYS=[
   wx:{t:"26°",ja:"晴 / 追い風 西 5m",en:"Clear / tailwind W 5m/s"},
   pts:[[33.2200,133.2950],[33.2500,133.3050],[33.2800,133.3150],[33.3200,133.3050],[33.3600,133.2900],[33.3900,133.2800],[33.4150,133.3200],[33.4400,133.3600],[33.4700,133.4100],[33.4900,133.4600],[33.4980,133.5200],[33.4970,133.5730],[33.5150,133.5620],[33.5350,133.5520],[33.5670,133.5440]],
   poi:[{f:.02,k:"rest",ja:"久礼スタート / 中村より輪行",en:"Start at Kure, after the rail transfer",dja:"土讃線で中村→窪川→久礼。輪行袋の畳み方は前夜に実演済み。",den:"Nakamura to Kure by rail. Bike-bag drill done the night before."},
-       {f:.11,k:"food",ja:"久礼 大正町市場 / 藁焼き",en:"Kure market: straw-seared bonito",dja:"目の前で藁が1m立ち上がる。10:30予約。全ツアーの山場。",den:"A metre of flame at the counter. Booked 10:30. The highlight."},
+       {f:.11,k:"food",ja:"久礼 大正町市場 / 藁焼き",en:"Kure market: straw-seared bonito",dja:"目の前で藁が1m立ち上がる。到着に合わせて予約済み。全ツアーの山場。",den:"A metre of flame at the counter. Booked to our arrival. The highlight."},
        {f:.31,k:"danger",ja:"焼坂峠 トンネル",en:"Yakizaka tunnel",dja:"照明が弱く路肩が狭い。リアライト必須・全員点灯確認。",den:"Dim, narrow shoulder. Rear lights on, check every rider."},
        {f:.50,k:"water",ja:"須崎 / 道の駅",en:"Susaki roadside station",dja:"鍋焼きラーメンの町。ここで大休止。",den:"Nabeyaki ramen town. Long break here."},
        {f:.72,k:"water",ja:"土佐市 / 最終補給",en:"Tosa City, final refill",dja:"残り25km。ここで完走の段取りを共有する。",den:"25 km left. Brief the finish here."},
@@ -767,7 +880,21 @@ var TOWNS=[
 ];
 
 var I18N={
- ja:{tabMap:"地図",tabDays:"行程",tabAlbum:"アルバム",tabBrief:"ブリーフ",tabCard:"記録",close:"閉じる",album:"ツアーアルバム",shots:"点",passed:"通過",tapPin:"地図のピンをタップすると、その場所の写真と動画が開きます。",onRoute:"地点",videoOf:"動画",photoOf:"写真",
+ ja:{navHome:"ホーム",navMap:"地図",navPhotos:"写真",navRecord:"記録",navGuide:"ガイド",
+     feedTitle:"活動日記",wholeTour:"総集編",allDays:"全7日",
+     uDays:"日間",uKm:"km",uM:"m",uKmh:"km/h",
+     stDays:"日数",stDist:"活動距離",stUp:"のぼり",stDown:"くだり",stTime:"活動時間",stRest:"休憩",stAvg:"平均速度",
+     roleGuide:"ガイド",secMap:"地図",secElev:"標高グラフ",secCourse:"コースタイム",secPhotos:"写真",secBody:"本文",
+     fullscreen:"全画面",back:"戻る",share:"共有",copied:"リンクをコピーしました",shareNA:"共有できませんでした",
+     scrubHint:"グラフを指でなぞると、地図上の現在地・距離・標高・時刻が連動して動きます。丸印はその地点で撮った写真です。",
+     tourElevHint:"7日間の標高を続けて表示しています。区切り線が日の変わり目です。",
+     courseStart:"スタート地点。点検・空気圧・ボトル確認。",courseGoal:"ゴール。洗車とチェーン注油、翌日の天候確認。",
+     shotAt:"撮影",hazard:"要注意",noHazard:"特筆すべき危険箇所なし",resupply:"箇所で補給できます。ボトル2本＋補給食2つ。",
+     gearHigh:"ウインドブレーカー必携。稜線は下界より9℃低い。指付きグローブ。",
+     gearLow:"アームウォーマー。午後は暑くなるので薄手で。",
+     todayFlag:"本日注意",bikeLab:"機材",issuedAt:"2026年10月18日 高知にて",
+     certLine:"尾道 → 高知 / 全7日間 完走",
+     tabMap:"地図",tabDays:"行程",tabAlbum:"アルバム",tabBrief:"ブリーフ",tabCard:"記録",close:"閉じる",album:"ツアーアルバム",shots:"点",passed:"通過",tapPin:"地図のピンをタップすると、その場所の写真と動画が開きます。",onRoute:"地点",videoOf:"動画",photoOf:"写真",
      hDist:"距離",hEle:"標高",hGrad:"勾配",hSpd:"速度",hTime:"時刻",tourMode:"通し",
      sumTitle:"ツアー全体",dayTitle:"日別行程",briefTitle:"当日ブリーフィング",cardTitle:"完走記録カード",
      totalDist:"総距離",totalGain:"総獲得標高",days:"日間",pref:"県",islands:"島",bridges:"橋",
@@ -782,7 +909,21 @@ var I18N={
      certNote:"このカードは走行データから自動生成されます。ツアー終了時にゲストへ配布し、そのまま SNS に投稿できる比率で出力されます。",
      briefNote:"ガイド用には危険情報とゲスト別の注意が表示されます。ゲスト用に切り替えると、その日の楽しみと必要な準備だけが残ります。",
      wxLab:"予報",elevLab:"標高 m",distLab:"距離 km"},
- en:{tabMap:"MAP",tabDays:"DAYS",tabAlbum:"ALBUM",tabBrief:"BRIEF",tabCard:"CARD",close:"Close",album:"Tour album",shots:"shots",passed:"PASSED",tapPin:"Tap a pin on the map to open the photo or video taken there.",onRoute:"on route",videoOf:"Video",photoOf:"Photo",
+ en:{navHome:"Home",navMap:"Map",navPhotos:"Photos",navRecord:"Record",navGuide:"Guide",
+     feedTitle:"Activity diary",wholeTour:"Whole tour",allDays:"All 7 days",
+     uDays:"days",uKm:"km",uM:"m",uKmh:"km/h",
+     stDays:"Days",stDist:"Distance",stUp:"Ascent",stDown:"Descent",stTime:"Elapsed",stRest:"Rest",stAvg:"Avg speed",
+     roleGuide:"Guide",secMap:"Map",secElev:"Elevation",secCourse:"Course time",secPhotos:"Photos",secBody:"Notes",
+     fullscreen:"Full screen",back:"Back",share:"Share",copied:"Link copied",shareNA:"Sharing unavailable",
+     scrubHint:"Drag along the graph: the rider on the map, the distance, elevation and clock all follow. The dots mark where each photo was taken.",
+     tourElevHint:"All seven days end to end. The dividers are day changes.",
+     courseStart:"Start. Bike check, pressures, bottles.",courseGoal:"Finish. Wash down, lube chains, check tomorrow's forecast.",
+     shotAt:"Shot",hazard:"HAZARD",noHazard:"No notable hazards",resupply:"resupply points. Two bottles plus two bars.",
+     gearHigh:"Windshell essential. The ridge runs 9°C colder. Full gloves.",
+     gearLow:"Arm warmers. It warms up after noon.",
+     todayFlag:"TODAY",bikeLab:"Bike",issuedAt:"18 October 2026, Kochi",
+     certLine:"Onomichi to Kochi / 7 days, completed",
+     tabMap:"MAP",tabDays:"DAYS",tabAlbum:"ALBUM",tabBrief:"BRIEF",tabCard:"CARD",close:"Close",album:"Tour album",shots:"shots",passed:"PASSED",tapPin:"Tap a pin on the map to open the photo or video taken there.",onRoute:"on route",videoOf:"Video",photoOf:"Photo",
      hDist:"DIST",hEle:"ELEV",hGrad:"GRADE",hSpd:"SPEED",hTime:"TIME",tourMode:"TOUR",
      sumTitle:"Tour overview",dayTitle:"Day by day",briefTitle:"Morning briefing",cardTitle:"Finisher record",
      totalDist:"Total distance",totalGain:"Total ascent",days:"days",pref:"prefectures",islands:"islands",
@@ -845,8 +986,11 @@ function buildDay(d){
   for(i=1;i<s.length;i++){
     var dd=s[i].d-s[i-1].d, de=s[i].e-s[i-1].e;
     var gr=dd>0? de/(dd*1000):0;
-    var v=25/(1+Math.max(0,gr)*26)+Math.max(0,-gr)*95;
-    v=Math.max(6.5,Math.min(63,v));
+    /* Guided group pace, not a solo fit rider: five guests of mixed ability,
+       one e-bike, one nervous descender. Flat base 19 km/h, descents capped
+       because the group regroups rather than bombs. */
+    var v=19/(1+Math.max(0,gr)*26)+Math.max(0,-gr)*80;
+    v=Math.max(6,Math.min(50,v));
     t+=dd/v;
     s[i].t=t; s[i].v=v; s[i].g=gr*100;
   }
@@ -854,15 +998,32 @@ function buildDay(d){
   d.poi.forEach(function(p){
     p.i=Math.min(s.length-1,Math.round(p.f*(s.length-1)));
     p.km=s[p.i].d;
-    var stops=0;
-    p.time=d.start+s[p.i].t+(p.k==="food"?0:0);
   });
+  /* A group stop is never the same length as a solo stop: seven people have to
+     arrive, park, eat, use the toilet and re-clip before anyone rolls. */
+  var STOP={food:75,photo:20,water:22};
   var stopMin=0;
-  d.poi.forEach(function(p){ p.timeAdj=d.start+s[p.i].t+stopMin/60; stopMin+=(p.k==="food"?45:p.k==="photo"?9:p.k==="water"?12:6); });
+  d.poi.forEach(function(p){ p.timeAdj=d.start+s[p.i].t+stopMin/60; stopMin+=(STOP[p.k]||15); });
   d.stopH=stopMin/60;
+  /* Wall-clock at any sample index: ride time plus every stop already taken.
+     Course times and photo timestamps both read from here so they cannot drift. */
+  d.clockAt=function(i){
+    var acc=0;
+    d.poi.forEach(function(p){ if(p.i<i) acc+=(STOP[p.k]||15); });
+    return d.start+s[Math.max(0,Math.min(s.length-1,i))].t+acc/60;
+  };
   return d;
 }
 DAYS.forEach(buildDay);
+/* descent, mirrored on the same 4 m threshold buildDay uses for ascent */
+DAYS.forEach(function(d){
+  var loss=0, mark=d.s[0].e, i;
+  for(i=1;i<d.s.length;i++){
+    if(mark-d.s[i].e>4){ loss+=mark-d.s[i].e; mark=d.s[i].e; }
+    else if(d.s[i].e>mark) mark=d.s[i].e;
+  }
+  d.loss=loss;
+});
 
 var TOTAL={km:0,gain:0,hours:0,maxE:0};
 DAYS.forEach(function(d){ TOTAL.km+=d.km; TOTAL.gain+=d.gain; TOTAL.hours+=d.hours; TOTAL.maxE=Math.max(TOTAL.maxE,d.maxE); });
@@ -926,8 +1087,10 @@ function buildMap(){
   routeProg=sub(map,"path",{fill:"none",stroke:"var(--route)","stroke-width":4.6,
     "stroke-linecap":"round","stroke-linejoin":"round","vector-effect":"non-scaling-stroke"});
 
-  gTowns=sub(map,"g",{});
   gPins=sub(map,"g",{});
+  /* Town names go above the pins: a photo thumbnail covering half a place name
+     reads as a rendering bug, and the name is what orients the reader. */
+  gTowns=sub(map,"g",{});
   gRider=sub(map,"g",{});
 }
 function pathOf(d){
@@ -1080,8 +1243,8 @@ function setDay(i,instant){
   routeProg.setAttribute("stroke-dashoffset",len);
   routeProg._len=len;
   drawPins(d);
-  if(window.WSM) WSM.onDay(d);
   S.geom=drawProfile(d);
+  if(window.WSM) WSM.onDay(d);
   flyTo(fitDay(d),instant);
   [].forEach.call(document.querySelectorAll(".dchip"),function(b,j){ b.classList.toggle("on",j===i); });
   [].forEach.call(document.querySelectorAll(".daycard"),function(b,j){ b.classList.toggle("on",j===i); });
@@ -1090,7 +1253,6 @@ function setDay(i,instant){
   else if(chip) chip.scrollIntoView({inline:"center",block:"nearest",behavior:reduceMotion?"auto":"smooth"});
   document.getElementById("ctrlTitle").textContent="Day "+d.n+" — "+L(d.from)+" → "+L(d.to);
   document.getElementById("mapBadge").textContent=lang==="ja"?("DAY "+d.n+" / "+fmt(d.km,1)+"km"):("DAY "+d.n+" / "+fmt(d.km,1)+"km");
-  if(document.getElementById("briefBody").childElementCount) renderBrief();
   update();
 }
 function setProgress(km){
@@ -1167,116 +1329,6 @@ function spark(d,w,h){
     '<path d="'+p+'" fill="none" stroke="var(--route)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>';
 }
 
-/* ---- days panel ---- */
-function renderDays(){
-  var b=document.getElementById("daysBody"),h="";
-  h+='<div class="hero"><div class="ht">'+(lang==="ja"?"ツアー全体":"TOUR OVERVIEW")+'</div>'+
-     '<div class="hn">'+L(TOUR.name)+'</div>'+
-     '<div class="hd">'+L(TOUR.dates)+' · '+L(TOUR.short)+'<br>'+
-     (lang==="ja"?"広島・愛媛・高知の3県、瀬戸内の6島を渡り、四国山地を越えて太平洋へ。"
-                 :"Three prefectures, six Setouchi islands, over the Shikoku range to the Pacific.")+'</div>'+
-     '<div class="bigrow">'+
-       '<div class="big"><div class="bv num">'+fmt(TOTAL.km,0)+'<small>km</small></div><div class="lab">'+T("totalDist")+'</div></div>'+
-       '<div class="big"><div class="bv num">'+fmt(TOTAL.gain,0)+'<small>m</small></div><div class="lab">'+T("totalGain")+'</div></div>'+
-       '<div class="big"><div class="bv num">'+hm(TOTAL.hours)+'</div><div class="lab">'+T("ridetime")+'</div></div>'+
-     '</div>'+
-     '<div class="minirow">'+
-       '<div class="mini"><div class="mv num">3</div><div class="ml">'+T("pref")+'</div></div>'+
-       '<div class="mini"><div class="mv num">6</div><div class="ml">'+T("islands")+'</div></div>'+
-       '<div class="mini"><div class="mv num">7</div><div class="ml">'+T("bridges")+'</div></div>'+
-       '<div class="mini"><div class="mv num">6</div><div class="ml">'+T("rivers")+'</div></div>'+
-     '</div>'+
-     '<div class="minirow" style="grid-template-columns:repeat(2,1fr)">'+
-       '<div class="mini"><div class="mv num">'+fmt(TOTAL.maxE,0)+' m</div><div class="ml">'+T("maxEle")+'</div></div>'+
-       '<div class="mini"><div class="mv num">'+fmt(TOTAL.km/TOTAL.hours,1)+' km/h</div><div class="ml">'+T("avg")+'</div></div>'+
-     '</div></div>';
-  h+='<div class="sechead"><h2>'+T("dayTitle")+'</h2><span class="sh">'+T("openMap")+' →</span></div>';
-  DAYS.forEach(function(d,i){
-    h+='<button class="card daycard'+(i===S.di?" on":"")+'" data-day="'+i+'">'+
-      '<div class="dh"><div class="dbadge">'+d.n+'</div><div class="dtitle">'+
-      '<div class="a">'+L(d.from)+' → '+L(d.to)+'</div><div class="b">'+L(d.sub)+'</div></div></div>'+
-      '<div class="dstats">'+
-        '<div class="dstat"><div class="sv">'+fmt(d.km,1)+'<small> km</small></div><div class="sl">'+(lang==="ja"?"距離":"DIST")+'</div></div>'+
-        '<div class="dstat"><div class="sv">'+fmt(d.gain,0)+'<small> m</small></div><div class="sl">'+(lang==="ja"?"獲得":"ASCENT")+'</div></div>'+
-        '<div class="dstat"><div class="sv">'+hm(d.hours)+'</div><div class="sl">'+(lang==="ja"?"走行":"MOVING")+'</div></div>'+
-        '<div class="dstat"><div class="sv">'+hhmm(d.start)+'</div><div class="sl">'+(lang==="ja"?"出発":"START")+'</div></div>'+
-      '</div>'+spark(d,300,34)+
-      '<div class="dhl"><span class="q">&ldquo;</span><span>'+L(d.hl)+'</span></div>'+
-      '<div class="pinrow">'+d.poi.map(function(p){
-        return '<span class="pinchip"><span class="dot" style="background:'+PINCOL[p.k]+'"></span>'+L({ja:p.ja,en:p.en})+'</span>';
-      }).join("")+'</div></button>';
-  });
-  b.innerHTML=h;
-  [].forEach.call(b.querySelectorAll(".daycard"),function(btn){
-    btn.addEventListener("click",function(){ setDay(+btn.getAttribute("data-day")); goTab("map"); });
-  });
-}
-
-/* ---- briefing panel ---- */
-var briefMode="guide";
-function renderBrief(){
-  var d=day(), b=document.getElementById("briefBody"), h="";
-  h+='<div class="segbar" role="tablist">'+
-     '<button class="'+(briefMode==="guide"?"on":"")+'" data-bm="guide">'+T("guideView")+'</button>'+
-     '<button class="'+(briefMode==="guest"?"on":"")+'" data-bm="guest">'+T("guestView")+'</button></div>';
-  h+='<div class="card brief"><div class="briefhead"><div>'+
-     '<div class="bt">Day '+d.n+' — '+L(d.to)+'</div>'+
-     '<div class="bs">'+L(d.from)+' → '+L(d.to)+' · '+fmt(d.km,1)+' km · +'+fmt(d.gain,0)+' m</div></div>'+
-     '<div class="wx"><div class="wt">'+d.wx.t+'</div><div class="ws">'+L({ja:d.wx.ja,en:d.wx.en})+'</div></div></div>';
-  h+='<div class="dhl" style="margin-top:11px"><span class="q">&ldquo;</span><span>'+L(d.hl)+'</span></div>';
-
-  var dangers=d.poi.filter(function(p){ return p.k==="danger"; });
-  if(briefMode==="guide"&&dangers.length){
-    h+=dangers.map(function(p){
-      return '<div class="alert"><div class="at">'+(lang==="ja"?"要注意 · KM "+fmt(p.km,1):"HAZARD · KM "+fmt(p.km,1))+'</div>'+
-        '<div class="ad"><b>'+L({ja:p.ja,en:p.en})+'</b><br>'+L({ja:p.dja,en:p.den})+'</div></div>';
-    }).join("");
-  }
-  h+='<div class="lab" style="margin-top:16px">'+T("timeline")+'</div><div class="tl">';
-  h+='<div class="tlrow" data-k="rest"><div class="tltime num">'+hhmm(d.start)+'</div><div class="tlbar"></div>'+
-     '<div class="tlbody"><div class="n">'+(lang==="ja"?"出発 · ":"Depart · ")+L(d.from)+'</div>'+
-     '<div class="d">'+(lang==="ja"?"点検・空気圧・ボトル確認。ブリーフィング10分。":"Bike check, pressures, bottles. 10 min briefing.")+'</div></div></div>';
-  d.poi.forEach(function(p){
-    if(briefMode==="guest"&&p.k==="danger") return;
-    h+='<div class="tlrow" data-k="'+p.k+'"><div class="tltime num">'+hhmm(p.timeAdj)+'</div><div class="tlbar"></div>'+
-       '<div class="tlbody"><div class="n">'+L({ja:p.ja,en:p.en})+'</div>'+
-       '<div class="d">'+L({ja:p.dja,en:p.den})+'</div>'+
-       '<div class="km">KM '+fmt(p.km,1)+' · '+fmt(d.s[p.i].e,0)+' m · '+L(PINLAB[p.k])+'</div></div></div>';
-  });
-  h+='<div class="tlrow" data-k="rest"><div class="tltime num">'+hhmm(d.start+d.hours+d.stopH)+'</div><div class="tlbar"></div>'+
-     '<div class="tlbody"><div class="n">'+(lang==="ja"?"到着 · ":"Arrive · ")+L(d.to)+'</div>'+
-     '<div class="d">'+(lang==="ja"?"洗車・チェーン注油・翌日の天候確認。":"Wash down, lube chains, check tomorrow's forecast.")+'</div></div></div></div>';
-
-  h+='<dl class="kv"><dt>'+T("gear")+'</dt><dd>'+(d.maxE>900
-      ?(lang==="ja"?"ウインドブレーカー必携。稜線は下界より9℃低い。指付きグローブ。":"Windshell essential. Ridge runs 9°C colder. Full gloves.")
-      :(lang==="ja"?"アームウォーマー。午後は暑くなるので薄手で。":"Arm warmers. It warms up after noon."))+'</dd>'+
-     '<dt>'+T("food")+'</dt><dd>'+(lang==="ja"?"補給ポイント "+d.poi.filter(function(p){return p.k==="water"||p.k==="food";}).length+"箇所。ボトル2本＋補給食2つ。":
-      "Resupply "+d.poi.filter(function(p){return p.k==="water"||p.k==="food";}).length+" times. Two bottles plus two bars.")+'</dd>'+
-     '<dt>'+T("risk")+'</dt><dd>'+(dangers.length?dangers.map(function(p){return L({ja:p.ja,en:p.en});}).join(" / ")
-      :(lang==="ja"?"特筆すべき危険箇所なし":"No notable hazards"))+'</dd></dl>';
-  h+='</div>';
-
-  if(briefMode==="guide"){
-    h+='<div class="sechead"><h2>'+T("guestwatch")+'</h2><span class="sh">Day '+d.n+'</span></div><div class="card brief">';
-    GUESTS.forEach(function(g){
-      var hot=g.crux===d.n;
-      h+='<div class="guestrow"><div class="av" style="'+(hot?"":"background:var(--sunk);color:var(--ink2)")+'">'+g.id+'</div>'+
-        '<div style="flex:1;min-width:0"><div class="gname">'+g.name+'<span class="flagpill">'+g.cc+'</span>'+
-        (hot?'<span class="flagpill" style="color:var(--accent);border-color:var(--accent)">'+(lang==="ja"?"本日注意":"TODAY")+'</span>':"")+'</div>'+
-        '<div class="gmeta">'+g.age+' · '+L(g.bike)+'</div>'+
-        '<div class="gnote">'+L(g.note)+'</div></div></div>';
-    });
-    h+='</div>';
-  }
-  h+='<div class="note">'+T("briefNote")+'</div>';
-  b.innerHTML=h;
-  [].forEach.call(b.querySelectorAll("[data-bm]"),function(btn){
-    btn.addEventListener("click",function(){ briefMode=btn.getAttribute("data-bm"); renderBrief(); });
-  });
-}
-
-/* ---- finisher card panel ---- */
-var gi=0;
 function tourPath(w,h){
   var xs=[],ys=[];
   DAYS.forEach(function(d){ d.pts.forEach(function(p){ var q=P(p); xs.push(q[0]); ys.push(q[1]); }); });
@@ -1301,73 +1353,6 @@ function tourPath(w,h){
   out+='<circle cx="'+z[0].toFixed(1)+'" cy="'+z[1].toFixed(1)+'" r="'+(4.6/sc).toFixed(1)+'" fill="var(--accent)" stroke="var(--surface)" stroke-width="1.6" vector-effect="non-scaling-stroke"/>';
   return out+'</g>';
 }
-function renderCard(){
-  var g=GUESTS[gi], b=document.getElementById("cardBody"),h="";
-  var avg=TOTAL.km/TOTAL.hours*g.f, rt=TOTAL.km/avg, mx=0;
-  DAYS.forEach(function(d){ d.s.forEach(function(x){ if(x.v>mx) mx=x.v; }); });
-  mx=Math.min(78,mx*g.f);
-  var bigDay=DAYS.reduce(function(a,c){ return c.gain>a.gain?c:a; });
-  h+='<div class="lab" style="margin:2px 2px 8px">'+T("pickGuest")+'</div><div class="gpick">';
-  GUESTS.forEach(function(x,i){
-    h+='<button class="gbtn'+(i===gi?" on":"")+'" data-g="'+i+'"><span class="av">'+x.id+'</span>'+x.name.split(" ")[0]+'</button>';
-  });
-  h+='</div>';
-  h+='<div class="cert"><div class="certtop">'+
-     '<div class="certlab">'+T("certfor")+'</div>'+
-     '<div class="certname">'+g.name+'</div>'+
-     '<div class="certsub">'+L(TOUR.name)+' · '+L(TOUR.dates)+'<br>'+
-     (lang==="ja"?"尾道 → 高知 / 全7日間 完走":"Onomichi to Kochi / 7 days, completed")+'</div></div>'+
-     '<svg class="certmap" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+tourPath(400,150)+'</svg>'+
-     '<div class="certstats">'+
-       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.km,0)+'<small> km</small></div><div class="cl">'+T("totalDist")+'</div></div>'+
-       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.gain,0)+'<small> m</small></div><div class="cl">'+T("totalGain")+'</div></div>'+
-       '<div class="certstat"><div class="cv num">'+fmt(TOTAL.maxE,0)+'<small> m</small></div><div class="cl">'+T("maxEle")+'</div></div>'+
-     '</div>'+
-     '<div class="certstats">'+
-       '<div class="certstat"><div class="cv num">'+hm(rt)+'</div><div class="cl">'+T("ridetime")+'</div></div>'+
-       '<div class="certstat"><div class="cv num">'+fmt(avg,1)+'<small> km/h</small></div><div class="cl">'+T("avg")+'</div></div>'+
-       '<div class="certstat"><div class="cv num">'+fmt(mx,1)+'<small> km/h</small></div><div class="cl">'+T("maxspd")+'</div></div>'+
-     '</div>'+
-     '<div class="stamps">'+DAYS.map(function(d){
-       return '<div class="stamp"><div class="sd">D'+d.n+'</div><div class="sk">'+fmt(d.km,0)+'</div></div>';
-     }).join("")+'</div>'+
-     '<div class="certfoot"><div class="sig">'+T("guideSig")+'<b>'+TOUR.guide+'</b>'+
-     '<div style="margin-top:6px">'+L(TOUR.op)+'</div></div>'+
-     '<svg class="seal" viewBox="0 0 64 64" aria-hidden="true">'+
-       '<circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" stroke-width="1.6"/>'+
-       '<circle cx="32" cy="32" r="25.5" fill="none" stroke="var(--accent)" stroke-width=".8" opacity=".6"/>'+
-       '<text x="32" y="27" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--accent)" font-family="var(--f-num)">'+fmt(TOTAL.km,0)+'</text>'+
-       '<text x="32" y="36" text-anchor="middle" font-size="6" font-weight="700" fill="var(--accent)" letter-spacing="1">KM</text>'+
-       '<text x="32" y="46" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--ink3)" letter-spacing=".6">7 DAYS</text>'+
-     '</svg></div></div>';
-  h+='<div class="sechead"><h2>'+T("personal")+'</h2><span class="sh">'+g.cc+'</span></div>'+
-     '<div class="card brief" style="margin-top:0"><dl class="kv" style="margin-top:0">'+
-     '<dt>'+T("climbday")+'</dt><dd>Day '+bigDay.n+' · '+L(bigDay.to)+' · +'+fmt(bigDay.gain,0)+' m</dd>'+
-     '<dt>'+(lang==="ja"?"機材":"Bike")+'</dt><dd>'+L(g.bike)+'</dd>'+
-     '<dt>'+T("issued")+'</dt><dd>'+(lang==="ja"?"2026年10月18日 高知にて":"18 October 2026, Kochi")+'</dd></dl></div>';
-  h+='<div class="note">'+T("certNote")+'</div>';
-  b.innerHTML=h;
-  [].forEach.call(b.querySelectorAll("[data-g]"),function(btn){
-    btn.addEventListener("click",function(){ gi=+btn.getAttribute("data-g"); renderCard(); });
-  });
-}
-
-/* ---- tabs / wiring ---- */
-function goTab(name){
-  [].forEach.call(document.querySelectorAll(".panel"),function(p){ p.classList.toggle("on",p.id==="p-"+name); });
-  [].forEach.call(document.querySelectorAll(".tab"),function(t){
-    var on=t.getAttribute("data-tab")===name;
-    t.classList.toggle("on",on); t.setAttribute("aria-selected",on?"true":"false");
-  });
-  if(name==="days") renderDays();
-  if(name==="album"&&window.WSM) WSM.renderAlbum();
-  if(name==="brief") renderBrief();
-  if(name==="card") renderCard();
-  if(name==="map") flyTo(fitDay(day()),true);
-}
-[].forEach.call(document.querySelectorAll(".tab"),function(t){
-  t.addEventListener("click",function(){ goTab(t.getAttribute("data-tab")); });
-});
 document.getElementById("playBtn").addEventListener("click",function(){
   if(S.km>=day().km) S.km=0;
   S.playing=!S.playing; setIcon();
@@ -1382,8 +1367,14 @@ document.getElementById("tourBtn").addEventListener("click",function(){
 document.getElementById("themeBtn").addEventListener("click",function(){
   var r=document.documentElement, cur=r.getAttribute("data-theme");
   var sysDark=window.matchMedia("(prefers-color-scheme: dark)").matches;
-  r.setAttribute("data-theme", cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark"));
+  var next=cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  r.setAttribute("data-theme",next);
+  try{ localStorage.setItem("ws.theme",next); }catch(e){}
 });
+try{
+  var savedTheme=localStorage.getItem("ws.theme");
+  if(savedTheme) document.documentElement.setAttribute("data-theme",savedTheme);
+}catch(e){}
 document.getElementById("langBtn").addEventListener("click",function(){
   lang=lang==="ja"?"en":"ja";
   this.textContent=lang==="ja"?"EN":"日本語";
@@ -1391,16 +1382,15 @@ document.getElementById("langBtn").addEventListener("click",function(){
 });
 function applyLang(){
   [].forEach.call(document.querySelectorAll("[data-i18n]"),function(n){ n.textContent=T(n.getAttribute("data-i18n")); });
-  document.getElementById("tourSub").textContent=L(TOUR.dates)+" · "+L(TOUR.short)+" · "+TOUR.guide;
+  setHead();
   buildStrip();
   drawPins(day());
   setDay(S.di,true);
-  var on=document.querySelector(".panel.on").id.replace("p-","");
   if(window.WSM) WSM.relang();
-  if(on==="days") renderDays();
-  if(on==="album"&&window.WSM) WSM.renderAlbum();
-  if(on==="brief") renderBrief();
-  if(on==="card") renderCard();
+}
+function setHead(){
+  document.getElementById("tourTitle").textContent=L(TOUR.name);
+  document.getElementById("tourSub").textContent=L(TOUR.dates)+" · "+L(TOUR.short)+" · "+TOUR.guide;
 }
 function buildStrip(){
   var s=document.getElementById("dayStrip");
@@ -1428,14 +1418,23 @@ function buildStrip(){
 window.addEventListener("resize",function(){ if(!vbTarget) flyTo(fitDay(day()),true); });
 
 /* ---- init ---- */
-window.WS={DAYS:DAYS,S:S,P:P,day:day,setDay:setDay,goTab:goTab,L:function(o){return L(o);},T:function(k){return T(k);},fmt:fmt,hhmm:hhmm,map:map,el:el,sub:sub,pins:function(){return gPins;},rescale:rescale,getLang:function(){return lang;},sampleAt:sampleAt,PINCOL:PINCOL};
+function fitAllVB(){
+  var all={pts:[]};
+  DAYS.forEach(function(d){ all.pts=all.pts.concat(d.pts); });
+  return fitDay(all,0.05);
+}
+window.WS={DAYS:DAYS,S:S,P:P,TOUR:TOUR,TOTAL:TOTAL,GUESTS:GUESTS,PINCOL:PINCOL,PINLAB:PINLAB,
+  day:day,setDay:setDay,setProgress:setProgress,sampleAt:sampleAt,setIcon:setIcon,
+  L:function(o){return L(o);},T:function(k){return T(k);},fmt:fmt,hhmm:hhmm,hm:hm,
+  map:map,el:el,sub:sub,pins:function(){return gPins;},rescale:rescale,getLang:function(){return lang;},
+  spark:spark,tourPath:tourPath,geom:function(){return S.geom;},
+  fit:function(all){ flyTo(all?fitAllVB():fitDay(day()),true); }};
 [].forEach.call(document.querySelectorAll("[data-i18n]"),function(n){ n.textContent=T(n.getAttribute("data-i18n")); });
 buildMap();
 buildStrip();
-document.getElementById("tourSub").textContent=L(TOUR.dates)+" · "+L(TOUR.short)+" · "+TOUR.guide;
+setHead();
 setDay(0,true);
 requestAnimationFrame(loop);
-setTimeout(function(){ if(!S.playing){ S.playing=true; setIcon(); } },1200);
 })();
 </script>
 
@@ -1664,7 +1663,7 @@ var M=[
  {d:0,f:.20,ty:"video",dur:"0:32",tm:"09:14",h:9.2,k:"bridge",sd:23,ja:"因島大橋の下層を走る",en:"Riding the lower deck, Innoshima Bridge",cja:"車道の下を通る自転車道。金網の向こうを潮が速く流れていく音がずっと続く。",cen:"The cycle deck runs beneath the traffic. The tide roars past the mesh the whole way over."},
  {d:0,f:.38,tm:"11:47",h:11.8,ty:"photo",k:"food",sd:31,ja:"瀬戸田、たこ飯と塩レモン",en:"Setoda: octopus rice and salted lemon",cja:"Lena には野菜の小鉢を別に頼んだ。レモンは全員が持ち帰った。",cen:"A separate vegetable set for Lena. Everyone bought lemons to carry."},
  {d:0,f:.50,ty:"video",dur:"0:18",tm:"13:22",h:13.4,k:"bridge",sd:43,ja:"多々羅大橋の鳴き龍",en:"The dragon echo, Tatara Bridge",cja:"主塔の真下で拍子木を打つ。音が塔を駆け上がって降りてくる。Marco が三回やった。",cen:"Clap under the tower and the sound climbs it and falls back. Marco did it three times."},
- {d:0,f:.93,tm:"17:06",h:17.1,ty:"photo",k:"bridge",sd:57,ja:"来島海峡大橋、日没20分前",en:"Kurushima Kaikyo, twenty minutes before sunset",cja:"世界初の三連吊橋。4.1kmを全員無言で渡った。海が銀色に潰れる時間帯。",cen:"The world's first triple suspension bridge. Nobody spoke for 4.1 km."},
+ {d:0,f:.93,tm:"17:06",h:17.1,ty:"photo",k:"bridge",sd:57,ja:"来島海峡大橋、夕方の逆光",en:"Kurushima Kaikyo, into the afternoon light",cja:"世界初の三連吊橋。4.1kmを全員無言で渡った。海が銀色に潰れる時間帯。",cen:"The world's first triple suspension bridge. Nobody spoke for 4.1 km."},
 
  {d:1,f:.34,tm:"08:58",h:9,ty:"photo",k:"town",sd:71,ja:"菊間、瓦の町の屋根",en:"Kikuma, a town of roof tiles",cja:"750年続く菊間瓦。町じゅうの屋根が同じ鈍い銀色に揃っている。",cen:"750 years of tile-making. Every roof in town the same dull silver."},
  {d:1,f:.55,ty:"video",dur:"0:24",tm:"10:41",h:10.7,k:"island",sd:83,ja:"北条、鹿島へ渡る船",en:"The little ferry to Kashima, Hojo",cja:"海の前で30分の休憩。渡し船が正面を横切っていった。",cen:"A thirty minute break by the sea. The ferry crossed right in front of us."},
@@ -1707,6 +1706,9 @@ M.forEach(function(m,i){
   var d=WS.DAYS[m.d];
   m.i=Math.min(d.s.length-1,Math.round(m.f*(d.s.length-1)));
   m.km=d.s[m.i].d; m.ele=d.s[m.i].e; m.idx=i;
+  /* Shot time comes from the ride engine, never from the authored string, so a
+     photo can never claim an hour the course-time table disagrees with. */
+  m.tm=WS.hhmm(d.clockAt(m.i));
 });
 M.sort(function(a,b){ return a.d-b.d || a.km-b.km; });
 M.forEach(function(m,i){ m.idx=i; });
@@ -1721,45 +1723,124 @@ function badge(m){
     : '';
 }
 
-/* ---- map thumbnails ---- */
+/* ============================================================
+   UI shell — YAMAP-style activity diary.
+   home feed / activity detail / full map / album /
+   finisher record / guide briefing.
+   Every number below comes out of the ride engine above.
+   ============================================================ */
+function $(id){ return document.getElementById(id); }
+function t(k){ return WS.T(k); }
+function L(o){ return WS.L(o); }
+function fmt(n,d){ return WS.fmt(n,d); }
+var TOTAL=WS.TOTAL, TOUR=WS.TOUR, DAYS=WS.DAYS;
+
+/* area tags, two per day, from the ground the day covers */
+var AREA=[
+ [{ja:"しまなみ海道",en:"Shimanami Kaido"},{ja:"広島・愛媛",en:"Hiroshima / Ehime"}],
+ [{ja:"伊予灘",en:"Iyo coast"},{ja:"道後",en:"Dogo"}],
+ [{ja:"犬寄峠",en:"Inuyose Pass"},{ja:"内子・大洲",en:"Uchiko / Ozu"}],
+ [{ja:"四国カルスト",en:"Shikoku Karst"},{ja:"地芳峠",en:"Jiyoshi Pass"}],
+ [{ja:"梼原",en:"Yusuhara"},{ja:"四万十源流",en:"Shimanto headwaters"}],
+ [{ja:"四万十川",en:"Shimanto river"},{ja:"沈下橋",en:"Low-water bridges"}],
+ [{ja:"土佐湾",en:"Tosa bay"},{ja:"高知・桂浜",en:"Kochi / Katsurahama"}]
+];
+var WD={ja:["日","月","火","水","木","金","土"],en:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]};
+function dayDate(n){
+  var dt=new Date(2026,9,11+n), w=WD[isJa()?"ja":"en"][dt.getDay()];
+  return isJa() ? "2026年10月"+dt.getDate()+"日（"+w+"）" : w+", "+dt.getDate()+" Oct 2026";
+}
+/* elapsed = moving + stops, 休憩 = stops. Keeps 距離 / 活動時間 / 平均速度 consistent. */
+function elapsedOf(d){ return d.hours+d.stopH; }
+function coverOf(di){
+  var lit=M.filter(function(m){ return m.d===di && m.ty==="photo" && m.h<19; });
+  return lit[lit.length-1] || M.filter(function(m){ return m.d===di; })[0];
+}
+function photosOf(di){ return di<0 ? M.slice() : M.filter(function(m){ return m.d===di; }); }
+
+/* ---- DOMO ---- */
+function lsGet(k,dv){ try{ var v=localStorage.getItem(k); return v==null?dv:v; }catch(e){ return dv; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function domoKey(di){ return "ws.domo."+(di<0?"tour":"d"+di); }
+function domoBase(di){
+  if(di<0){ var s=0; DAYS.forEach(function(d,i){ s+=domoBase(i); }); return s; }
+  var d=DAYS[di];
+  return 48+d.n*19+Math.round(d.km/2)+Math.round(d.gain/25);
+}
+function domoOn(di){ return lsGet(domoKey(di),"0")==="1"; }
+function domoCount(di){ return domoBase(di)+(domoOn(di)?1:0); }
+
+/* ---- toast + share ---- */
+var toTimer=null;
+function toast(msg){
+  var n=$("toast"); n.textContent=msg; n.classList.add("on");
+  clearTimeout(toTimer); toTimer=setTimeout(function(){ n.classList.remove("on"); },1800);
+}
+function share(title){
+  if(navigator.share){ navigator.share({title:title,url:location.href}).catch(function(){}); return; }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(location.href).then(function(){ toast(t("copied")); },function(){ toast(t("shareNA")); });
+    return;
+  }
+  toast(t("shareNA"));
+}
+
+/* ---- the map + elevation rig moves between the detail card and the full map ---- */
+function mountRig(mp,pp){
+  var park=$("rigpark");
+  (mp||park).appendChild($("mapwrap"));
+  (pp||park).appendChild($("profwrap"));
+}
+
+/* ---- map: small circular photo pins + photo marks on the profile ---- */
 function onDay(d){
-  var g=WS.pins(), di=WS.DAYS.indexOf(d);
-  M.filter(function(m){ return m.d===di; }).forEach(function(m,j){
+  var g=WS.pins(), di=DAYS.indexOf(d), mine=M.filter(function(m){ return m.d===di; });
+  mine.forEach(function(m){
     var q=WS.P([d.s[m.i].lat,d.s[m.i].lng]);
-    /* consecutive stops sit close together on the map; fan the cards out */
-    var ox=[0,36,-36,18,-18,52][j%6], oy=[-26,-70,-70,-114,-114,-26][j%6];
     var n=WS.el("g",{"data-sx":q[0].toFixed(1),"data-sy":q[1].toFixed(1),"data-k":1,style:"cursor:pointer"});
-    var cy=oy-20, cx=ox;
-    n.innerHTML='<defs><clipPath id="mc'+m.idx+'"><rect x="'+(cx-20)+'" y="'+(cy-20)+'" width="40" height="40" rx="9"/></clipPath></defs>'+
-      '<line x1="0" y1="-2" x2="'+cx+'" y2="'+(cy+18)+'" stroke="var(--accent)" stroke-width="1.5"/>'+
-      '<circle cx="0" cy="0" r="2.8" fill="var(--accent)"/>'+
-      '<rect x="'+(cx-22)+'" y="'+(cy-22)+'" width="44" height="44" rx="11" fill="var(--surface)"/>'+
-      '<g clip-path="url(#mc'+m.idx+')"><g transform="translate('+(cx-26.7)+','+(cy-20)+') scale(0.1333)">'+art(m.k,m.sd,m.h)+'</g></g>'+
-      '<rect x="'+(cx-20)+'" y="'+(cy-20)+'" width="40" height="40" rx="9" fill="none" stroke="var(--accent)" stroke-width="1.6" opacity=".9"/>'+
+    /* 26 px circle: the artwork is 400x300, so scale 26/300 and centre it on (0,-20) */
+    n.innerHTML='<defs><clipPath id="mc'+m.idx+'"><circle cx="0" cy="-20" r="13"/></clipPath></defs>'+
+      '<circle cx="0" cy="0" r="2.6" fill="var(--accent)"/>'+
+      '<line x1="0" y1="0" x2="0" y2="-8" stroke="var(--accent)" stroke-width="1.4"/>'+
+      '<circle cx="0" cy="-20" r="15" fill="var(--surface)"/>'+
+      '<g clip-path="url(#mc'+m.idx+')"><g transform="translate(-17.33,-33) scale(0.08667)">'+art(m.k,m.sd,m.h)+'</g></g>'+
+      '<circle cx="0" cy="-20" r="14" fill="none" stroke="var(--accent)" stroke-width="1.6"/>'+
       (m.ty==="video"
-        ? '<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="rgba(8,14,17,.52)"/><path d="M'+(cx-3)+','+(cy-5)+' L'+(cx+6)+','+cy+' L'+(cx-3)+','+(cy+5)+' Z" fill="#fff"/>'
-        : '');
-    n.addEventListener("click",function(ev){ ev.stopPropagation(); open(m.idx); });
+        ? '<circle cx="0" cy="-20" r="6.5" fill="rgba(8,14,17,.55)"/><path d="M-2,-23.5 L3.5,-20 L-2,-16.5 Z" fill="#fff"/>' : '');
+    n.addEventListener("click",function(ev){ ev.stopPropagation(); openM(m.idx); });
     g.appendChild(n);
+  });
+  var gm=WS.geom(), pr=$("prof");
+  if(gm&&pr) mine.forEach(function(m){
+    pr.appendChild(WS.el("circle",{cx:gm.X(m.i).toFixed(1),cy:gm.Y(m.i).toFixed(1),r:5.5,
+      fill:"var(--surface)",stroke:"var(--accent)","stroke-width":2.4}));
   });
   WS.rescale();
   strip.innerHTML=""; shown={}; strip.classList.remove("on");
 }
 
-/* ---- playback filmstrip ---- */
-var strip=document.getElementById("strip"), shown={};
+/* ---- live scrub readout + playback filmstrip ---- */
+var strip=$("strip"), shown={};
 function onProgress(d,km){
-  var di=WS.DAYS.indexOf(d);
+  var sd=$("scDist");
+  if(sd){
+    var p=WS.sampleAt(d,km), stops=0;
+    d.poi.forEach(function(x){ if(x.km<=km) stops+=(x.k==="food"?45:x.k==="photo"?9:x.k==="water"?12:6); });
+    sd.innerHTML=fmt(km,1)+"<small>km</small>";
+    $("scEle").innerHTML=fmt(p.e,0)+"<small>m</small>";
+    $("scTime").textContent=WS.hhmm(d.start+p.t+stops/60);
+  }
+  var di=DAYS.indexOf(d);
   M.forEach(function(m){
     if(m.d!==di || m.km>km || shown[m.idx]) return;
     shown[m.idx]=1;
     if(!strip.childElementCount){
-      var l=document.createElement("div"); l.className="sl"; l.textContent=T("passed"); strip.appendChild(l);
+      var l=document.createElement("div"); l.className="sl"; l.textContent=t("passed"); strip.appendChild(l);
     }
     var b=document.createElement("button");
     b.className="thumb pop"; b.setAttribute("aria-label",ttl(m));
     b.innerHTML=artSVG(m)+badge(m);
-    b.addEventListener("click",function(){ open(m.idx); });
+    b.addEventListener("click",function(){ openM(m.idx); });
     strip.appendChild(b);
     strip.classList.add("on");
     strip.scrollTo({left:strip.scrollWidth,behavior:"smooth"});
@@ -1767,14 +1848,11 @@ function onProgress(d,km){
   if(km<0.05 && strip.childElementCount){ strip.innerHTML=""; shown={}; strip.classList.remove("on"); }
 }
 
-/* ---- bottom sheet ---- */
-var sheet=document.getElementById("sheet"), stage=document.getElementById("stage"),
-    stageArt=document.getElementById("stageArt"), bigplay=document.getElementById("bigplay"),
-    vbar=document.getElementById("vbar"), vbarI=document.getElementById("vbarI"),
-    vtime=document.getElementById("vtime"), cur=0, vTimer=null;
-
+/* ---- full-screen media viewer ---- */
+var sheet=$("sheet"), stage=$("stage"), stageArt=$("stageArt"), bigplay=$("bigplay"),
+    vbar=$("vbar"), vbarI=$("vbarI"), vtime=$("vtime"), cur=0, vTimer=null;
 function secs(s){ var p=String(s).split(":"); return (+p[0])*60+(+p[1]); }
-function mmss(t){ return Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"); }
+function mmss(x){ return Math.floor(x/60)+":"+String(Math.floor(x%60)).padStart(2,"0"); }
 function stopVideo(){
   clearInterval(vTimer); vTimer=null;
   stage.classList.remove("kb"); vbar.classList.remove("on"); vtime.classList.remove("on");
@@ -1793,40 +1871,46 @@ function playVideo(m){
   },80);
 }
 function paint(){
-  var m=M[cur], d=WS.DAYS[m.d];
+  var m=M[cur], d=DAYS[m.d];
   stopVideo();
   stageArt.innerHTML=artSVG(m);
   bigplay.classList.toggle("hide",m.ty!=="video");
-  document.getElementById("sMeta").innerHTML=
-    "<b>DAY "+d.n+"</b> · "+m.tm+" · KM "+WS.fmt(m.km,1)+" · "+WS.fmt(m.ele,0)+" m · "+
-    (m.ty==="video"?T("videoOf")+" "+m.dur:T("photoOf"));
-  document.getElementById("sTitle").textContent=ttl(m);
-  document.getElementById("sCap").textContent=cap(m);
-  document.getElementById("sTags").innerHTML=
-    '<span class="pinchip"><span class="dot" style="background:var(--accent)"></span>'+
-    (isJa()?d.from.ja+" → "+d.to.ja:d.from.en+" → "+d.to.en)+'</span>'+
-    '<span class="pinchip"><span class="dot" style="background:var(--route)"></span>'+
-    (isJa()?"ルート上 "+WS.fmt(m.km/d.km*100,0)+"%":WS.fmt(m.km/d.km*100,0)+"% "+T("onRoute"))+'</span>';
-  document.getElementById("sCount").textContent=(cur+1)+" / "+M.length;
-  document.getElementById("prevB").disabled=cur===0;
-  document.getElementById("nextB").disabled=cur===M.length-1;
+  $("sMeta").innerHTML="<b>DAY "+d.n+"</b> · "+t("shotAt")+" "+m.tm+" · "+t("hEle")+" "+fmt(m.ele,0)+" m · KM "+fmt(m.km,1)+
+    (m.ty==="video"?" · "+t("videoOf")+" "+m.dur:"");
+  $("sTitle").textContent=ttl(m);
+  $("sCap").textContent=cap(m);
+  $("sCount").textContent=(cur+1)+" / "+M.length;
+  $("prevB").disabled=cur===0;
+  $("nextB").disabled=cur===M.length-1;
 }
-function open(i){
-  WS.S.playing=false;
-  document.getElementById("playIcon").innerHTML='<path d="M4 2.5v11l9-5.5z"/>';
+function openM(i){
+  WS.S.playing=false; WS.setIcon();
   cur=i; sheet.classList.add("on"); paint();
 }
-function close(){ stopVideo(); sheet.classList.remove("on"); }
-function step(n){ var t=cur+n; if(t<0||t>=M.length) return; cur=t; paint(); }
-
-document.getElementById("closeB").addEventListener("click",close);
-document.getElementById("scrim").addEventListener("click",close);
-document.getElementById("prevB").addEventListener("click",function(){ step(-1); });
-document.getElementById("nextB").addEventListener("click",function(){ step(1); });
+function closeM(){ stopVideo(); sheet.classList.remove("on"); }
+function step(n){ var x=cur+n; if(x<0||x>=M.length) return; cur=x; paint(); }
+function toMapFromViewer(){
+  var m=M[cur];
+  closeM();
+  if(WS.S.di!==m.d) WS.setDay(m.d,true);
+  goScreen("detail",m.d);
+  WS.setProgress(m.km);
+  /* goScreen re-renders and restores the saved scroll offset, so wait a frame
+     or the scroll lands and is immediately undone. */
+  requestAnimationFrame(function(){
+    var slot=$("dMapSlot");
+    if(slot) slot.scrollIntoView({behavior:"smooth",block:"center"});
+  });
+}
+$("closeB").addEventListener("click",closeM);
+$("scrim").addEventListener("click",closeM);
+$("prevB").addEventListener("click",function(){ step(-1); });
+$("nextB").addEventListener("click",function(){ step(1); });
+$("toMapB").addEventListener("click",toMapFromViewer);
 bigplay.addEventListener("click",function(){ playVideo(M[cur]); });
 document.addEventListener("keydown",function(e){
   if(!sheet.classList.contains("on")) return;
-  if(e.key==="Escape") close();
+  if(e.key==="Escape") closeM();
   if(e.key==="ArrowRight") step(1);
   if(e.key==="ArrowLeft") step(-1);
 });
@@ -1841,36 +1925,387 @@ document.addEventListener("keydown",function(e){
   stage.addEventListener("pointercancel",function(){ x0=null; });
 })();
 
-/* ---- album ---- */
-function renderAlbum(){
-  var b=document.getElementById("albumBody"),h="",cd=-1;
-  h+='<div class="hero" style="padding:14px 15px"><div class="ht">'+T("album")+'</div>'+
-     '<div class="hn" style="font-size:19px">'+M.length+' <span style="font-size:13px;font-weight:600;color:var(--ink3)">'+T("shots")+'</span></div>'+
-     '<div class="hd">'+T("tapPin")+'</div></div>';
-  M.forEach(function(m){
-    var d=WS.DAYS[m.d];
-    if(m.d!==cd){
-      if(cd>=0) h+='</div>';
-      cd=m.d;
-      h+='<div class="albday"><span class="an">Day '+d.n+' — '+(isJa()?d.to.ja:d.to.en)+'</span>'+
-         '<span class="am">'+M.filter(function(x){return x.d===cd;}).length+' '+T("shots")+'</span></div><div class="grid">';
-    }
-    h+='<button class="gcell" data-m="'+m.idx+'" aria-label="'+ttl(m).replace(/"/g,"")+'">'+artSVG(m)+
-       (m.ty==="video"?'<span class="vbadge">'+m.dur+'</span><span class="vplay"><i></i></span>':'')+
-       '<span class="gcap"><span class="gt">'+ttl(m)+'</span><span class="gm">'+m.tm+' · KM '+WS.fmt(m.km,1)+'</span></span></button>';
+/* ---- shared fragments ---- */
+function statCell(v,u,l){
+  return '<div><div class="sv">'+v+(u?'<small>'+u+'</small>':'')+'</div><div class="sl">'+l+'</div></div>';
+}
+function sumCell(v,u,l){
+  return '<div class="sumcell"><div class="cv">'+v+(u?'<small>'+u+'</small>':'')+'</div><div class="cl">'+l+'</div></div>';
+}
+function tagsOf(di){
+  var src=di<0?[{ja:"瀬戸内",en:"Setouchi"},{ja:"四国",en:"Shikoku"}]:AREA[di];
+  return '<div class="tagrow">'+src.map(function(a){ return '<span class="tag">'+L(a)+'</span>'; }).join("")+'</div>';
+}
+function photoGrid(di){
+  return '<div class="pgrid">'+photosOf(di).map(function(m){
+    return '<button class="pcell" data-m="'+m.idx+'" aria-label="'+ttl(m).replace(/"/g,"")+'">'+artSVG(m)+badge(m)+'</button>';
+  }).join("")+'</div>';
+}
+function icoCam(){ return '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="18" height="13" rx="2.5"/><circle cx="12" cy="13" r="3.6"/><path d="M8.5 6.5 10 4h4l1.5 2.5"/></svg>'; }
+function icoHeart(){ return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.7-7.5-9.6A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8C19.5 15.3 12 20 12 20z"/></svg>'; }
+
+/* ============ Screen A: home (activity feed) ============ */
+function renderHome(){
+  var h='';
+  h+='<div class="feedhead">'+t("feedTitle")+'<small>'+L(TOUR.name)+' · '+L(TOUR.dates)+'</small></div>';
+
+  h+='<button class="actcard" data-open="-1">'+
+     '<div class="acover tourmap"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+
+       '<rect width="400" height="200" fill="var(--sea)"/>'+WS.tourPath(400,200)+'</svg>'+
+       '<span class="abadge accent">'+t("wholeTour")+'</span></div>'+
+     '<div class="abody">'+
+       '<div class="atitle">'+L(TOUR.name)+'</div>'+
+       '<div class="asub">'+L(TOUR.short)+'</div>'+
+       '<div class="ameta">'+L(TOUR.dates)+'</div>'+
+       tagsOf(-1)+
+       '<div class="stat3">'+
+         statCell(DAYS.length,t("uDays"),t("stDays"))+
+         statCell(fmt(TOTAL.km,0),t("uKm"),t("stDist"))+
+         statCell("+"+fmt(TOTAL.gain,0),t("uM"),t("stUp"))+
+       '</div>'+
+       '<div class="afoot"><span class="ic">'+icoCam()+M.length+'</span>'+
+         '<span class="ic">'+icoHeart()+domoCount(-1)+'</span></div>'+
+     '</div></button>';
+
+  DAYS.forEach(function(d,i){
+    h+='<button class="actcard" data-open="'+i+'">'+
+      '<div class="acover">'+artSVG(coverOf(i))+'<span class="abadge">DAY '+d.n+'</span></div>'+
+      '<div class="abody">'+
+        '<div class="atitle">Day '+d.n+' — '+L(d.from)+' → '+L(d.to)+'</div>'+
+        '<div class="asub">'+L(d.sub)+'</div>'+
+        '<div class="ameta">'+dayDate(d.n)+'</div>'+
+        tagsOf(i)+
+        '<div class="stat3">'+
+          statCell(fmt(d.km,1),t("uKm"),t("stDist"))+
+          statCell("+"+fmt(d.gain,0),t("uM"),t("stUp"))+
+          statCell(WS.hm(elapsedOf(d)),"",t("stTime"))+
+        '</div>'+
+        WS.spark(d,320,32)+
+        '<div class="afoot"><span class="ic">'+icoCam()+photosOf(i).length+'</span>'+
+          '<span class="ic">'+icoHeart()+domoCount(i)+'</span></div>'+
+      '</div></button>';
   });
-  h+='</div>';
-  b.innerHTML=h;
-  [].forEach.call(b.querySelectorAll("[data-m]"),function(btn){
-    btn.addEventListener("click",function(){ open(+btn.getAttribute("data-m")); });
+  $("homeBody").innerHTML=h;
+  [].forEach.call($("homeBody").querySelectorAll("[data-open]"),function(b){
+    b.addEventListener("click",function(){ goScreen("detail",+b.getAttribute("data-open")); });
   });
 }
 
+/* ============ Screen B: activity detail ============ */
+function tourProfile(w,h){
+  var tot=TOTAL.km, maxE=0, off=0, p="", divs="";
+  DAYS.forEach(function(d){ if(d.maxE>maxE) maxE=d.maxE; });
+  maxE=Math.max(320,maxE*1.12);
+  DAYS.forEach(function(d,i){
+    var st=Math.max(1,Math.floor(d.s.length/60)), j;
+    for(j=0;j<d.s.length;j+=st){
+      p+=(p?"L":"M")+((off+d.s[j].d)/tot*w).toFixed(1)+","+(h-4-(d.s[j].e/maxE)*(h-16)).toFixed(1);
+    }
+    off+=d.km;
+    if(i<DAYS.length-1){
+      var x=(off/tot*w).toFixed(1);
+      divs+='<line x1="'+x+'" y1="6" x2="'+x+'" y2="'+h+'" stroke="var(--line)" stroke-width="1"/>';
+    }
+  });
+  return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="display:block;width:100%;height:150px" aria-hidden="true">'+
+    '<path d="'+p+'L'+w+','+h+'L0,'+h+'Z" fill="var(--route-soft)"/>'+divs+
+    '<path d="'+p+'" fill="none" stroke="var(--route)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>';
+}
+function courseRows(d){
+  var rows=[{tm:d.start,name:L(d.from),k:"rest",km:0,e:d.s[0].e,desc:t("courseStart")}];
+  d.poi.forEach(function(p){
+    rows.push({tm:p.timeAdj,name:L({ja:p.ja,en:p.en}),k:p.k,km:p.km,e:d.s[p.i].e,desc:L({ja:p.dja,en:p.den})});
+  });
+  var lastKm=d.poi.length?d.poi[d.poi.length-1].km:0;
+  if(d.km-lastKm>0.05)
+    rows.push({tm:d.start+elapsedOf(d),name:L(d.to),k:"rest",km:d.km,e:d.s[d.s.length-1].e,desc:t("courseGoal")});
+  return rows;
+}
+function courseHTML(di){
+  var h='<div class="ct">';
+  if(di<0){
+    DAYS.forEach(function(d,i){
+      h+='<div class="ctrow" data-k="rest" data-jump="'+i+'" style="cursor:pointer">'+
+        '<div class="cttime">'+WS.hhmm(d.start)+'</div><div class="ctrail"></div>'+
+        '<div class="ctbody"><div class="ctname">Day '+d.n+' — '+L(d.from)+' → '+L(d.to)+'</div>'+
+        '<div class="ctseg">'+fmt(d.km,1)+' km · +'+fmt(d.gain,0)+' m · '+WS.hm(elapsedOf(d))+'</div>'+
+        '<div class="ctdesc">'+L(d.sub)+'</div></div></div>';
+    });
+    return h+'</div>';
+  }
+  var d=DAYS[di], rows=courseRows(d);
+  rows.forEach(function(r,i){
+    var seg;
+    if(i>0){
+      var dk=r.km-rows[i-1].km, dh=r.tm-rows[i-1].tm;
+      seg='<div class="ctseg">'+fmt(dk,1)+' km · '+WS.hm(Math.max(0,dh))+' · '+fmt(r.e,0)+' m</div>';
+    } else seg='<div class="ctseg">0.0 km · '+fmt(r.e,0)+' m</div>';
+    h+='<div class="ctrow" data-k="'+r.k+'">'+
+      '<div class="cttime">'+WS.hhmm(r.tm)+'</div><div class="ctrail"></div>'+
+      '<div class="ctbody"><div class="ctname">'+r.name+'</div>'+seg+
+      (r.desc?'<div class="ctdesc">'+r.desc+'</div>':'')+'</div></div>';
+  });
+  return h+'</div>';
+}
+function renderDetail(di){
+  var tour=di<0, d=tour?null:DAYS[di], b=$("detailBody"), h="";
+  var km=tour?TOTAL.km:d.km, gain=tour?TOTAL.gain:d.gain;
+  var loss=0, elap=0, rest=0, moving=0;
+  if(tour) DAYS.forEach(function(x){ loss+=x.loss; elap+=elapsedOf(x); rest+=x.stopH; moving+=x.hours; });
+  else { loss=d.loss; elap=elapsedOf(d); rest=d.stopH; moving=d.hours; }
+
+  h+='<div class="cover'+(tour?" tourmap":"")+'">'+
+     (tour ? '<svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect width="400" height="225" fill="var(--sea)"/>'+WS.tourPath(400,225)+'</svg>'
+           : artSVG(coverOf(di)))+
+     '<button class="fab l" id="dBack" aria-label="'+t("back")+'"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>'+
+     '<button class="fab r" id="dShare" aria-label="'+t("share")+'"><svg viewBox="0 0 24 24"><path d="M12 15V4M8.5 7.5 12 4l3.5 3.5"/><path d="M5 13v6.5h14V13"/></svg></button></div>';
+
+  h+='<div class="dhead">'+
+     '<h1 class="dh1">'+(tour?L(TOUR.name):"Day "+d.n+" — "+L(d.from)+" → "+L(d.to))+'</h1>'+
+     '<div class="dh2">'+(tour?L(TOUR.short):L(d.sub))+'</div>'+
+     '<div class="ddate">'+(tour?L(TOUR.dates):dayDate(d.n))+'</div>'+
+     tagsOf(di)+
+     '<div class="author"><div class="av">M</div><div><div class="aname">'+TOUR.guide+'</div>'+
+       '<div class="arole">'+L(TOUR.op)+' · '+t("roleGuide")+'</div></div></div></div>';
+
+  h+='<div class="dsec" style="margin-top:16px"><div class="sumgrid">'+
+       sumCell(fmt(km,1),t("uKm"),t("stDist"))+
+       sumCell("+"+fmt(gain,0),t("uM"),t("stUp"))+
+       sumCell("-"+fmt(loss,0),t("uM"),t("stDown"))+
+       sumCell(WS.hm(elap),"",t("stTime"))+
+       sumCell(WS.hm(rest),"",t("stRest"))+
+       sumCell(fmt(km/moving,1),t("uKmh"),t("stAvg"))+
+     '</div></div>';
+
+  h+='<div class="dsec"><div class="sechead"><h2>'+t("secMap")+'</h2>'+
+     '<span class="sh">'+(tour?t("allDays"):"Day "+d.n)+'</span></div>'+
+     '<div class="mapcard"><div class="mapslot" id="dMapSlot"></div>'+
+     '<button class="fullbtn" id="dFull"><svg viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M15 20h5v-5M9 20H4v-5"/></svg>'+t("fullscreen")+'</button></div></div>';
+
+  h+='<div class="dsec"><div class="sechead"><h2>'+t("secElev")+'</h2>'+
+     '<span class="sh">'+t("maxEle")+' '+fmt(tour?TOTAL.maxE:d.maxE,0)+' m</span></div>';
+  if(tour){
+    h+='<div class="profcard">'+tourProfile(1000,150)+'</div><div class="profhint">'+t("tourElevHint")+'</div>';
+  } else {
+    h+='<div class="profcard"><div class="scrubread">'+
+         '<div><div class="rv" id="scDist">0.0<small>km</small></div><div class="rl">'+t("stDist")+'</div></div>'+
+         '<div><div class="rv" id="scEle">0<small>m</small></div><div class="rl">'+t("hEle")+'</div></div>'+
+         '<div><div class="rv" id="scTime">'+WS.hhmm(d.start)+'</div><div class="rl">'+t("hTime")+'</div></div>'+
+       '</div><div class="profslot" id="dProfSlot"></div></div>'+
+       '<div class="profhint">'+t("scrubHint")+'</div>';
+  }
+  h+='</div>';
+
+  h+='<div class="dsec"><div class="sechead"><h2>'+t("secCourse")+'</h2>'+
+     '<span class="sh">'+(tour?DAYS.length+" "+t("uDays"):WS.hm(elap))+'</span></div>'+courseHTML(di)+'</div>';
+
+  h+='<div class="dsec"><div class="sechead"><h2>'+t("secPhotos")+'</h2>'+
+     '<span class="sh">'+photosOf(di).length+' '+t("shots")+'</span></div>'+photoGrid(di)+'</div>';
+
+  h+='<div class="dsec"><div class="sechead"><h2>'+t("secBody")+'</h2></div><div class="bodytext">'+
+     (tour ? DAYS.map(function(x){ return "<b>Day "+x.n+"</b> "+L(x.hl); }).join("<br><br>") : L(d.hl))+'</div>'+
+     (tour?"":'<div class="wxline"><b>'+d.wx.t+'</b>'+t("wxLab")+' · '+L({ja:d.wx.ja,en:d.wx.en})+'</div>')+'</div>';
+
+  h+='<div class="dsec" style="margin-top:22px"><button class="domo'+(domoOn(di)?" on":"")+'" id="domoB">'+
+     icoHeart()+'<span>DOMO</span><span class="dc" id="domoC">'+domoCount(di)+'</span></button></div>';
+
+  b.innerHTML=h;
+
+  $("dBack").addEventListener("click",function(){ goScreen("home"); });
+  $("dShare").addEventListener("click",function(){ share(tour?L(TOUR.name):"Day "+d.n+" — "+L(d.to)); });
+  $("dFull").addEventListener("click",function(){ goScreen("map"); });
+  [].forEach.call(b.querySelectorAll("[data-m]"),function(x){
+    x.addEventListener("click",function(){ openM(+x.getAttribute("data-m")); });
+  });
+  [].forEach.call(b.querySelectorAll("[data-jump]"),function(x){
+    x.addEventListener("click",function(){ goScreen("detail",+x.getAttribute("data-jump")); });
+  });
+  $("domoB").addEventListener("click",function(){
+    var on=!domoOn(di);
+    lsSet(domoKey(di),on?"1":"0");
+    this.classList.toggle("on",on);
+    this.classList.remove("bump"); void this.offsetWidth; this.classList.add("bump");
+    $("domoC").textContent=domoCount(di);
+  });
+
+  mountRig($("dMapSlot"), tour?null:$("dProfSlot"));
+  if(!tour && WS.S.di!==di) WS.setDay(di,true);
+  WS.fit(tour);
+  if(!tour) onProgress(d,WS.S.km);
+}
+
+/* ============ Screen D: album ============ */
+function renderAlbum(){
+  var h="",cd=-1;
+  h+='<div class="hero" style="padding:14px 15px"><div class="ht">'+t("album")+'</div>'+
+     '<div class="hn" style="font-size:19px">'+M.length+' <span style="font-size:13px;font-weight:600;color:var(--ink3)">'+t("shots")+'</span></div>'+
+     '<div class="hd">'+t("tapPin")+'</div></div>';
+  M.forEach(function(m){
+    var d=DAYS[m.d];
+    if(m.d!==cd){
+      if(cd>=0) h+='</div>';
+      cd=m.d;
+      h+='<div class="albhead"><span class="an">Day '+d.n+' — '+L(d.to)+'</span>'+
+         '<span class="am">'+photosOf(cd).length+' '+t("shots")+'</span></div><div class="pgrid">';
+    }
+    h+='<button class="pcell" data-m="'+m.idx+'" aria-label="'+ttl(m).replace(/"/g,"")+'">'+artSVG(m)+badge(m)+'</button>';
+  });
+  h+='</div>';
+  $("albumBody").innerHTML=h;
+  [].forEach.call($("albumBody").querySelectorAll("[data-m]"),function(b){
+    b.addEventListener("click",function(){ openM(+b.getAttribute("data-m")); });
+  });
+}
+
+/* ============ Screen E-1: finisher record ============ */
+var gi=0;
+function renderRecord(){
+  var G=WS.GUESTS, g=G[gi], h="";
+  var avg=TOTAL.km/TOTAL.hours*g.f, rt=TOTAL.km/avg, mx=0;
+  DAYS.forEach(function(d){ d.s.forEach(function(x){ if(x.v>mx) mx=x.v; }); });
+  mx=Math.min(78,mx*g.f);
+  var bigDay=DAYS.reduce(function(a,c){ return c.gain>a.gain?c:a; });
+  h+='<div class="lab" style="margin:2px 2px 9px">'+t("pickGuest")+'</div><div class="gpick">';
+  G.forEach(function(x,i){
+    h+='<button class="gbtn'+(i===gi?" on":"")+'" data-g="'+i+'"><span class="av">'+x.id+'</span>'+x.name.split(" ")[0]+'</button>';
+  });
+  h+='</div>';
+  h+='<div class="cert"><div class="certtop">'+
+     '<div class="certlab">'+t("certfor")+'</div>'+
+     '<div class="certname">'+g.name+'</div>'+
+     '<div class="certsub">'+L(TOUR.name)+' · '+L(TOUR.dates)+'<br>'+t("certLine")+'</div></div>'+
+     '<svg class="certmap" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+WS.tourPath(400,150)+'</svg>'+
+     '<div class="certstats">'+
+       '<div class="certstat"><div class="cv">'+fmt(TOTAL.km,0)+'<small> km</small></div><div class="cl">'+t("totalDist")+'</div></div>'+
+       '<div class="certstat"><div class="cv">'+fmt(TOTAL.gain,0)+'<small> m</small></div><div class="cl">'+t("totalGain")+'</div></div>'+
+       '<div class="certstat"><div class="cv">'+fmt(TOTAL.maxE,0)+'<small> m</small></div><div class="cl">'+t("maxEle")+'</div></div>'+
+     '</div>'+
+     '<div class="certstats">'+
+       '<div class="certstat"><div class="cv">'+WS.hm(rt)+'</div><div class="cl">'+t("ridetime")+'</div></div>'+
+       '<div class="certstat"><div class="cv">'+fmt(avg,1)+'<small> km/h</small></div><div class="cl">'+t("avg")+'</div></div>'+
+       '<div class="certstat"><div class="cv">'+fmt(mx,1)+'<small> km/h</small></div><div class="cl">'+t("maxspd")+'</div></div>'+
+     '</div>'+
+     '<div class="stamps">'+DAYS.map(function(d){
+       return '<div class="stamp"><div class="sd">D'+d.n+'</div><div class="sk">'+fmt(d.km,0)+'</div></div>';
+     }).join("")+'</div>'+
+     '<div class="certfoot"><div class="sig">'+t("guideSig")+'<b>'+TOUR.guide+'</b>'+
+     '<div style="margin-top:6px">'+L(TOUR.op)+'</div></div>'+
+     '<svg class="seal" viewBox="0 0 64 64" aria-hidden="true">'+
+       '<circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" stroke-width="1.6"/>'+
+       '<circle cx="32" cy="32" r="25.5" fill="none" stroke="var(--accent)" stroke-width=".8" opacity=".6"/>'+
+       '<text x="32" y="27" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--accent)">'+fmt(TOTAL.km,0)+'</text>'+
+       '<text x="32" y="36" text-anchor="middle" font-size="6" font-weight="700" fill="var(--accent)" letter-spacing="1">KM</text>'+
+       '<text x="32" y="46" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--ink3)" letter-spacing=".6">7 DAYS</text>'+
+     '</svg></div></div>';
+  h+='<div class="sechead"><h2>'+t("personal")+'</h2><span class="sh">'+g.cc+'</span></div>'+
+     '<div class="card brief" style="margin-top:0"><dl class="kv" style="margin-top:0">'+
+     '<dt>'+t("climbday")+'</dt><dd>Day '+bigDay.n+' · '+L(bigDay.to)+' · +'+fmt(bigDay.gain,0)+' m</dd>'+
+     '<dt>'+t("bikeLab")+'</dt><dd>'+L(g.bike)+'</dd>'+
+     '<dt>'+t("issued")+'</dt><dd>'+t("issuedAt")+'</dd></dl></div>';
+  h+='<div class="note">'+t("certNote")+'</div>';
+  $("recordBody").innerHTML=h;
+  [].forEach.call($("recordBody").querySelectorAll("[data-g]"),function(b){
+    b.addEventListener("click",function(){ gi=+b.getAttribute("data-g"); renderRecord(); });
+  });
+}
+
+/* ============ Screen E-2: guide briefing ============ */
+var briefMode="guide";
+function renderGuide(){
+  var d=WS.day(), h="";
+  h+='<div class="daystrip" style="border:none;padding:0 0 12px;background:none">'+
+     DAYS.map(function(x,i){
+       return '<button class="dchip'+(i===WS.S.di?" on":"")+'" data-gd="'+i+'">'+
+         '<div class="dn">DAY '+x.n+'</div><div class="dk">'+fmt(x.km,0)+'<small> km</small></div></button>';
+     }).join("")+'</div>';
+  h+='<div class="segbar" role="tablist">'+
+     '<button class="'+(briefMode==="guide"?"on":"")+'" data-bm="guide">'+t("guideView")+'</button>'+
+     '<button class="'+(briefMode==="guest"?"on":"")+'" data-bm="guest">'+t("guestView")+'</button></div>';
+  h+='<div class="card brief"><div class="briefhead"><div>'+
+     '<div class="bt">Day '+d.n+' — '+L(d.to)+'</div>'+
+     '<div class="bs">'+L(d.from)+' → '+L(d.to)+' · '+fmt(d.km,1)+' km · +'+fmt(d.gain,0)+' m</div></div>'+
+     '<div class="wx"><div class="wt">'+d.wx.t+'</div><div class="ws">'+L({ja:d.wx.ja,en:d.wx.en})+'</div></div></div>';
+  h+='<div class="quote"><span class="q">&ldquo;</span><span>'+L(d.hl)+'</span></div>';
+  var dangers=d.poi.filter(function(p){ return p.k==="danger"; });
+  if(briefMode==="guide"&&dangers.length){
+    h+=dangers.map(function(p){
+      return '<div class="alert"><div class="at">'+t("hazard")+' · KM '+fmt(p.km,1)+'</div>'+
+        '<div class="ad"><b>'+L({ja:p.ja,en:p.en})+'</b><br>'+L({ja:p.dja,en:p.den})+'</div></div>';
+    }).join("");
+  }
+  h+='<dl class="kv"><dt>'+t("gear")+'</dt><dd>'+t(d.maxE>900?"gearHigh":"gearLow")+'</dd>'+
+     '<dt>'+t("food")+'</dt><dd>'+d.poi.filter(function(p){return p.k==="water"||p.k==="food";}).length+' '+t("resupply")+'</dd>'+
+     '<dt>'+t("risk")+'</dt><dd>'+(dangers.length?dangers.map(function(p){return L({ja:p.ja,en:p.en});}).join(" / "):t("noHazard"))+'</dd></dl>';
+  h+='</div>';
+  h+='<div class="sechead"><h2>'+t("secCourse")+'</h2><span class="sh">Day '+d.n+'</span></div>'+
+     '<div class="card brief" style="margin-top:0">'+courseHTML(WS.S.di)+'</div>';
+  if(briefMode==="guide"){
+    h+='<div class="sechead"><h2>'+t("guestwatch")+'</h2><span class="sh">Day '+d.n+'</span></div><div class="card brief" style="margin-top:0">';
+    WS.GUESTS.forEach(function(g){
+      var hot=g.crux===d.n;
+      h+='<div class="guestrow"><div class="av" style="'+(hot?"":"background:var(--sunk);color:var(--ink2)")+'">'+g.id+'</div>'+
+        '<div style="flex:1;min-width:0"><div class="gname">'+g.name+'<span class="flagpill">'+g.cc+'</span>'+
+        (hot?'<span class="flagpill" style="color:var(--accent);border-color:var(--accent)">'+t("todayFlag")+'</span>':"")+'</div>'+
+        '<div class="gmeta">'+g.age+' · '+L(g.bike)+'</div>'+
+        '<div class="gnote">'+L(g.note)+'</div></div></div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="note">'+t("briefNote")+'</div>';
+  $("guideBody").innerHTML=h;
+  [].forEach.call($("guideBody").querySelectorAll("[data-bm]"),function(b){
+    b.addEventListener("click",function(){ briefMode=b.getAttribute("data-bm"); renderGuide(); });
+  });
+  [].forEach.call($("guideBody").querySelectorAll("[data-gd]"),function(b){
+    b.addEventListener("click",function(){ WS.setDay(+b.getAttribute("data-gd"),true); renderGuide(); });
+  });
+}
+
+/* ============ screen router ============ */
+var SC={cur:"home",prev:"home",di:0}, scrollPos={};
+function goScreen(name,arg){
+  mountRig(null,null); /* park first: a re-render would otherwise delete the rig with its host */
+  var old=document.querySelector(".panel.on");
+  if(old){ var os=old.querySelector(".scroll"); if(os) scrollPos[old.id]=os.scrollTop; }
+  if(name==="detail"&&arg!==undefined){
+    if(arg!==SC.di) scrollPos["p-detail"]=0;
+    SC.di=arg;
+  }
+  if(name!==SC.cur) SC.prev=SC.cur;
+  SC.cur=name;
+  [].forEach.call(document.querySelectorAll(".panel"),function(p){ p.classList.toggle("on",p.id==="p-"+name); });
+  $("app").classList.toggle("hidehead",name==="detail");
+  var navFor=name==="detail"?"home":name;
+  [].forEach.call(document.querySelectorAll(".tab"),function(b){
+    var on=b.getAttribute("data-tab")===navFor;
+    b.classList.toggle("on",on); b.setAttribute("aria-selected",on?"true":"false");
+  });
+  if(name==="home") renderHome();
+  else if(name==="detail") renderDetail(SC.di);
+  else if(name==="album") renderAlbum();
+  else if(name==="record") renderRecord();
+  else if(name==="guide") renderGuide();
+  else if(name==="map"){ mountRig($("mapSlotFull"),$("profSlotFull")); WS.fit(false); }
+  var np=$("p-"+name), ns=np&&np.querySelector(".scroll");
+  if(ns) ns.scrollTop=scrollPos["p-"+name]||0;
+}
+[].forEach.call(document.querySelectorAll(".tab"),function(b){
+  b.addEventListener("click",function(){ goScreen(b.getAttribute("data-tab")); });
+});
+$("mapBack").addEventListener("click",function(){
+  goScreen(SC.prev==="map"?"home":SC.prev);
+});
+
 window.WSM={
-  onDay:onDay, onProgress:onProgress, renderAlbum:renderAlbum,
-  relang:function(){ if(sheet.classList.contains("on")) paint(); }
+  onDay:onDay, onProgress:onProgress,
+  relang:function(){
+    [].forEach.call(document.querySelectorAll("[data-i18n]"),function(n){ n.textContent=t(n.getAttribute("data-i18n")); });
+    if(sheet.classList.contains("on")) paint();
+    goScreen(SC.cur);
+  }
 };
 WS.setDay(WS.S.di,true);
+goScreen("home");
 })();
 </script>
 
