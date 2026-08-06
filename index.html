@@ -436,9 +436,10 @@ tr.ours .price{color:var(--gold-text); font-size:19px}
   display:flex; align-items:center; justify-content:center;
 }
 .amtx{min-width:0; flex:1; display:flex; flex-direction:column}
-/* 「渡すもの」＝初心者が止まる場所なので、カードの最後に独立した1行として出す。
-   margin-top:auto で横に並ぶ2枚の高さが違っても同じ位置に揃う（.kv の margin に勝つため .amcard 起点） */
-.amcard .amgive{margin-top:auto; padding-top:13px; border-top:1px dashed var(--line)}
+/* 「まかせる範囲 / 人が決める」＝どこまで任せるかが読み手の関心なので、カードの最後に
+   独立した枠として出す。margin-top:auto で横に並ぶ2枚の高さが違っても同じ位置に揃う
+   （.kv の margin に勝つため .amcard 起点） */
+.amcard .amgive{margin-top:auto; padding-top:13px; border-top:1px dashed var(--line); row-gap:3px}
 .amguard h4{color:var(--gold)}
 .amguard ul{list-style:none; margin:12px 0 0; padding:0; display:grid; gap:9px; color:#B7C4DA; font-size:14.5px; line-height:1.85}
 .amguard li{padding-left:21px; position:relative}
@@ -589,7 +590,7 @@ footer a{color:#A7B4CC}
         <span><b>状態</b> プロトタイプ（実際に動きます）</span>
       </div>
       <a class="herojump" href="#aimenu">
-        <span><span class="nb">AIでできること、</span><span class="nb">14個から選ぶ</span></span><svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13m0 0 5-5m-5 5-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><span class="nb">まかせられること、</span><span class="nb">14個から選ぶ</span></span><svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13m0 0 5-5m-5 5-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
 
@@ -1081,25 +1082,25 @@ footer a{color:#A7B4CC}
 <section class="sec" id="aimenu">
   <div class="wrap">
     <div class="reveal">
-      <p class="eyebrow">06 / AI × ガイド業 できることメニュー</p>
-      <h2><span class="nb">AIを</span><span class="nb">触ったことがなくても、</span><span class="nb">ここまでできます。</span></h2>
-      <p class="lead">ここに並んでいるのは、masaya さんがいま手でやっていることです。どれも特別な設定はいりません。パソコンに向かって、日本語で話しかけるだけです。「渡すもの」に書いてあるものを手元に用意して、そのまま言えば返ってきます。</p>
+      <p class="eyebrow">06 / まかせられることリスト</p>
+      <h2><span class="nb">「やっておいて」で、</span><span class="nb">終わらせる。</span></h2>
+      <p class="lead">これは、AIに質問して答えをもらう話ではありません。調べる・作る・フォルダに置くところまでをやってもらって、masaya さんは出てきたものを見て直すだけ、という状態にします。理想は masaya さん自身が「やっておいて」と言えるようになることです。最初のしくみだけ僕が用意して、そこから先は本人の手で回せる形にします。「本人でいける」と付いているものは、用意さえ済めば masaya さんだけで回せるものです。</p>
     </div>
 
     <div class="phase reveal">
       <div class="phasehead">
         <span class="pn"><span class="nb">A. ゲストのまわり</span></span>
-        <span class="pd">ツアーの前・最中・あとで、ゲストに渡すもの</span>
+        <span class="pd">ツアーの前・最中・あとで、ゲストに届くもの</span>
       </div>
       <div class="amgrid">
 
         <article class="pm amcard">
           <div class="amn num">1</div>
           <div class="amtx">
-            <div class="tagrow"><span class="st-live">5分</span><span class="st-live">英語も同時</span></div>
-            <h4><span class="nb">英語の問い合わせに、</span><span class="nb">日本語で返事を書く</span></h4>
-            <p>届いた英文をそのまま貼って「これに返事を」と言うだけ。日本語で内容を確認してから、英語の文面が出てきます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>届いたメールの本文</dd></dl>
+            <div class="tagrow"><span class="who-g">本人でいける</span><span class="st-live">5分</span><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">英語の問い合わせに、</span><span class="nb">返事の下書きを</span><span class="nb">置いておく</span></h4>
+            <p>受信箱を見に行って、返事が要るメールを拾い、1通ずつ下書きまで作って置いておきます。日本語の要約が付くので、内容は開かなくても分かります。masaya さんは読んで、送信ボタンを押すだけです。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>受信箱を見る → 返事が要るものを選ぶ → 下書きを作る</dd><dt>人が決める</dt><dd>送信するかどうか</dd></dl>
           </div>
         </article>
 
@@ -1107,19 +1108,19 @@ footer a{color:#A7B4CC}
           <div class="amn num">2</div>
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">英語も同時</span></div>
-            <h4><span class="nb">日英2枚の</span><span class="nb">「旅のしおり」にする</span></h4>
-            <p>日程・宿・集合時刻・持ち物を箇条書きで言うだけ。そのまま印刷して渡せる形になります。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>日程のメモ（走り書きで可）</dd></dl>
+            <h4><span class="nb">日英2枚の</span><span class="nb">「旅のしおり」を</span><span class="nb">PDFで作る</span></h4>
+            <p>予約の内容と日程から、ゲストに配れるPDFを作って手元のフォルダに置きます。宿・集合時刻・持ち物・緊急連絡先まで入った状態で、日本語版と英語版が同時に出ます。直したいところを言えば、その場で刷り直します。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>日程を組み立てる → 日英2種のPDFを作る → フォルダに置く</dd><dt>人が決める</dt><dd>配る前の最終確認</dd></dl>
           </div>
         </article>
 
         <article class="pm amcard">
           <div class="amn num">3</div>
           <div class="amtx">
-            <div class="tagrow"><span class="who-v">⭐効果大</span></div>
-            <h4><span class="nb">ゲスト1人ずつの</span><span class="nb">注意メモを1枚に</span></h4>
-            <p>「下りが苦手」「ベジタリアン」「E-BIKEの残量が読めない」。いまノートに書いていることを、当日の朝に読める1枚にまとめます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>ゲストの人数と、気をつけたいこと</dd></dl>
+            <div class="tagrow"><span class="who-g">本人でいける</span><span class="who-v">⭐効果大</span></div>
+            <h4><span class="nb">ゲスト1人ずつの</span><span class="nb">注意メモを、</span><span class="nb">当日の朝に出す</span></h4>
+            <p>事前アンケートやメールのやりとりから、その人の注意点を拾い出して1枚にまとめます。「下りが苦手」「ベジタリアン」「E-BIKEの残量が読めない」。走る前の朝に、その日に関係あるぶんだけ並んだ状態で出てきます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>やりとりから注意点を拾う → その日に関係するものを選ぶ → 1枚にする</dd><dt>人が決める</dt><dd>現場で誰にどう伝えるか</dd></dl>
           </div>
         </article>
 
@@ -1127,9 +1128,9 @@ footer a{color:#A7B4CC}
           <div class="amn num">4</div>
           <div class="amtx">
             <div class="tagrow"><span class="st-live">その日中</span><span class="st-live">英語も同時</span></div>
-            <h4><span class="nb">ツアーが終わった夜の御礼を、</span><span class="nb">1人ずつ</span></h4>
-            <p>全員に同じ文を送らずに済みます。名前とその人に起きたことを言えば、5人なら5通、それぞれの言語で出てきます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>名前と、その人の印象に残った場面</dd></dl>
+            <h4><span class="nb">ツアーが終わった夜の御礼を、</span><span class="nb">人数分そろえる</span></h4>
+            <p>ゲストの一覧とその週の写真から、1人ずつ違う文面を作ります。その人に起きたことに触れた文が、それぞれの言語で、名前入りで並びます。読んで、直して、送る。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>1人ずつ文面を作る → 言語をそろえる → 下書きに入れる</dd><dt>人が決める</dt><dd>送信</dd></dl>
           </div>
         </article>
 
@@ -1147,39 +1148,39 @@ footer a{color:#A7B4CC}
           <div class="amn num">5</div>
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span></div>
-            <h4><span class="nb">下見のメモを、</span><span class="nb">次に使える形に清書する</span></h4>
-            <p>走り書きや音声メモを渡すと、距離・登り・補給ポイントが並んだルート表になります。次の下見はここから始められます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>下見のときのメモや写真</dd></dl>
+            <h4><span class="nb">下見の記録を、</span><span class="nb">次に使える形にして残す</span></h4>
+            <p>撮ってきた写真とメモを渡すと、写真に入っている位置と時刻から距離・登り・補給地点を割り出してルート表にします。前に走った同じルートがあれば、変わったところだけ拾って知らせます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>写真と位置を読む → ルート表を作る → 前回との差分を出す</dd><dt>人が決める</dt><dd>実際に通すかどうか</dd></dl>
           </div>
         </article>
 
         <article class="pm amcard">
           <div class="amn num">6</div>
           <div class="amtx">
-            <div class="tagrow"><span class="st-live">一度きり</span></div>
-            <h4><span class="nb">毎回口で言っていることを、</span><span class="nb">書き出しておく</span></h4>
-            <p>「この下りは落石があるから一列」「この先50kmは補給ゼロ」。一度書き出せば、次から読み上げるだけになります。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>いつも注意していること（思いつく順で可）</dd></dl>
+            <div class="tagrow"><span class="st-live">一度きり</span><span class="who-v">⭐効果大</span></div>
+            <h4><span class="nb">毎回口で言っていることを、</span><span class="nb">ルートに貼り付けておく</span></h4>
+            <p>過去のしおり・メモ・思い出した順の書き付けから、危険箇所と補給ポイントを抜き出して、地図上の位置に結び付けます。一度やれば、次から同じルートを走るときに勝手に出てきます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>過去の資料から拾う → 場所に結び付ける → 一覧にする</dd><dt>人が決める</dt><dd>合っているかどうかの確認</dd></dl>
           </div>
         </article>
 
         <article class="pm amcard">
           <div class="amn num">7</div>
           <div class="amtx">
-            <div class="tagrow"><span class="st-live">安全に効く</span></div>
-            <h4><span class="nb">雨と体調不良の</span><span class="nb">「逃げ道」を</span><span class="nb">先に用意する</span></h4>
-            <p>ルートと季節を伝えると、短縮案・輪行区間・代替の宿の候補が出ます。当日に慌てて探さなくて済みます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>ルート名と、走る時期</dd></dl>
+            <div class="tagrow"><span class="st-live">安全に効く</span><span class="st-live">毎日でも</span></div>
+            <h4><span class="nb">天気を見て、</span><span class="nb">前日のうちに</span><span class="nb">組み替え案を出しておく</span></h4>
+            <p>前日の夜に予報を見に行って、翌日が荒れそうなら短縮案・輪行区間・代わりの宿の候補を並べて置いておきます。朝起きた時点で、選べる状態になっています。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>予報を見る → 影響を判定する → 代案を並べる</dd><dt>人が決める</dt><dd>中止・迂回の判断</dd></dl>
           </div>
         </article>
 
         <article class="pm amcard">
           <div class="amn num">8</div>
           <div class="amtx">
-            <div class="tagrow"><span class="st-live">5分</span></div>
-            <h4><span class="nb">見積りと請求の</span><span class="nb">文面を作る</span></h4>
-            <p>人数・日数・含むものを言えば、そのまま送れる文章になります。金額を決めるのはご本人です。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>人数・日数・含むもの</dd></dl>
+            <div class="tagrow"><span class="who-g">本人でいける</span><span class="st-live">5分</span></div>
+            <h4><span class="nb">見積りと請求を、</span><span class="nb">送れる形まで作る</span></h4>
+            <p>人数・日数・含むものを言えば、明細つきの見積書と請求書を作ってPDFで置きます。過去の案件があれば、その書式に合わせて揃えます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>明細を組む → 書式を揃える → PDFにする</dd><dt>人が決める</dt><dd>金額と、送る相手</dd></dl>
           </div>
         </article>
 
@@ -1197,9 +1198,9 @@ footer a{color:#A7B4CC}
           <div class="amn num">9</div>
           <div class="amtx">
             <div class="tagrow"><span class="st-live">英語も同時</span></div>
-            <h4><span class="nb">ツアーの紹介文を、</span><span class="nb">3つの長さで</span></h4>
-            <p>同じ内容から、SNS用の短い文・申し込みページ用の説明・写真に添える1行が同時に出ます。日本語と英語の両方で。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>ツアーの日程と、見どころ3つ</dd></dl>
+            <h4><span class="nb">ツアーの紹介文を、</span><span class="nb">置き場所ごとに書き分ける</span></h4>
+            <p>1つの内容から、SNS用・申し込みページ用・写真に添える1行を、日本語と英語で同時に作ります。すでにあるページを見に行って、書き方をそこに合わせられます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>既存のページを見る → 長さ違いで書き分ける → 日英そろえる</dd><dt>人が決める</dt><dd>どれを出すか</dd></dl>
           </div>
         </article>
 
@@ -1207,9 +1208,9 @@ footer a{color:#A7B4CC}
           <div class="amn num">10</div>
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">その日中</span></div>
-            <h4><span class="nb">走った1日を、</span><span class="nb">読み物にする</span></h4>
-            <p>その日にあったことを話すだけで記事の下書きになります。写真を選んで並べるところまで一緒にできます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>その日の写真と、覚えていること</dd></dl>
+            <h4><span class="nb">走った1日を、</span><span class="nb">そのまま記事にする</span></h4>
+            <p>その日の写真を渡して、覚えていることを話すだけ。写真の順番と時刻から流れを組み立てて、読み物の形にします。使う写真の選定と並べ替えまでやります。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>写真を時系列に並べる → 本文を書く → 使う写真を選ぶ</dd><dt>人が決める</dt><dd>公開するかどうか</dd></dl>
           </div>
         </article>
 
@@ -1228,18 +1229,18 @@ footer a{color:#A7B4CC}
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">安全に効く</span></div>
             <h4><span class="nb">Day 4で誰が苦しむか、</span><span class="nb">申し込みの時点で</span><span class="nb">見当をつける</span></h4>
-            <p>年齢・普段の走行距離・過去の最長距離を伝えると、その人が各日の登りにどれくらい余裕があるかが並びます。E-BIKEに替える・輪行で1区間飛ばす・サポートを付ける、といった逃げ道の候補も一緒に出ます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>ゲストの年齢と、普段どれくらい乗っているか</dd></dl>
+            <p>申込フォームの回答から、その人が各日の登りにどれくらい余裕があるかを出します。厳しそうな人がいれば、E-BIKEに替える・輪行で1区間飛ばす・サポートを付ける、といった手を先に用意しておきます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>回答を読む → 各日の負荷と突き合わせる → 手当ての候補を出す</dd><dt>人が決める</dt><dd>誰にどう伝えるか、当日の判断</dd></dl>
           </div>
         </article>
 
         <article class="pm amcard">
           <div class="amn num">12</div>
           <div class="amtx">
-            <div class="tagrow"><span class="st-live">5分</span><span class="st-live">英語も同時</span></div>
-            <h4><span class="nb">レンタル車のサイズと、</span><span class="nb">その人の言語での</span><span class="nb">持ち物リスト</span></h4>
-            <p>身長・股下・いま乗っている車体を伝えると、フレームサイズとサドル高の目安が出ます。ペダル・シューズ・輪行袋など、その人が持ってくるべきものの一覧も本人の言語で。到着した日の朝の調整が短くなります。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>身長・股下・いま乗っている自転車</dd></dl>
+            <div class="tagrow"><span class="who-g">本人でいける</span><span class="st-live">英語も同時</span></div>
+            <h4><span class="nb">レンタル車の手配表と、</span><span class="nb">本人の言語での</span><span class="nb">持ち物リストを作る</span></h4>
+            <p>身長・股下・いま乗っている車体から、フレームサイズとサドル高の目安を出して手配表にします。持ち物リストはその人の言語で作って、そのまま送れる形にします。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>サイズを割り出す → 手配表にする → 言語別の持ち物リストを作る</dd><dt>人が決める</dt><dd>現車での最終フィッティング</dd></dl>
           </div>
         </article>
 
@@ -1257,9 +1258,9 @@ footer a{color:#A7B4CC}
           <div class="amn num">13</div>
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span><span class="st-live">その日中</span></div>
-            <h4><span class="nb">移動中の「10分ネタ」を、</span><span class="nb">通過する順番に並べる</span></h4>
-            <p>ルートと出発時刻を伝えると、車窓の外に何が見えるかを通過順に並べたネタ帳になります。中高生が顔を上げる切り口（数字・記録・少し怖い話）を指定できます。毎回ゼロから考えなくて済みます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>当日のルートと、出発時刻</dd></dl>
+            <h4><span class="nb">移動中の「10分ネタ」を、</span><span class="nb">通過する順番に用意する</span></h4>
+            <p>当日のルートと出発時刻を渡すと、通過する順に何を話すかを並べたネタ帳を作ります。中高生が顔を上げる切り口（数字・記録・少し怖い話）を指定できます。裏取りした出典も一緒に付きます。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>ルート沿いを調べる → 通過時刻に合わせて並べる → 出典を付ける</dd><dt>人が決める</dt><dd>どれを話すか</dd></dl>
           </div>
         </article>
 
@@ -1268,8 +1269,8 @@ footer a{color:#A7B4CC}
           <div class="amtx">
             <div class="tagrow"><span class="who-v">⭐効果大</span></div>
             <h4><span class="nb">班別自主行動の計画が</span><span class="nb">「間に合うか」を</span><span class="nb">班ごとに見る</span></h4>
-            <p>生徒が出した行き先を班ごとに貼ると、移動時間・乗り換え・拝観の受付時刻から、集合に間に合うかどうかが出ます。無理な班には、どこを削れば成立するかの案まで。先生に見せる形にまとめられます。</p>
-            <dl class="kv amgive"><dt>渡すもの</dt><dd>班ごとの行き先と、集合の時刻・場所</dd></dl>
+            <p>生徒が出した行き先を渡すと、実際の時刻表と拝観の受付時刻を調べて、集合に間に合うかを班ごとに判定します。無理な班には削る案まで付けて、先生に見せる資料の形で出します。</p>
+            <dl class="kv amgive"><dt>まかせる範囲</dt><dd>時刻表を調べる → 班ごとに判定する → 先生用の資料にする</dd><dt>人が決める</dt><dd>班に返す内容と、当日の運用</dd></dl>
           </div>
         </article>
 
@@ -1279,6 +1280,7 @@ footer a{color:#A7B4CC}
     <div class="effort amguard reveal">
       <h4><span class="nb">🔒 ちゃんと守るところ</span></h4>
       <ul>
+        <li>送信・支払い・予約の確定はしません。下書きと候補を置くところまでで、実行のボタンは必ずご本人が押します。</li>
         <li>中止・迂回・搬送の判断はAIにさせません。候補を並べるところまでで、決めるのは現場のガイドです。</li>
         <li>ゲストの氏名・持病・アレルギー・連絡先は、ご本人の同意なくAIに渡しません。</li>
         <li>保険・許認可・医療にかかる文章は下書きまで。出す前に必ず人が確認します。</li>
@@ -1286,7 +1288,7 @@ footer a{color:#A7B4CC}
       </ul>
     </div>
 
-    <p class="amclose reveal"><span class="nb">気になった番号を</span><span class="nb">言ってもらえれば、</span><span class="nb">その場で一緒に作ります。</span></p>
+    <p class="amclose reveal"><span class="nb">気になった番号を</span><span class="nb">言ってもらえれば、</span><span class="nb">その1つを</span><span class="nb">動く状態にして渡します。</span></p>
     <p class="small amkit">
       <span>いくつかは、すでに手順とセリフを用意してあります →</span>
       <a class="chipbtn" href="kit/" target="_blank" rel="noopener">自分で試せるキットを見る</a>
