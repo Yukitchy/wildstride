@@ -324,6 +324,22 @@ h3{font-size:clamp(20px,3vw,25px)}
   box-shadow:0 2px 4px rgba(240,163,36,.25), 0 14px 34px rgba(240,163,36,.34);
   transition:transform .12s var(--spring), box-shadow .12s ease;
 }
+/* Hero's secondary action. Outline, not solid, so it never competes with the
+   gold「スマホで開く」— the demo stays the primary thing to touch. */
+.herojump{
+  display:inline-flex; align-items:center; gap:9px; margin-top:var(--s3);
+  font:inherit; font-size:15px; font-weight:800; text-decoration:none; line-height:1.5;
+  color:var(--gold); background-color:transparent;
+  border:1.5px solid color-mix(in srgb, var(--gold) 52%, transparent);
+  border-radius:999px; padding:13px 22px;
+  transition:transform .12s var(--spring), border-color .12s ease, background-color .12s ease;
+}
+.herojump:hover{transform:translateY(-2px); border-color:var(--gold);
+  background-color:color-mix(in srgb, var(--gold) 12%, transparent)}
+.herojump:active{transform:translateY(0) scale(.98)}
+.herojump svg{flex:none}
+/* The nav is sticky, so an anchor target would otherwise land underneath it. */
+.sec{scroll-margin-top:84px}
 .bigcta:hover{transform:translateY(-2px); box-shadow:0 3px 6px rgba(240,163,36,.3), 0 20px 44px rgba(240,163,36,.45)}
 .bigcta:active{transform:translateY(0) scale(.98)}
 .bigcta svg{flex:none}
@@ -569,6 +585,9 @@ footer a{color:#A7B4CC}
         <span><b>題材</b> 尾道 → しまなみ海道 → 松山 → 内子 → 四国カルスト → 四万十川 → 高知</span>
         <span><b>状態</b> プロトタイプ（実際に動きます）</span>
       </div>
+      <a class="herojump" href="#aimenu">
+        <span><span class="nb">AIでできること、</span><span class="nb">14個から選ぶ</span></span><svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13m0 0 5-5m-5 5-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
 
     <div class="herodevice">
