@@ -944,6 +944,10 @@ function T(k){ return I18N[lang][k]||k; }
 function L(o){ return o? (o[lang]!==undefined?o[lang]:o) : ""; }
 
 /* ---- ride engine: distance, elevation, speed, time ---- */
+/* Minutes added to the clock at each stop kind. Single source of truth: buildDay's
+   static timeAdj/course-time table and the live scrub clocks (update(), onProgress())
+   must agree on how long a stop takes, or the two clocks drift apart as stops pile up. */
+var STOP={food:75,photo:20,water:22};
 function buildDay(d){
   var s=[], i, j;
   s.push({lat:d.pts[0][0],lng:d.pts[0][1]});
@@ -1001,7 +1005,6 @@ function buildDay(d){
   });
   /* A group stop is never the same length as a solo stop: seven people have to
      arrive, park, eat, use the toilet and re-clip before anyone rolls. */
-  var STOP={food:75,photo:20,water:22};
   var stopMin=0;
   d.poi.forEach(function(p){ p.timeAdj=d.start+s[p.i].t+stopMin/60; stopMin+=(STOP[p.k]||15); });
   d.stopH=stopMin/60;
@@ -1277,7 +1280,7 @@ function update(){
   document.getElementById("hGrad").innerHTML=(p.g>0?"+":"")+fmt(p.g,1)+"<small>%</small>";
   document.getElementById("hSpd").innerHTML=fmt(S.km>0?p.v:0,1)+"<small>km/h</small>";
   var stops=0;
-  d.poi.forEach(function(x){ if(x.km<=S.km) stops+=(x.k==="food"?45:x.k==="photo"?9:x.k==="water"?12:6); });
+  d.poi.forEach(function(x){ if(x.km<=S.km) stops+=(STOP[x.k]||15); });
   document.getElementById("hTime").textContent=hhmm(d.start+p.t+stops/60);
   document.getElementById("ctrlSub").textContent=
     (lang==="ja"?"獲得 ":"Ascent ")+fmt(d.gain,0)+" m · "+hm(d.hours+d.stopH)+" · "+L(d.sub);
@@ -1423,7 +1426,7 @@ function fitAllVB(){
   DAYS.forEach(function(d){ all.pts=all.pts.concat(d.pts); });
   return fitDay(all,0.05);
 }
-window.WS={DAYS:DAYS,S:S,P:P,TOUR:TOUR,TOTAL:TOTAL,GUESTS:GUESTS,PINCOL:PINCOL,PINLAB:PINLAB,
+window.WS={DAYS:DAYS,S:S,P:P,TOUR:TOUR,TOTAL:TOTAL,GUESTS:GUESTS,PINCOL:PINCOL,PINLAB:PINLAB,STOP:STOP,
   day:day,setDay:setDay,setProgress:setProgress,sampleAt:sampleAt,setIcon:setIcon,
   L:function(o){return L(o);},T:function(k){return T(k);},fmt:fmt,hhmm:hhmm,hm:hm,
   map:map,el:el,sub:sub,pins:function(){return gPins;},rescale:rescale,getLang:function(){return lang;},
@@ -1825,7 +1828,7 @@ function onProgress(d,km){
   var sd=$("scDist");
   if(sd){
     var p=WS.sampleAt(d,km), stops=0;
-    d.poi.forEach(function(x){ if(x.km<=km) stops+=(x.k==="food"?45:x.k==="photo"?9:x.k==="water"?12:6); });
+    d.poi.forEach(function(x){ if(x.km<=km) stops+=(WS.STOP[x.k]||15); });
     sd.innerHTML=fmt(km,1)+"<small>km</small>";
     $("scEle").innerHTML=fmt(p.e,0)+"<small>m</small>";
     $("scTime").textContent=WS.hhmm(d.start+p.t+stops/60);
